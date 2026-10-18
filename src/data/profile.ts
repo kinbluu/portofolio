@@ -101,23 +101,14 @@ export const contact = {
 };
 
 export const chat = {
-  assistant: "Rahmat's assistant",
+  assistant: "Asisten Rahmat",
   initials: "RM",
-  status: "Online · usually replies in minutes",
-  messages: [
-    {
-      from: "assistant",
-      text: "Hi! 👋 I can answer questions about Rahmat's experience, skills, or availability.",
-    },
-    { from: "visitor", text: "Is he open to freelance Laravel projects?" },
-    {
-      from: "assistant",
-      text: "Yes — he takes on select Laravel & Livewire projects. Want me to share his email?",
-    },
+  status: "Online · asisten AI",
+  greeting:
+    "Halo! 👋 Saya asisten AI Rahmat. Tanyakan apa saja seputar pengalaman, keahlian, atau cara menghubunginya.",
+  suggestions: [
+    "Apa pekerjaan Rahmat saat ini?",
+    "Teknologi apa yang dikuasai Rahmat?",
+    "Bagaimana cara menghubungi Rahmat?",
   ],
-  quickReplies: [
-    { label: "View experience", href: "#experience" },
-    { label: "Get in touch", href: "#contact" },
-  ],
-  emailSubject: "Hello from your portfolio",
 };

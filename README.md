@@ -38,6 +38,16 @@ All commands are run from the root of the project, from a terminal:
 | `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `bun astro -- --help` | Get help using the Astro CLI                     |
 
+## 💬 Chat assistant
+
+The chat widget streams answers from Gemini through TanStack AI (`src/pages/api/chat.ts`) and runs on Cloudflare Workers.
+
+- Local key: copy `.dev.vars.example` to `.dev.vars` and fill in `GEMINI_API_KEY`, then restart `bun dev`.
+- Production key: `bunx wrangler secret put GEMINI_API_KEY`.
+- Deploy: `bun run build && bunx wrangler deploy`.
+- The assistant only answers from `src/data/profile.ts` (prompt in `src/lib/chat-prompt.ts`).
+- Limits: 10 requests per minute per IP (`ratelimits` in `wrangler.jsonc`), 500 characters per message and 12 questions per conversation (`src/lib/chat.ts`).
+
 ## 👀 Want to learn more?
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).

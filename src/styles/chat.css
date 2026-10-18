@@ -1,0 +1,49 @@
+.chat-markdown > * + * {
+  margin-top: 8px;
+}
+
+.chat-markdown :is(ul, ol) {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 18px;
+}
+
+.chat-markdown ul {
+  list-style: disc;
+}
+
+.chat-markdown ol {
+  list-style: decimal;
+}
+
+.chat-markdown li::marker {
+  color: var(--rm3-muted);
+}
+
+.chat-markdown :is(strong, h1, h2, h3, h4, h5, h6) {
+  font-weight: 500;
+}
+
+.chat-markdown a {
+  color: var(--rm3-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.chat-markdown code {
+  border-radius: var(--rm3-radius-xs);
+  background-color: var(--rm3-soft);
+  padding: 1px 4px;
+  font-size: 13px;
+}
+
+.chat-markdown pre {
+  white-space: pre-wrap;
+}
+
+.chat-markdown blockquote {
+  border-left: 2px solid var(--rm3-line);
+  padding-left: 10px;
+  color: var(--rm3-muted);
+}
