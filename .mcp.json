@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "astro_docs": {
+      "type": "stdio",
+      "command": "bunx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.docs.astro.build/mcp"
+      ]
+    }
+  }
+}
