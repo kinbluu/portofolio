@@ -10,6 +10,8 @@
   --rm3-soft: #f5f6f1;
   --rm3-accent: #50623d;
   --rm3-tint: #e8eddf;
+  --rm3-selection-background: var(--rm3-accent);
+  --rm3-selection-foreground: var(--rm3-paper);
   --rm3-gh-0: #dfe3da;
   --rm3-gh-1: #cbd9b8;
   --rm3-gh-2: #9cb779;
@@ -229,6 +231,12 @@
 }
 
 @layer base {
+  ::selection {
+    background-color: var(--rm3-selection-background);
+    color: var(--rm3-selection-foreground);
+    text-shadow: none;
+  }
+
   html {
     scroll-padding-top: 5rem;
   }
