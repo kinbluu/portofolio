@@ -17,6 +17,22 @@ const { title, description } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+    <script is:inline>
+      (() => {
+        let theme;
+
+        try {
+          theme = localStorage.getItem("theme");
+        } catch {
+          // Fall back to the system theme when storage is blocked.
+        }
+
+        document.documentElement.dataset.theme =
+          theme === "light" || theme === "dark"
+            ? theme
+            : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <Font cssVariable="--font-manrope" preload={[{ weight: 600 }]} />
@@ -26,6 +42,7 @@ const { title, description } = Astro.props;
   <body class="bg-canvas font-body text-ink antialiased" data-overlayscrollbars-initialize>
     <slot />
     <script>
+      import "../scripts/theme";
       import "../scripts/scrollbars";
       import "../scripts/reveal";
     </script>

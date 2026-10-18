@@ -5,6 +5,7 @@ import X from "@lucide/astro/icons/x";
 import { navigation, profile } from "../data/profile";
 import Button from "./ui/Button.astro";
 import TextLink from "./ui/TextLink.astro";
+import ThemeToggle from "./ui/ThemeToggle.astro";
 ---
 
 <header
@@ -15,7 +16,7 @@ import TextLink from "./ui/TextLink.astro";
     class="flex items-center justify-between gap-6 border-b border-line pb-4 lg:border-b-0 lg:pb-0"
   >
     <a href="#top" class="type-wordmark">{profile.wordmark}</a>
-    <ul class="hidden items-center gap-7 lg:flex">
+    <ul class="ml-auto hidden items-center gap-7 lg:flex">
       {
         navigation.map((link) => (
           <li>
@@ -29,16 +30,19 @@ import TextLink from "./ui/TextLink.astro";
         ))
       }
     </ul>
-    <button
-      type="button"
-      class="grid size-11 place-items-center rounded-pill text-ink ring-1 ring-line ring-inset active:scale-90 motion-safe:transition-transform lg:hidden"
-      aria-label="Open menu"
-      aria-expanded="false"
-      aria-controls="site-menu"
-      data-menu-open
-    >
-      <Menu size={20} />
-    </button>
+    <div class="flex items-center gap-2">
+      <ThemeToggle />
+      <button
+        type="button"
+        class="grid size-11 place-items-center rounded-pill text-ink ring-1 ring-line ring-inset active:scale-90 motion-safe:transition-transform lg:hidden"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="site-menu"
+        data-menu-open
+      >
+        <Menu size={20} />
+      </button>
+    </div>
   </nav>
   <dialog
     id="site-menu"
@@ -48,14 +52,17 @@ import TextLink from "./ui/TextLink.astro";
     <div class="flex h-full flex-col gap-8 rounded-lg bg-paper px-5 pt-7 pb-6">
       <div class="flex items-center justify-between border-b border-line pb-4">
         <a href="#top" class="type-wordmark">{profile.wordmark}</a>
-        <button
-          type="button"
-          class="grid size-11 place-items-center rounded-pill bg-ink text-paper"
-          aria-label="Close menu"
-          data-menu-close
-        >
-          <X size={20} />
-        </button>
+        <div class="flex items-center gap-2">
+          <ThemeToggle />
+          <button
+            type="button"
+            class="grid size-11 place-items-center rounded-pill bg-ink text-paper"
+            aria-label="Close menu"
+            data-menu-close
+          >
+            <X size={20} />
+          </button>
+        </div>
       </div>
       <nav aria-label="Menu">
         <ol>

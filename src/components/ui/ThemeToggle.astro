@@ -1,0 +1,27 @@
+---
+import Moon from "@lucide/astro/icons/moon";
+import Sun from "@lucide/astro/icons/sun";
+---
+
+<button
+  type="button"
+  class="grid size-11 shrink-0 place-items-center rounded-pill text-ink ring-1 ring-line ring-inset hover:bg-soft active:scale-90 motion-safe:transition-[background-color,transform]"
+  aria-label="Dark mode"
+  aria-pressed="false"
+  title="Switch to dark mode"
+  data-theme-toggle
+  hidden
+>
+  <Moon size={20} data-theme-icon="moon" aria-hidden="true" />
+  <Sun size={20} class="hidden" data-theme-icon="sun" aria-hidden="true" />
+</button>
+
+<style>
+  :global([data-theme="dark"]) [data-theme-icon="moon"] {
+    display: none;
+  }
+
+  :global([data-theme="dark"]) [data-theme-icon="sun"] {
+    display: block;
+  }
+</style>
