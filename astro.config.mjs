@@ -1,9 +1,12 @@
 // @ts-check
 import { defineConfig, envField, fontProviders } from "astro/config";
+import cloudflare from "@astrojs/cloudflare";
 import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
+  adapter: cloudflare({ imageService: "compile" }),
+  session: false,
   integrations: [react()],
   fonts: [
     {
