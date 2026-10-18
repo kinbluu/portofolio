@@ -17,6 +17,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.4.0",
     "motion": "^14.3.0",
+    "overlayscrollbars": "^2.16.0",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {

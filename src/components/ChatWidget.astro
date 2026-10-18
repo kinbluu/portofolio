@@ -45,33 +45,35 @@ import { chat, profile } from "../data/profile";
       <X size={20} />
     </button>
   </div>
-  <div class="flex flex-1 flex-col gap-3 overflow-y-auto bg-soft p-4 lg:p-5">
-    {
-      chat.messages.map((message) => (
-        <p
-          class:list={[
-            "w-[250px] px-3.5 py-2.5 text-body/[1.5] lg:w-65",
-            message.from === "assistant"
-              ? "rounded-[16px_16px_16px_4px] bg-paper ring-1 ring-line ring-inset"
-              : "ml-auto rounded-[16px_16px_4px_16px] bg-accent text-paper",
-          ]}
-        >
-          {message.text}
-        </p>
-      ))
-    }
-    <div class="flex gap-2">
+  <div class="flex-1 overflow-y-auto bg-soft" data-overlayscrollbars-initialize>
+    <div class="flex flex-col gap-3 p-4 lg:p-5">
       {
-        chat.quickReplies.map((reply) => (
-          <a
-            href={reply.href}
-            class="hit-target rounded-pill bg-paper px-3 py-[7px] text-caption/[1.5] font-medium text-accent ring-1 ring-accent ring-inset"
-            data-chat-dismiss
+        chat.messages.map((message) => (
+          <p
+            class:list={[
+              "w-[250px] px-3.5 py-2.5 text-body/[1.5] lg:w-65",
+              message.from === "assistant"
+                ? "rounded-[16px_16px_16px_4px] bg-paper ring-1 ring-line ring-inset"
+                : "ml-auto rounded-[16px_16px_4px_16px] bg-accent text-paper",
+            ]}
           >
-            {reply.label}
-          </a>
+            {message.text}
+          </p>
         ))
       }
+      <div class="flex gap-2">
+        {
+          chat.quickReplies.map((reply) => (
+            <a
+              href={reply.href}
+              class="hit-target rounded-pill bg-paper px-3 py-[7px] text-caption/[1.5] font-medium text-accent ring-1 ring-accent ring-inset"
+              data-chat-dismiss
+            >
+              {reply.label}
+            </a>
+          ))
+        }
+      </div>
     </div>
   </div>
   <form

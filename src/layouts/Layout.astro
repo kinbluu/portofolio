@@ -11,7 +11,7 @@ const { title, description } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-overlayscrollbars-initialize>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -23,9 +23,10 @@ const { title, description } = Astro.props;
     <Font cssVariable="--font-dm-sans" preload={[{ weight: 400 }]} />
     <title>{title}</title>
   </head>
-  <body class="bg-canvas font-body text-ink antialiased">
+  <body class="bg-canvas font-body text-ink antialiased" data-overlayscrollbars-initialize>
     <slot />
     <script>
+      import "../scripts/scrollbars";
       import "../scripts/reveal";
     </script>
   </body>
