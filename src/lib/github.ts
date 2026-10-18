@@ -1,4 +1,4 @@
-import { GITHUB_TOKEN, GITHUB_USERNAME } from "astro:env/server";
+import { GITHUB_USERNAME } from "astro:env/server";
 import snapshot from "../data/github-snapshot.json";
 
 export type ContributionLevel = 0 | 1 | 2 | 3 | 4;
@@ -24,48 +24,10 @@ export interface CalendarView {
 
 export const contributionLevelClasses = ["bg-gh-0", "bg-gh-1", "bg-gh-2", "bg-gh-3", "bg-gh-4"];
 
-const levels = {
-  NONE: 0,
-  FIRST_QUARTILE: 1,
-  SECOND_QUARTILE: 2,
-  THIRD_QUARTILE: 3,
-  FOURTH_QUARTILE: 4,
-} as const satisfies Record<string, ContributionLevel>;
-
 interface CalendarResponse {
-  data?: {
-    user: {
-      contributionsCollection: {
-        contributionCalendar: {
-          weeks: {
-            contributionDays: {
-              date: string;
-              contributionCount: number;
-              contributionLevel: keyof typeof levels;
-            }[];
-          }[];
-        };
-      };
-    } | null;
-  };
-  errors?: { message: string }[];
+  total: Record<string, number>;
+  contributions: ContributionDay[];
 }
-
-const query = `query ($login: String!) {
-  user(login: $login) {
-    contributionsCollection {
-      contributionCalendar {
-        weeks {
-          contributionDays {
-            date
-            contributionCount
-            contributionLevel
-          }
-        }
-      }
-    }
-  }
-}`;
 
 const day = 86_400_000;
 
@@ -80,30 +42,20 @@ export function getContributionCalendar() {
 }
 
 async function fetchContributionCalendar(): Promise<ContributionCalendar> {
-  if (!GITHUB_TOKEN) throw new Error("GITHUB_TOKEN is not set");
-  const response = await fetch("https://api.github.com/graphql", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${GITHUB_TOKEN}`,
-      "Content-Type": "application/json",
-      "User-Agent": GITHUB_USERNAME,
-    },
-    body: JSON.stringify({ query, variables: { login: GITHUB_USERNAME } }),
-  });
-  if (!response.ok) throw new Error(`GitHub GraphQL responded with ${response.status}`);
-  const { data, errors } = (await response.json()) as CalendarResponse;
-  if (errors?.length) throw new Error(errors.map(({ message }) => message).join("; "));
-  if (!data?.user) throw new Error(`GitHub user "${GITHUB_USERNAME}" not found`);
+  // Match the client calendar's rolling-year view instead of fetching all years.
+  const response = await fetch(
+    `https://github-contributions-api.jogruber.de/v4/${encodeURIComponent(GITHUB_USERNAME)}?y=last`,
+    { signal: AbortSignal.timeout(10_000) },
+  );
+  if (!response.ok) throw new Error(`GitHub Contributions API responded with ${response.status}`);
+  const { contributions } = (await response.json()) as CalendarResponse;
+  if (!Array.isArray(contributions) || contributions.length === 0) {
+    throw new Error(`No contribution data returned for GitHub user "${GITHUB_USERNAME}"`);
+  }
   return {
     login: GITHUB_USERNAME,
     capturedAt: new Date().toISOString(),
-    days: data.user.contributionsCollection.contributionCalendar.weeks
-      .flatMap((week) => week.contributionDays)
-      .map((entry) => ({
-        date: entry.date,
-        count: entry.contributionCount,
-        level: levels[entry.contributionLevel] ?? 0,
-      })),
+    days: contributions,
   };
 }
 
