@@ -25,5 +25,8 @@ const { title, description } = Astro.props;
   </head>
   <body class="bg-canvas font-body text-ink antialiased">
     <slot />
+    <script>
+      import "../scripts/reveal";
+    </script>
   </body>
 </html>

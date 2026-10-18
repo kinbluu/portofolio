@@ -11,7 +11,7 @@ const count = new Intl.NumberFormat("en-US");
 const label = `${count.format(view.total)} contributions from ${view.from} to ${view.to}`;
 ---
 
-<div role="img" aria-label={label} class:list={["grid auto-cols-fr grid-flow-col", className]}>
+<div role="img" aria-label={label} class:list={["grid auto-cols-fr grid-flow-col", className]} data-reveal-cells>
   {
     view.weeks.flat().map((day) =>
       day ? (

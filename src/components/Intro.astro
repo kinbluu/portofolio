@@ -5,19 +5,19 @@ import Button from "./ui/Button.astro";
 ---
 
 <section aria-labelledby="intro-title" class="flex flex-col gap-5 py-10 lg:gap-6 lg:pt-16 lg:pb-14">
-  <p class="flex items-center gap-3 text-micro text-muted lg:text-body">
+  <p class="flex items-center gap-3 text-micro text-muted motion-safe:enter-0 lg:text-body">
     <MapPin size={16} class="shrink-0" />
     {profile.location} · {profile.role}
   </p>
-  <h1 id="intro-title" class="type-display">
+  <h1 id="intro-title" class="type-display motion-safe:enter-1">
     {profile.nameLines[0]}{" "}<br class="lg:hidden" />
     {profile.nameLines[1]}
   </h1>
-  <p class="type-headline">
+  <p class="type-headline motion-safe:enter-2">
     {profile.headlineLines[0]}{" "}<br class="max-lg:hidden" />
     {profile.headlineLines[1]}
   </p>
-  <div class="flex items-center gap-2 lg:gap-3">
+  <div class="flex items-center gap-2 motion-safe:enter-3 lg:gap-3">
     <Button href={`mailto:${profile.email}`}>Let’s talk</Button>
     <Button href={profile.linkedin} variant="secondary">LinkedIn</Button>
   </div>
