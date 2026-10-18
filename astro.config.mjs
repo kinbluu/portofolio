@@ -1,8 +1,10 @@
 // @ts-check
 import { defineConfig, envField, fontProviders } from "astro/config";
+import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
+  integrations: [react()],
   fonts: [
     {
       provider: fontProviders.google(),

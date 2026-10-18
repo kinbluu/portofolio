@@ -1,0 +1,24 @@
+.github-contributions .react-activity-calendar {
+  color: var(--rm3-muted);
+}
+
+.github-contributions .react-activity-calendar__count {
+  max-width: 100%;
+  color: var(--rm3-ink);
+  font-variant-numeric: tabular-nums;
+  white-space: normal;
+}
+
+.react-activity-calendar__tooltip[data-color-scheme] {
+  padding: 6px 10px;
+  border-radius: var(--rm3-radius-sm);
+  background-color: var(--rm3-ink);
+  color: var(--rm3-paper);
+  font-family: var(--font-dm-sans);
+  font-size: 13px;
+  box-shadow: 0 8px 24px var(--rm3-shadow);
+}
+
+.react-activity-calendar__tooltip[data-color-scheme] .react-activity-calendar__tooltip-arrow {
+  fill: var(--rm3-ink);
+}
