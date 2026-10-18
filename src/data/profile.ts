@@ -42,9 +42,9 @@ export const featuredRole = {
   description:
     "Registration, class schedules, attendance and report-card approvals, brought together in one internal platform.",
   figures: [
-    { value: "~50", caption: "staff supported", shortCaption: "staff supported" },
-    { value: "~1,000", caption: "students managed", shortCaption: "students" },
-    { value: "4", caption: "modules in one app", shortCaption: "modules" },
+    { value: 50, prefix: "~", caption: "staff supported", shortCaption: "staff supported" },
+    { value: 1_000, prefix: "~", caption: "students managed", shortCaption: "students" },
+    { value: 4, prefix: "", caption: "modules in one app", shortCaption: "modules" },
   ],
   stack: ["Laravel", "Livewire", "MariaDB"],
   modules: [

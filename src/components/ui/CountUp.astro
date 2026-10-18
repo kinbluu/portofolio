@@ -1,0 +1,55 @@
+---
+interface Props {
+  value: number;
+  prefix?: string;
+}
+
+const { value, prefix = "" } = Astro.props;
+const formatted = new Intl.NumberFormat("en-US").format(value);
+const label = `${prefix}${formatted}`;
+---
+
+<span class="inline-grid tabular-nums">
+  <span class="invisible col-start-1 row-start-1" aria-hidden="true">{label}</span>
+  <span class="col-start-1 row-start-1" aria-hidden="true">
+    {prefix}<span data-count-up={value}>{formatted}</span>
+  </span>
+  <span class="sr-only">{label}</span>
+</span>
+
+<script>
+  import { animate, inView } from "motion";
+
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const counters = document.querySelectorAll<HTMLSpanElement>("[data-count-up]");
+  const format = new Intl.NumberFormat("en-US");
+
+  if (!reducedMotion.matches) {
+    const active = new Map<HTMLSpanElement, ReturnType<typeof animate>>();
+    counters.forEach((counter) => { counter.textContent = "0"; });
+
+    const stopObserving = inView(counters, (element) => {
+      const counter = element as HTMLSpanElement;
+      const target = Number(counter.dataset.countUp);
+      const animation = animate(0, target, {
+        duration: 1.2,
+        ease: [0.16, 1, 0.3, 1],
+        onUpdate: (value) => { counter.textContent = format.format(Math.round(value)); },
+        onComplete: () => {
+          counter.textContent = format.format(target);
+          active.delete(counter);
+        },
+      });
+      active.set(counter, animation);
+    }, { amount: 0.5 });
+
+    reducedMotion.addEventListener("change", () => {
+      stopObserving();
+      active.forEach((animation) => animation.stop());
+      active.clear();
+      counters.forEach((counter) => {
+        counter.textContent = format.format(Number(counter.dataset.countUp));
+      });
+    }, { once: true });
+  }
+</script>

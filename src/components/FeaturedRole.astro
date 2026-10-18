@@ -3,6 +3,7 @@ import Check from "@lucide/astro/icons/check";
 import GraduationCap from "@lucide/astro/icons/graduation-cap";
 import { featuredRole } from "../data/profile";
 import Badge from "./ui/Badge.astro";
+import CountUp from "./ui/CountUp.astro";
 import IconTile from "./ui/IconTile.astro";
 ---
 
@@ -40,7 +41,7 @@ import IconTile from "./ui/IconTile.astro";
                   <span class="lg:hidden">{figure.shortCaption}</span>
                   <span class="max-lg:hidden">{figure.caption}</span>
                 </dt>
-                <dd class="type-figure">{figure.value}</dd>
+                <dd class="type-figure"><CountUp value={figure.value} prefix={figure.prefix} /></dd>
               </div>
             </Fragment>
           ))
