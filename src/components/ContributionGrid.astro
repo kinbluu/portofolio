@@ -1,0 +1,27 @@
+---
+import { contributionLevelClasses, type CalendarView } from "../lib/github";
+
+interface Props {
+  view: CalendarView;
+  class?: string;
+}
+
+const { view, class: className } = Astro.props;
+const count = new Intl.NumberFormat("en-US");
+const label = `${count.format(view.total)} contributions from ${view.from} to ${view.to}`;
+---
+
+<div role="img" aria-label={label} class:list={["grid auto-cols-fr grid-flow-col", className]}>
+  {
+    view.weeks.flat().map((day) =>
+      day ? (
+        <span
+          class:list={["rounded-xs", contributionLevelClasses[day.level]]}
+          title={`${day.count} ${day.count === 1 ? "contribution" : "contributions"} on ${day.date}`}
+        />
+      ) : (
+        <span />
+      ),
+    )
+  }
+</div>

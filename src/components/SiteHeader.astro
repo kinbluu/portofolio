@@ -1,0 +1,108 @@
+---
+import ArrowDownRight from "@lucide/astro/icons/arrow-down-right";
+import Menu from "@lucide/astro/icons/menu";
+import X from "@lucide/astro/icons/x";
+import { navigation, profile } from "../data/profile";
+import Button from "./ui/Button.astro";
+import TextLink from "./ui/TextLink.astro";
+---
+
+<header
+  class="sticky top-0 z-30 -mt-3 bg-paper pt-3 lg:-my-4 lg:py-4"
+>
+  <nav
+    aria-label="Primary"
+    class="flex items-center justify-between gap-6 border-b border-line pb-4 lg:border-b-0 lg:pb-0"
+  >
+    <a href="#top" class="type-wordmark">{profile.wordmark}</a>
+    <ul class="hidden items-center gap-7 lg:flex">
+      {
+        navigation.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              class="hit-target text-body text-muted hover:text-ink motion-safe:transition-colors"
+            >
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <button
+      type="button"
+      class="grid size-11 place-items-center rounded-pill text-ink ring-1 ring-line ring-inset lg:hidden"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="site-menu"
+      data-menu-open
+    >
+      <Menu size={20} />
+    </button>
+  </nav>
+  <dialog
+    id="site-menu"
+    aria-label="Menu"
+    class="m-0 h-dvh max-h-none w-full max-w-none bg-canvas p-3 text-ink opacity-0 backdrop:bg-transparent open:opacity-100 starting:open:opacity-0 motion-safe:transition-[opacity,display,overlay] motion-safe:transition-discrete motion-safe:duration-200"
+  >
+    <div class="flex h-full flex-col gap-8 rounded-lg bg-paper px-5 pt-7 pb-6">
+      <div class="flex items-center justify-between border-b border-line pb-4">
+        <a href="#top" class="type-wordmark">{profile.wordmark}</a>
+        <button
+          type="button"
+          class="grid size-11 place-items-center rounded-pill bg-ink text-paper"
+          aria-label="Close menu"
+          data-menu-close
+        >
+          <X size={20} />
+        </button>
+      </div>
+      <nav aria-label="Menu">
+        <ol>
+          {
+            navigation.map((link, index) => (
+              <li>
+                <a href={link.href} class="flex h-15 items-center gap-4 border-b border-line">
+                  <span class="text-micro font-medium text-accent">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span class="flex-1 type-menu">{link.label}</span>
+                  <ArrowDownRight size={18} class="text-muted" />
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+      <div class="mt-auto flex flex-col gap-4">
+        <Button href={`mailto:${profile.email}`} size="large" class="w-full">Let’s talk</Button>
+        <div class="flex items-center justify-between">
+          <div class="flex gap-5">
+            <TextLink href={profile.linkedin}>LinkedIn</TextLink>
+            <TextLink href={profile.github}>GitHub</TextLink>
+          </div>
+          <p class="text-caption text-muted">{profile.locationShort}</p>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</header>
+
+<script>
+  const menu = document.querySelector<HTMLDialogElement>("#site-menu");
+  const opener = document.querySelector<HTMLButtonElement>("[data-menu-open]");
+
+  if (menu && opener) {
+    opener.addEventListener("click", () => {
+      menu.showModal();
+      opener.setAttribute("aria-expanded", "true");
+    });
+    menu.addEventListener("close", () => opener.setAttribute("aria-expanded", "false"));
+    menu
+      .querySelectorAll("a, [data-menu-close]")
+      .forEach((element) => element.addEventListener("click", () => menu.close()));
+    matchMedia("(width >= 64rem)").addEventListener("change", (event) => {
+      if (event.matches) menu.close();
+    });
+  }
+</script>

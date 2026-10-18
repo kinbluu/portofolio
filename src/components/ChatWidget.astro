@@ -1,0 +1,118 @@
+---
+import MessageCircle from "@lucide/astro/icons/message-circle";
+import Send from "@lucide/astro/icons/send";
+import X from "@lucide/astro/icons/x";
+import { chat, profile } from "../data/profile";
+---
+
+<button
+  type="button"
+  popovertarget="chat-panel"
+  aria-label="Open chat"
+  class="fixed right-4 bottom-6 z-40 grid size-14 place-items-center rounded-pill bg-ink text-paper shadow-launcher hover:-translate-y-0.5 motion-safe:transition-transform lg:right-18 lg:bottom-16 lg:size-15"
+>
+  <MessageCircle size={26} />
+  <span
+    class="absolute top-[3px] right-1 size-[13px] rounded-full border-2 border-ink bg-online lg:top-1 lg:size-3.5"
+    aria-hidden="true"></span>
+</button>
+
+<div
+  id="chat-panel"
+  popover
+  role="dialog"
+  aria-label="Chat with Rahmat's assistant"
+  class="fixed inset-x-4 top-auto bottom-24 m-0 h-[500px] max-h-[calc(100dvh-8rem)] w-auto translate-y-2 flex-col overflow-hidden rounded-[16px] border border-line bg-paper p-0 text-ink opacity-0 shadow-float open:flex open:translate-y-0 open:opacity-100 starting:open:translate-y-2 starting:open:opacity-0 motion-safe:transition-[opacity,translate,display,overlay] motion-safe:transition-discrete motion-safe:duration-200 lg:right-18 lg:bottom-36 lg:left-auto lg:h-[520px] lg:max-h-[calc(100dvh-11rem)] lg:w-94 lg:rounded-md"
+>
+  <div class="flex items-center gap-3 bg-ink px-4 py-3.5 lg:px-5 lg:py-[18px]">
+    <span
+      class="grid size-10 shrink-0 place-items-center rounded-pill bg-accent font-heading text-body font-bold text-paper"
+      aria-hidden="true">{chat.initials}</span>
+    <div class="flex min-w-0 flex-1 flex-col gap-0.5">
+      <p class="font-heading text-label/[1.5] font-bold text-paper">{chat.assistant}</p>
+      <p class="flex items-center gap-1.5 text-micro/[1.5] text-on-ink-muted">
+        <span class="size-2 rounded-full bg-online" aria-hidden="true"></span>
+        {chat.status}
+      </p>
+    </div>
+    <button
+      type="button"
+      popovertarget="chat-panel"
+      popovertargetaction="hide"
+      aria-label="Close chat"
+      class="hit-target text-paper"
+    >
+      <X size={20} />
+    </button>
+  </div>
+  <div class="flex flex-1 flex-col gap-3 overflow-y-auto bg-soft p-4 lg:p-5">
+    {
+      chat.messages.map((message) => (
+        <p
+          class:list={[
+            "w-[250px] px-3.5 py-2.5 text-body/[1.5] lg:w-65",
+            message.from === "assistant"
+              ? "rounded-[16px_16px_16px_4px] bg-paper ring-1 ring-line ring-inset"
+              : "ml-auto rounded-[16px_16px_4px_16px] bg-accent text-paper",
+          ]}
+        >
+          {message.text}
+        </p>
+      ))
+    }
+    <div class="flex gap-2">
+      {
+        chat.quickReplies.map((reply) => (
+          <a
+            href={reply.href}
+            class="hit-target rounded-pill bg-paper px-3 py-[7px] text-caption/[1.5] font-medium text-accent ring-1 ring-accent ring-inset"
+            data-chat-dismiss
+          >
+            {reply.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+  <form
+    class="flex items-center gap-2 border-t border-line p-3 lg:gap-2.5 lg:px-4 lg:py-3.5"
+    data-chat-form
+    data-email={profile.email}
+    data-subject={chat.emailSubject}
+  >
+    <label for="chat-message" class="sr-only">Message</label>
+    <input
+      id="chat-message"
+      name="message"
+      type="text"
+      required
+      autocomplete="off"
+      placeholder="Type a message…"
+      class="h-11 min-w-0 flex-1 rounded-pill bg-soft px-4 text-body/[1.5] text-ink placeholder:text-muted lg:h-[42px]"
+    />
+    <button
+      type="submit"
+      aria-label="Send message"
+      class="grid size-11 shrink-0 place-items-center rounded-pill bg-ink text-paper lg:size-[42px]"
+    >
+      <Send size={18} />
+    </button>
+  </form>
+</div>
+
+<script>
+  const panel = document.querySelector<HTMLElement>("#chat-panel");
+  const form = panel?.querySelector<HTMLFormElement>("[data-chat-form]");
+
+  panel
+    ?.querySelectorAll("[data-chat-dismiss]")
+    .forEach((link) => link.addEventListener("click", () => panel.hidePopover()));
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const message = new FormData(form).get("message")?.toString().trim() ?? "";
+    const subject = encodeURIComponent(form.dataset.subject ?? "");
+    window.location.href = `mailto:${form.dataset.email}?subject=${subject}&body=${encodeURIComponent(message)}`;
+    form.reset();
+  });
+</script>

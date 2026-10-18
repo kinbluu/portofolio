@@ -1,0 +1,210 @@
+@import "tailwindcss";
+
+:root {
+  --rm3-canvas: #ecece8;
+  --rm3-paper: #ffffff;
+  --rm3-ink: #26291f;
+  --rm3-muted: #62665d;
+  --rm3-line: #dcddd5;
+  --rm3-soft: #f5f6f1;
+  --rm3-accent: #50623d;
+  --rm3-tint: #e8eddf;
+  --rm3-gh-0: #dfe3da;
+  --rm3-gh-1: #cbd9b8;
+  --rm3-gh-2: #9cb779;
+  --rm3-gh-3: #6e8b50;
+  --rm3-gh-4: #3e5d2c;
+  --rm3-online: #7fb24e;
+  --rm3-on-ink-muted: #c9ccc2;
+  --rm3-shadow: #26291f26;
+  --rm3-shadow-strong: #26291f33;
+  --rm3-radius-xs: 2px;
+  --rm3-radius-sm: 12px;
+  --rm3-radius-md: 20px;
+  --rm3-radius-lg: 24px;
+  --rm3-radius-xl: 40px;
+  --rm3-radius-pill: 100px;
+}
+
+@theme inline {
+  --color-*: initial;
+  --color-canvas: var(--rm3-canvas);
+  --color-paper: var(--rm3-paper);
+  --color-ink: var(--rm3-ink);
+  --color-muted: var(--rm3-muted);
+  --color-line: var(--rm3-line);
+  --color-soft: var(--rm3-soft);
+  --color-accent: var(--rm3-accent);
+  --color-tint: var(--rm3-tint);
+  --color-gh-0: var(--rm3-gh-0);
+  --color-gh-1: var(--rm3-gh-1);
+  --color-gh-2: var(--rm3-gh-2);
+  --color-gh-3: var(--rm3-gh-3);
+  --color-gh-4: var(--rm3-gh-4);
+  --color-online: var(--rm3-online);
+  --color-on-ink-muted: var(--rm3-on-ink-muted);
+
+  --font-*: initial;
+  --font-heading: var(--font-manrope);
+  --font-body: var(--font-dm-sans);
+
+  --radius-*: initial;
+  --radius-xs: var(--rm3-radius-xs);
+  --radius-sm: var(--rm3-radius-sm);
+  --radius-md: var(--rm3-radius-md);
+  --radius-lg: var(--rm3-radius-lg);
+  --radius-xl: var(--rm3-radius-xl);
+  --radius-pill: var(--rm3-radius-pill);
+
+  --shadow-*: initial;
+  --shadow-float: 0 16px 48px var(--rm3-shadow);
+  --shadow-launcher: 0 8px 24px var(--rm3-shadow-strong);
+
+  --text-*: initial;
+  --text-micro: 12px;
+  --text-micro--line-height: 1.55;
+  --text-caption: 13px;
+  --text-caption--line-height: 1.55;
+  --text-body: 14px;
+  --text-body--line-height: 1.55;
+  --text-label: 15px;
+  --text-label--line-height: 1.55;
+  --text-body-l: 16px;
+  --text-body-l--line-height: 1.55;
+}
+
+@utility type-display {
+  font-family: var(--font-manrope);
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 1.25;
+  letter-spacing: -0.6px;
+  @variant lg {
+    font-size: 48px;
+    line-height: 1.2;
+    letter-spacing: -1.6px;
+  }
+}
+
+@utility type-headline {
+  font-family: var(--font-manrope);
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1.35;
+  letter-spacing: -0.5px;
+  @variant lg {
+    font-size: 38px;
+    line-height: 1.3;
+    letter-spacing: -1px;
+  }
+}
+
+@utility type-feature {
+  font-family: var(--font-manrope);
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.15;
+  letter-spacing: -0.8px;
+  @variant lg {
+    font-size: 44px;
+    letter-spacing: -1.2px;
+  }
+}
+
+@utility type-figure {
+  font-family: var(--font-manrope);
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.6px;
+  @variant lg {
+    font-size: 40px;
+    letter-spacing: -1px;
+  }
+}
+
+@utility type-h2 {
+  font-family: var(--font-manrope);
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 1.25;
+  letter-spacing: -0.6px;
+  @variant lg {
+    font-size: 32px;
+  }
+}
+
+@utility type-stat {
+  font-family: var(--font-manrope);
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.25;
+  letter-spacing: -0.6px;
+  @variant lg {
+    font-size: 28px;
+  }
+}
+
+@utility type-h3 {
+  font-family: var(--font-manrope);
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.25;
+  letter-spacing: -0.6px;
+  @variant lg {
+    font-size: 21px;
+  }
+}
+
+@utility type-wordmark {
+  font-family: var(--font-manrope);
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -0.6px;
+  @variant lg {
+    font-size: 24px;
+  }
+}
+
+@utility type-menu {
+  font-family: var(--font-manrope);
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: -0.6px;
+}
+
+@utility hit-target {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    translate: -50% -50%;
+  }
+}
+
+@layer base {
+  html {
+    scroll-padding-top: 5rem;
+  }
+
+  html:has(#site-menu[open]) {
+    overflow: hidden;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--rm3-accent);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}

@@ -1,0 +1,48 @@
+---
+import { buildCalendarView, contributionLevelClasses, getContributionCalendar } from "../lib/github";
+import ContributionGrid from "./ContributionGrid.astro";
+import GithubIcon from "./icons/GithubIcon.astro";
+import TextLink from "./ui/TextLink.astro";
+
+const calendar = await getContributionCalendar();
+const year = buildCalendarView(calendar.days);
+const recent = buildCalendarView(calendar.days, 90);
+const count = new Intl.NumberFormat("en-US");
+const contributions = (total: number) => `${count.format(total)} ${total === 1 ? "contribution" : "contributions"}`;
+const capturedOn = new Intl.DateTimeFormat("en-GB", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  timeZone: "UTC",
+}).format(new Date(calendar.capturedAt));
+---
+
+<section id="github" aria-labelledby="github-title" class="flex flex-col gap-5 pb-12 lg:pb-16">
+  <div class="flex items-center gap-3">
+    <GithubIcon size={24} />
+    <h2 id="github-title" class="type-h2">GitHub activity</h2>
+  </div>
+  <div class="flex flex-col gap-5 rounded-md bg-soft p-5 ring-1 ring-line ring-inset lg:rounded-lg lg:p-7">
+    <div class="flex flex-col gap-2">
+      <p class="type-stat">
+        <span class="lg:hidden">{contributions(recent.total)}</span>
+        <span class="max-lg:hidden">{contributions(year.total)}</span>
+      </p>
+      <p class="text-micro text-muted lg:text-caption">
+        <span class="lg:hidden">Last 90 days · {recent.from} – {recent.to}</span>
+        <span class="max-lg:hidden">{year.from} – {year.to}</span>
+      </p>
+    </div>
+    <ContributionGrid view={recent} class="grid-rows-[repeat(7,12px)] gap-[3px] lg:hidden" />
+    <ContributionGrid view={year} class="grid-rows-[repeat(7,14px)] gap-1 max-lg:hidden" />
+    <div class="flex items-center justify-end gap-2 text-micro text-muted">
+      <span>Less</span>
+      {contributionLevelClasses.map((level) => <span class:list={["size-3 rounded-xs", level]} aria-hidden="true" />)}
+      <span>More</span>
+    </div>
+    <div class="flex flex-col items-start gap-2 lg:flex-row lg:items-center lg:gap-6">
+      <TextLink href={`https://github.com/${calendar.login}`} class="font-medium">@{calendar.login}</TextLink>
+      <p class="text-micro text-muted lg:flex-1 lg:text-right">Snapshot · {capturedOn} UTC</p>
+    </div>
+  </div>
+</section>

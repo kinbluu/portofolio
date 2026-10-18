@@ -1,0 +1,26 @@
+---
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"a"> {
+  variant?: "primary" | "secondary";
+  size?: "adaptive" | "large";
+}
+
+const { variant = "primary", size = "adaptive", class: className, ...attrs } = Astro.props;
+---
+
+<a
+  class:list={[
+    "inline-flex shrink-0 items-center justify-center gap-3 rounded-pill text-body font-medium whitespace-nowrap motion-safe:transition-colors",
+    size === "adaptive" ? "h-12 px-4 lg:h-13 lg:px-5.5" : "h-13 px-5.5",
+    variant === "primary"
+      ? "bg-ink text-paper hover:bg-accent"
+      : "bg-paper text-ink ring-1 ring-line ring-inset hover:ring-ink",
+    className,
+  ]}
+  {...attrs}
+>
+  <slot />
+  <ArrowUpRight size={18} />
+</a>

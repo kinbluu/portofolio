@@ -1,0 +1,19 @@
+---
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"a">;
+
+const { class: className, ...attrs } = Astro.props;
+---
+
+<a
+  class:list={[
+    "hit-target inline-flex items-center gap-1 text-body text-ink underline-offset-4 hover:underline",
+    className,
+  ]}
+  {...attrs}
+>
+  <slot />
+  <ArrowUpRight size={14} />
+</a>
