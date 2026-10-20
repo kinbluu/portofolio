@@ -11,25 +11,30 @@ const count = new Intl.NumberFormat("en-US");
 const label = `${count.format(view.total)} contributions from ${view.from} to ${view.to}`;
 // Labels and cells share one column template, so month names line up with their weeks at any width.
 const columns = `grid-template-columns: repeat(${view.weeks.length}, minmax(0, 1fr))`;
+const days = view.weeks.flat();
+const firstDay = days.find((day) => day)?.date;
 ---
 
-<div class:list={["flex flex-col gap-2", className]}>
+<contribution-grid class:list={["flex flex-col gap-2", className]}>
   <div class="grid gap-x-[3px] text-micro text-muted lg:gap-x-1" style={columns} aria-hidden="true">
     {view.months.map(({ week, label }) => <span style={`grid-column: ${week + 1} / span 3`}>{label}</span>)}
   </div>
   <div
-    role="img"
+    role="group"
     aria-label={label}
     class="grid grid-flow-col grid-rows-7 gap-[3px] lg:gap-1"
     style={columns}
     data-reveal-cells
   >
     {
-      view.weeks.flat().map((day) =>
+      days.map((day) =>
         day ? (
           <span
             class:list={["aspect-square rounded-xs", contributionLevelClasses[day.level]]}
-            title={`${count.format(day.count)} ${day.count === 1 ? "contribution" : "contributions"} on ${day.date}`}
+            role="img"
+            aria-label={`${count.format(day.count)} ${day.count === 1 ? "contribution" : "contributions"} on ${day.date}`}
+            tabindex={day.date === firstDay ? 0 : -1}
+            data-contribution-cell
           />
         ) : (
           <span class="aspect-square" />
@@ -37,4 +42,170 @@ const columns = `grid-template-columns: repeat(${view.weeks.length}, minmax(0, 1
       )
     }
   </div>
-</div>
+  <div
+    class="contribution-tooltip fixed z-50 w-max rounded-[6px] bg-ink px-3 py-1.5 text-micro text-paper"
+    role="tooltip"
+    popover="manual"
+  >
+    <span data-tooltip-content></span>
+    <span class="contribution-tooltip-arrow" aria-hidden="true"></span>
+  </div>
+</contribution-grid>
+
+<script>
+  import { contributionTooltipPosition } from "../scripts/contribution-tooltip";
+
+  class ContributionGrid extends HTMLElement {
+    private cleanup?: () => void;
+
+    connectedCallback() {
+      if (this.cleanup) return;
+      const tooltip = this.querySelector<HTMLElement>("[popover]");
+      const content = this.querySelector<HTMLElement>("[data-tooltip-content]");
+      const cells = [...this.querySelectorAll<HTMLElement>("[data-contribution-cell]")];
+      if (!tooltip || !content) return;
+
+      const controller = new AbortController();
+      const options = { signal: controller.signal };
+      tooltip.id = `contribution-tooltip-${crypto.randomUUID()}`;
+      let active: HTMLElement | undefined;
+      let closeTimer: number | undefined;
+
+      const hide = () => {
+        window.clearTimeout(closeTimer);
+        active?.removeAttribute("aria-describedby");
+        active = undefined;
+        if (tooltip.matches(":popover-open")) tooltip.hidePopover();
+      };
+      const show = (cell: HTMLElement) => {
+        window.clearTimeout(closeTimer);
+        active?.removeAttribute("aria-describedby");
+        active = cell;
+        content.textContent = cell.getAttribute("aria-label");
+        cell.setAttribute("aria-describedby", tooltip.id);
+        if (!tooltip.matches(":popover-open")) tooltip.showPopover();
+        const position = contributionTooltipPosition(
+          cell.getBoundingClientRect(),
+          { width: tooltip.offsetWidth, height: tooltip.offsetHeight },
+          { width: window.innerWidth, height: window.innerHeight },
+        );
+        tooltip.style.left = `${position.left}px`;
+        tooltip.style.top = `${position.top}px`;
+        tooltip.style.setProperty("--tooltip-arrow-x", `${position.arrowX}px`);
+        tooltip.dataset.side = position.side;
+      };
+      const cellFor = (target: EventTarget | null) =>
+        target instanceof Element ? target.closest<HTMLElement>("[data-contribution-cell]") : null;
+      const closeSoon = () => {
+        window.clearTimeout(closeTimer);
+        closeTimer = window.setTimeout(hide, 120);
+      };
+
+      this.addEventListener("pointerover", (event) => {
+        window.clearTimeout(closeTimer);
+        const cell = cellFor(event.target);
+        if (cell) show(cell);
+        else if (!(event.target instanceof Node && tooltip.contains(event.target))) closeSoon();
+      }, options);
+      this.addEventListener("pointerleave", closeSoon, options);
+      this.addEventListener("focusin", (event) => {
+        const cell = cellFor(event.target);
+        if (cell) show(cell);
+      }, options);
+      this.addEventListener("focusout", (event) => {
+        if (!cellFor(event.relatedTarget)) hide();
+      }, options);
+      this.addEventListener("keydown", (event) => {
+        const cell = cellFor(event.target);
+        if (!cell) return;
+        const index = cells.indexOf(cell);
+        const offsets: Record<string, number> = { ArrowUp: -1, ArrowDown: 1, ArrowLeft: -7, ArrowRight: 7 };
+        const nextIndex = event.key === "Home" ? 0
+          : event.key === "End" ? cells.length - 1
+          : event.key in offsets ? index + offsets[event.key] : undefined;
+        if (nextIndex === undefined) return;
+        event.preventDefault();
+        const next = cells[nextIndex];
+        if (!next) return;
+        cell.tabIndex = -1;
+        next.tabIndex = 0;
+        next.focus();
+      }, options);
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") hide();
+      }, options);
+      document.addEventListener("pointerdown", (event) => {
+        if (!(event.target instanceof Node && this.contains(event.target))) hide();
+      }, options);
+      window.addEventListener("scroll", hide, { ...options, capture: true });
+      window.addEventListener("resize", hide, options);
+      this.cleanup = () => {
+        controller.abort();
+        hide();
+      };
+    }
+
+    disconnectedCallback() {
+      this.cleanup?.();
+      this.cleanup = undefined;
+    }
+  }
+
+  if (!customElements.get("contribution-grid")) {
+    customElements.define("contribution-grid", ContributionGrid);
+  }
+</script>
+
+<style>
+  .contribution-tooltip {
+    inset: auto;
+    margin: 0;
+    max-width: min(20rem, calc(100vw - 1rem));
+    overflow: visible;
+    border: 0;
+    line-height: 1.5;
+    text-align: center;
+    text-wrap: balance;
+    transform-origin: var(--tooltip-arrow-x) bottom;
+  }
+
+  .contribution-tooltip:popover-open {
+    animation: tooltip-enter 150ms var(--rm3-ease-out);
+  }
+
+  .contribution-tooltip-arrow {
+    position: absolute;
+    bottom: -4px;
+    left: var(--tooltip-arrow-x);
+    width: 10px;
+    height: 10px;
+    border-radius: var(--rm3-radius-xs);
+    background: inherit;
+    translate: -50% 0;
+    rotate: 45deg;
+  }
+
+  .contribution-tooltip[data-side="bottom"] {
+    --tooltip-rise: -4px;
+    transform-origin: var(--tooltip-arrow-x) top;
+  }
+
+  .contribution-tooltip[data-side="bottom"] .contribution-tooltip-arrow {
+    top: -4px;
+    bottom: auto;
+  }
+
+  @keyframes tooltip-enter {
+    from {
+      opacity: 0;
+      scale: 0.95;
+      translate: 0 var(--tooltip-rise, 4px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contribution-tooltip:popover-open {
+      animation: none;
+    }
+  }
+</style>
