@@ -5,11 +5,64 @@ export const chatRejectedCode = "chat_rejected";
 
 export const chatLimits = {
   messageLength: 500,
+  // ponytail: estimated from maxOutputTokens 1024 (~4-5 chars/token), not measured; tune from a real long chat.
+  replyLength: 8_000,
+  toolResultLength: 200,
+  historyLength: 60_000,
   turns: 12,
   requestSize: 100_000,
 };
 
-export const pageSections = ["work", "experience", "about", "github", "contact"] as const;
+const contentLimits: Record<string, number> = {
+  user: chatLimits.messageLength,
+  assistant: chatLimits.replyLength,
+  reasoning: chatLimits.replyLength,
+  tool: chatLimits.toolResultLength,
+};
+
+/** Per-role checks: assistant may omit content (tool calls), user must send non-empty text. */
+export function checkHistory(
+  messages: readonly { role: string; content?: unknown }[],
+): "invalid" | "message" | "length" | null {
+  const userCount = messages.filter(
+    (message) => message.role === "user",
+  ).length;
+  if (
+    userCount === 0 ||
+    messages.some((message) => !Object.hasOwn(contentLimits, message.role))
+  )
+    return "invalid";
+  if (
+    userCount > chatLimits.turns ||
+    JSON.stringify(messages).length > chatLimits.historyLength
+  )
+    return "length";
+  for (const { role, content } of messages) {
+    const limit = contentLimits[role];
+    if (role === "user") {
+      if (
+        typeof content !== "string" ||
+        !content.trim() ||
+        content.length > limit
+      )
+        return "message";
+    } else if (
+      content !== undefined &&
+      (typeof content !== "string" || content.length > limit)
+    ) {
+      return "length";
+    }
+  }
+  return null;
+}
+
+export const pageSections = [
+  "work",
+  "experience",
+  "about",
+  "github",
+  "contact",
+] as const;
 
 export type PageSection = (typeof pageSections)[number];
 
@@ -26,7 +79,9 @@ export const showSectionTool = toolDefinition({
   description:
     "Scroll the portfolio page to one of its sections and give the visitor a link to it. Use it when the answer is covered by that section.",
   inputSchema: z.object({
-    section: z.enum(pageSections).meta({ description: "Id of the page section to show" }),
+    section: z
+      .enum(pageSections)
+      .meta({ description: "Id of the page section to show" }),
   }),
   outputSchema: z.object({ shown: z.boolean() }),
 });
