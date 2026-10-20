@@ -5,8 +5,7 @@ import ContributionGrid from "./ContributionGrid.astro";
 import TextLink from "./ui/TextLink.astro";
 
 const calendar = await getContributionCalendar();
-// Rendered at build as the fallback, then re-rendered live as a server island (see GitHubActivity).
-// Don't let browsers pin the snapshot fallback; live data matches the server's 1h TTL.
+// The server island replaces its loading placeholder; cache live data for the server's 1h TTL.
 Astro.response.headers.set(
   "Cache-Control",
   calendar.capturedAt === snapshot.capturedAt ? "no-store" : "public, max-age=3600",
@@ -24,11 +23,11 @@ const updatedOn = new Intl.DateTimeFormat("en-GB", {
 
 <div class="flex flex-col gap-5">
   <div class="flex flex-col gap-1">
-    <p class="type-stat" data-skeleton-item>
+    <p class="type-stat">
       <span class="lg:hidden">{count.format(recent.total)} contributions</span>
       <span class="max-lg:hidden">{count.format(year.total)} contributions</span>
     </p>
-    <p class="text-micro text-muted lg:text-caption" data-skeleton-item>
+    <p class="text-micro text-muted lg:text-caption">
       <span class="lg:hidden">Last 90 days</span>
       <span class="max-lg:hidden">Last year</span>
       {" "}· Updated {updatedOn}
@@ -37,7 +36,7 @@ const updatedOn = new Intl.DateTimeFormat("en-GB", {
   <!-- ponytail: 90-day view has ~13 columns, capped so tablets don't get giant cells. -->
   <ContributionGrid view={recent} class="max-w-96 lg:hidden" />
   <ContributionGrid view={year} class="max-lg:hidden" />
-  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between" data-skeleton-item>
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
     <TextLink href={`https://github.com/${calendar.login}`} class="font-medium">@{calendar.login}</TextLink>
     <div class="flex items-center gap-2 text-micro text-muted">
       <span>Less</span>

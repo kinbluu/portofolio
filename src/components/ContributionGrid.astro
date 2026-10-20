@@ -17,7 +17,7 @@ const firstDay = days.find((day) => day)?.date;
 
 <contribution-grid class:list={["flex flex-col gap-2", className]}>
   <div class="grid gap-x-[3px] text-micro text-muted lg:gap-x-1" style={columns} aria-hidden="true">
-    {view.months.map(({ week, label }) => <span style={`grid-column: ${week + 1} / span 3`} data-skeleton-item>{label}</span>)}
+    {view.months.map(({ week, label }) => <span style={`grid-column: ${week + 1} / span 3`}>{label}</span>)}
   </div>
   <div
     role="group"
@@ -34,7 +34,6 @@ const firstDay = days.find((day) => day)?.date;
             aria-label={`${count.format(day.count)} ${day.count === 1 ? "contribution" : "contributions"} on ${day.date}`}
             tabindex={day.date === firstDay ? 0 : -1}
             data-contribution-cell
-            data-skeleton-item="cell"
           />
         ) : (
           <span class="aspect-square" />

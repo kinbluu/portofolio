@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "overlayscrollbars/overlayscrollbars.scriptingenabled.css";
-@import "./skeleton.css";
 
 :root {
   color-scheme: light dark;
@@ -253,14 +252,6 @@
   @media (prefers-reduced-motion: no-preference) {
     html {
       scroll-behavior: smooth;
-    }
-  }
-
-  @media print {
-    [data-reveal],
-    [data-reveal-cells] > * {
-      opacity: 1 !important;
-      translate: none !important;
     }
   }
 }

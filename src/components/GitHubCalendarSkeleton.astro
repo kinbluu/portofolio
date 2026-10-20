@@ -1,0 +1,80 @@
+---
+import snapshot from "../data/github-snapshot.json";
+import { buildCalendarView, type ContributionCalendar } from "../lib/calendar-view";
+import Skeleton from "./ui/Skeleton.astro";
+import TextLink from "./ui/TextLink.astro";
+
+const calendar = snapshot as ContributionCalendar;
+const views = [buildCalendarView(calendar.days, 90), buildCalendarView(calendar.days)];
+---
+
+<github-calendar-fallback class="block" role="status">
+  <div
+    data-github-loading
+    hidden
+    class="flex flex-col gap-5 motion-safe:animate-pulse [&_[data-slot=skeleton]]:animate-none"
+  >
+    <span class="sr-only">Loading GitHub activity…</span>
+    <div class="flex flex-col gap-1" aria-hidden="true">
+      <div class="flex h-[1.25em] items-center type-stat">
+        <Skeleton class="h-[0.8em] w-72 max-w-full" />
+      </div>
+      <div class="flex h-[1.55em] items-center text-micro lg:text-caption">
+        <Skeleton class="h-3 w-64 max-w-full" />
+      </div>
+    </div>
+    {
+      views.map((view, index) => {
+        const columns = `grid-template-columns: repeat(${view.weeks.length}, minmax(0, 1fr))`;
+        return (
+          <div class:list={["flex flex-col gap-2", index === 0 ? "max-w-96 lg:hidden" : "max-lg:hidden"]} aria-hidden="true">
+            <div class="grid h-[1.55em] gap-x-[3px] text-micro lg:gap-x-1" style={columns}>
+              {view.months.map(({ week }) => (
+                <Skeleton class="h-2.5 w-6 self-center" style={`grid-column: ${week + 1} / span 3`} />
+              ))}
+            </div>
+            <div class="grid grid-flow-col grid-rows-7 gap-[3px] lg:gap-1" style={columns}>
+              {view.weeks.flat().map((day) => day ? <Skeleton class="aspect-square rounded-xs" /> : <span class="aspect-square" />)}
+            </div>
+          </div>
+        );
+      })
+    }
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between" aria-hidden="true">
+      <div class="flex h-[1.55em] items-center text-body">
+        <Skeleton class="h-3.5 w-28" />
+      </div>
+      <div class="flex h-[1.55em] items-center text-micro">
+        <Skeleton class="h-3 w-36" />
+      </div>
+    </div>
+  </div>
+  <div data-github-error>
+    <p class="mb-3 text-body-l text-muted">GitHub activity is unavailable right now.</p>
+    <TextLink href={`https://github.com/${calendar.login}`}>View activity on GitHub</TextLink>
+  </div>
+</github-calendar-fallback>
+
+<script>
+  class GitHubCalendarFallback extends HTMLElement {
+    private timeout?: number;
+
+    connectedCallback() {
+      this.querySelector("[data-github-loading]")?.removeAttribute("hidden");
+      this.querySelector("[data-github-error]")?.setAttribute("hidden", "");
+      // Astro leaves fallback content mounted on failed island requests. Bound that wait.
+      this.timeout = window.setTimeout(() => {
+        this.querySelector("[data-github-loading]")?.remove();
+        this.querySelector("[data-github-error]")?.removeAttribute("hidden");
+      }, 12_000);
+    }
+
+    disconnectedCallback() {
+      window.clearTimeout(this.timeout);
+    }
+  }
+
+  if (!customElements.get("github-calendar-fallback")) {
+    customElements.define("github-calendar-fallback", GitHubCalendarFallback);
+  }
+</script>

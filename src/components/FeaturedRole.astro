@@ -11,24 +11,23 @@ import IconTile from "./ui/IconTile.astro";
   id="work"
   aria-labelledby="work-title"
   class="flex flex-col gap-7 rounded-md bg-soft p-6 lg:gap-10 lg:rounded-lg lg:p-12"
-  data-skeleton-reveal
 >
   <div class="flex items-center justify-between gap-3 lg:gap-6">
     <Badge>{featuredRole.badge}</Badge>
-    <p class="text-body text-muted" data-skeleton-item>{featuredRole.dates}</p>
+    <p class="text-body text-muted">{featuredRole.dates}</p>
   </div>
   <div class="flex flex-col gap-7 lg:gap-10 xl:flex-row xl:gap-16">
     <div class="contents lg:flex lg:flex-col lg:gap-8 xl:min-w-0 xl:flex-1">
       <div class="order-1 flex flex-col gap-3 lg:order-none lg:gap-4">
-        <h2 id="work-title" class="type-feature" data-skeleton-item>
+        <h2 id="work-title" class="type-feature">
           {featuredRole.titleLines[0]}{" "}<br class="max-lg:hidden" />
           {featuredRole.titleLines[1]}
         </h2>
-        <p class="flex gap-2 text-body font-medium lg:items-center lg:text-body-l" data-skeleton-item>
+        <p class="flex gap-2 text-body font-medium lg:items-center lg:text-body-l">
           <GraduationCap size={18} class="shrink-0 text-accent" />
           {featuredRole.employer}
         </p>
-        <p class="text-body text-muted lg:max-w-130 lg:text-body-l" data-skeleton-item>{featuredRole.description}</p>
+        <p class="text-body text-muted lg:max-w-130 lg:text-body-l">{featuredRole.description}</p>
       </div>
       <dl
         class="order-2 grid grid-cols-3 gap-x-4 border-y border-line py-5 lg:order-none lg:flex lg:items-center lg:gap-10 lg:border-y-0 lg:py-0"
@@ -38,11 +37,11 @@ import IconTile from "./ui/IconTile.astro";
             <Fragment>
               {index > 0 && <span class="hidden h-14 w-px bg-line lg:block" aria-hidden="true" />}
               <div class="flex flex-col-reverse gap-0.5">
-                <dt class="text-micro text-muted lg:text-caption" data-skeleton-item>
+                <dt class="text-micro text-muted lg:text-caption">
                   <span class="lg:hidden">{figure.shortCaption}</span>
                   <span class="max-lg:hidden">{figure.caption}</span>
                 </dt>
-                <dd class="type-figure" data-skeleton-item><CountUp value={figure.value} prefix={figure.prefix} /></dd>
+                <dd class="type-figure"><CountUp value={figure.value} prefix={figure.prefix} /></dd>
               </div>
             </Fragment>
           ))
@@ -53,7 +52,6 @@ import IconTile from "./ui/IconTile.astro";
           featuredRole.stack.map((item) => (
             <li
               class="rounded-pill bg-paper px-3.5 py-1.5 text-caption font-medium ring-1 ring-line ring-inset"
-              data-skeleton-item="pill"
             >
               {item}
             </li>
@@ -65,13 +63,13 @@ import IconTile from "./ui/IconTile.astro";
       class="order-3 rounded-md bg-paper px-4 py-1 ring-1 ring-line ring-inset lg:order-none lg:px-6 lg:py-2 xl:w-110 xl:shrink-0"
     >
       <div class="flex items-center justify-between py-3.5 lg:py-4">
-        <h3 class="text-caption font-medium text-muted" data-skeleton-item>What I built</h3>
-        <p class="text-micro text-muted" data-skeleton-item>{featuredRole.modules.length} modules</p>
+        <h3 class="text-caption font-medium text-muted">What I built</h3>
+        <p class="text-micro text-muted">{featuredRole.modules.length} modules</p>
       </div>
       <ul>
         {
           featuredRole.modules.map(({ icon: Icon, name, detail }) => (
-            <li class="flex items-center gap-4 border-t border-line py-3.5 lg:py-4" data-skeleton-item>
+            <li class="flex items-center gap-4 border-t border-line py-3.5 lg:py-4">
               <IconTile>
                 <Icon size={20} />
               </IconTile>
@@ -86,11 +84,11 @@ import IconTile from "./ui/IconTile.astro";
     </div>
   </div>
   <div class="flex flex-col gap-2.5 border-t border-line pt-5 lg:flex-row lg:items-center lg:gap-7 lg:pt-6">
-    <p class="text-caption font-medium text-muted" data-skeleton-item>Built for reliability</p>
+    <p class="text-caption font-medium text-muted">Built for reliability</p>
     <ul class="grid grid-cols-2 gap-x-3 gap-y-2.5 lg:flex lg:gap-7">
       {
         featuredRole.practices.map((practice) => (
-          <li class="flex items-center gap-1.5 text-caption whitespace-nowrap" data-skeleton-item>
+          <li class="flex items-center gap-1.5 text-caption whitespace-nowrap">
             <Check size={16} class="shrink-0 text-accent" />
             {practice}
           </li>

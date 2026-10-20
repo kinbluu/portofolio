@@ -7,18 +7,17 @@ import IconTile from "./ui/IconTile.astro";
   id="about"
   aria-labelledby="about-title"
   class="flex flex-col gap-8 border-t border-line pt-10 pb-12 lg:flex-row lg:gap-20 lg:pt-14 lg:pb-16"
-  data-skeleton-reveal
 >
   <div class="flex flex-1 flex-col gap-6">
-    <h2 id="about-title" class="type-h2" data-skeleton-item>
+    <h2 id="about-title" class="type-h2">
       {about.titleLines[0]}<br />
       {about.titleLines[1]}
     </h2>
-    <p class="text-body-l text-muted" data-skeleton-item>{about.description}</p>
+    <p class="text-body-l text-muted">{about.description}</p>
     <ul class="flex flex-col gap-4 pt-2">
       {
         about.practices.map(({ icon: Icon, label }) => (
-          <li class="flex items-center gap-3 text-body" data-skeleton-item>
+          <li class="flex items-center gap-3 text-body">
             <Icon size={18} class="shrink-0 text-accent" />
             {label}
           </li>
@@ -27,11 +26,11 @@ import IconTile from "./ui/IconTile.astro";
     </ul>
   </div>
   <div class="flex flex-1 flex-col gap-4 lg:gap-5">
-    <h3 class="type-h2" data-skeleton-item>My everyday toolkit.</h3>
+    <h3 class="type-h2">My everyday toolkit.</h3>
     <ul class="flex flex-col gap-4 lg:gap-5">
       {
         skills.map(({ icon: Icon, label, value }) => (
-          <li class="flex gap-4 border-b border-line pb-4" data-skeleton-item>
+          <li class="flex gap-4 border-b border-line pb-4">
             <IconTile>
               <Icon size={20} />
             </IconTile>

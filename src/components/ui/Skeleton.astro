@@ -1,0 +1,14 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"div">;
+
+const { class: className, ...attrs } = Astro.props;
+---
+
+<div
+  data-slot="skeleton"
+  aria-hidden="true"
+  class:list={["rounded-[6px] bg-line motion-safe:animate-pulse", className]}
+  {...attrs}
+/>

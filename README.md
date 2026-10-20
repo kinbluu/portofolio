@@ -38,6 +38,16 @@ All commands are run from the root of the project, from a terminal:
 | `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `bun astro -- --help` | Get help using the Astro CLI                     |
 
+## Loading states
+
+Static portfolio sections render immediately, without scroll-triggered loading masks. Only the deferred GitHub calendar shows a loading placeholder.
+
+`src/components/ui/Skeleton.astro` adapts the [shadcn/ui Skeleton](https://ui.shadcn.com/docs/components/skeleton) pattern to Astro and the existing theme tokens, without adding client-side JavaScript. `GitHubCalendarSkeleton.astro` composes it into the calendar's responsive layout, uses one shared pulse, and disables motion for `prefers-reduced-motion`. Astro replaces it as soon as the server island responds; there is no artificial delay.
+
+If the island request fails or stalls, the fallback stops loading after 12 seconds (above the upstream's 10-second timeout) and shows an unavailable message with a GitHub link. A late successful response still replaces it. Without JavaScript, the message and link appear immediately instead of an endless skeleton.
+
+Regression check (requires Chromium on `PATH` and a running dev server): `bun tests/github-island-failure.test.ts`. It blocks the real island request with HTTP 503 and a dropped connection, then uses Chromium's virtual clock to verify loading ends and the recovery link is visible. Set `PORTFOLIO_URL` to check another local server.
+
 ## 💬 Chat assistant
 
 The chat widget streams answers from Gemini through TanStack AI (`src/pages/api/chat.ts`) and runs on Cloudflare Workers.
