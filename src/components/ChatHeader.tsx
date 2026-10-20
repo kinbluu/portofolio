@@ -8,7 +8,13 @@ interface Props {
   onReset?: () => void;
 }
 
-export default function ChatHeader({ panelId, assistant, initials, status, onReset }: Props) {
+export default function ChatHeader({
+  panelId,
+  assistant,
+  initials,
+  status,
+  onReset,
+}: Props) {
   return (
     <div className="flex items-center gap-3 bg-ink px-4 py-3.5 lg:px-5 lg:py-[18px]">
       <span
@@ -18,9 +24,14 @@ export default function ChatHeader({ panelId, assistant, initials, status, onRes
         {initials}
       </span>
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <p className="font-heading text-label/[1.5] font-bold text-paper">{assistant}</p>
+        <p className="font-heading text-label/[1.5] font-bold text-paper">
+          {assistant}
+        </p>
         <p className="flex items-center gap-1.5 text-micro/[1.5] text-on-ink-muted">
-          <span className="size-2 rounded-full bg-online" aria-hidden="true"></span>
+          <span
+            className="size-2 rounded-full bg-online"
+            aria-hidden="true"
+          ></span>
           {status}
         </p>
       </div>

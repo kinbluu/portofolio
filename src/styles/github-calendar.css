@@ -19,6 +19,7 @@
   box-shadow: 0 8px 24px var(--rm3-shadow);
 }
 
-.react-activity-calendar__tooltip[data-color-scheme] .react-activity-calendar__tooltip-arrow {
+.react-activity-calendar__tooltip[data-color-scheme]
+  .react-activity-calendar__tooltip-arrow {
   fill: var(--rm3-ink);
 }

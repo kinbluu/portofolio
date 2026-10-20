@@ -1,4 +1,11 @@
-import { about, contact, experience, featuredRole, profile, skills } from "../data/profile";
+import {
+  about,
+  contact,
+  experience,
+  featuredRole,
+  profile,
+  skills,
+} from "../data/profile";
 
 const count = new Intl.NumberFormat("en-US");
 

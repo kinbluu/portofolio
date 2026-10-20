@@ -8,7 +8,10 @@ interface Props {
 }
 
 const compactQuery = "(width < 64rem)";
-const colors = Array.from({ length: 5 }, (_, level) => `var(--rm3-gh-${level})`);
+const colors = Array.from(
+  { length: 5 },
+  (_, level) => `var(--rm3-gh-${level})`,
+);
 const theme = { light: colors, dark: colors };
 const count = new Intl.NumberFormat("en-US");
 const date = new Intl.DateTimeFormat("en-US", {
@@ -55,8 +58,16 @@ function describeActivity(activity: { date: string; count: number }) {
 }
 
 export default function GitHubContributions({ username }: Props) {
-  const colorScheme = useSyncExternalStore(subscribeTheme, getTheme, () => "light" as const);
-  const compact = useSyncExternalStore(subscribeCompact, getCompact, () => false);
+  const colorScheme = useSyncExternalStore(
+    subscribeTheme,
+    getTheme,
+    () => "light" as const,
+  );
+  const compact = useSyncExternalStore(
+    subscribeCompact,
+    getCompact,
+    () => false,
+  );
 
   return (
     <div
@@ -65,7 +76,9 @@ export default function GitHubContributions({ username }: Props) {
       aria-label={`GitHub contribution calendar for ${username}`}
       data-github-calendar
     >
-      <p className="text-caption text-muted">{compact ? "Last 90 days" : "Last year"}</p>
+      <p className="text-caption text-muted">
+        {compact ? "Last 90 days" : "Last year"}
+      </p>
       <GitHubCalendar
         username={username}
         year="last"

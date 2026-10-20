@@ -2,7 +2,9 @@ type Theme = "light" | "dark";
 
 const root = document.documentElement;
 const systemTheme = matchMedia("(prefers-color-scheme: dark)");
-const buttons = document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]");
+const buttons = document.querySelectorAll<HTMLButtonElement>(
+  "[data-theme-toggle]",
+);
 const parseTheme = (value: string | null): Theme | null =>
   value === "light" || value === "dark" ? value : null;
 

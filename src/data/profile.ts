@@ -19,7 +19,10 @@ export const profile = {
   role: "Full Stack Developer",
   location: "Surabaya, Indonesia",
   locationShort: "Surabaya, ID",
-  headlineLines: ["I build web applications that make", "everyday work easier."],
+  headlineLines: [
+    "I build web applications that make",
+    "everyday work easier.",
+  ],
   email: "mrahmatmuttaqin@gmail.com",
   linkedin: "https://www.linkedin.com/in/",
   phone: "+62",
@@ -42,18 +45,54 @@ export const featuredRole = {
   description:
     "Registration, class schedules, attendance and report-card approvals, brought together in one internal platform.",
   figures: [
-    { value: 50, prefix: "~", caption: "staff supported", shortCaption: "staff supported" },
-    { value: 1_000, prefix: "~", caption: "students managed", shortCaption: "students" },
-    { value: 4, prefix: "", caption: "modules in one app", shortCaption: "modules" },
+    {
+      value: 50,
+      prefix: "~",
+      caption: "staff supported",
+      shortCaption: "staff supported",
+    },
+    {
+      value: 1_000,
+      prefix: "~",
+      caption: "students managed",
+      shortCaption: "students",
+    },
+    {
+      value: 4,
+      prefix: "",
+      caption: "modules in one app",
+      shortCaption: "modules",
+    },
   ],
   stack: ["Laravel", "Livewire", "MariaDB"],
   modules: [
-    { icon: UserPlus, name: "Registration", detail: "Online enrolment and student records" },
-    { icon: CalendarDays, name: "Scheduling", detail: "Class timetables and teacher allocation" },
-    { icon: ClipboardCheck, name: "Attendance", detail: "Daily check-in per class and session" },
-    { icon: FileCheck, name: "Report cards", detail: "Multi-step approval before release" },
+    {
+      icon: UserPlus,
+      name: "Registration",
+      detail: "Online enrolment and student records",
+    },
+    {
+      icon: CalendarDays,
+      name: "Scheduling",
+      detail: "Class timetables and teacher allocation",
+    },
+    {
+      icon: ClipboardCheck,
+      name: "Attendance",
+      detail: "Daily check-in per class and session",
+    },
+    {
+      icon: FileCheck,
+      name: "Report cards",
+      detail: "Multi-step approval before release",
+    },
   ],
-  practices: ["Role-based access", "Queued jobs", "Audit logs", "Feature tests"],
+  practices: [
+    "Role-based access",
+    "Queued jobs",
+    "Audit logs",
+    "Feature tests",
+  ],
 };
 
 export const experience = [
@@ -71,7 +110,8 @@ export const experience = [
     icon: Wrench,
     title: "Full Stack Web Developer",
     organization: "LEAP English & Digital Class · Internship",
-    description: "Reviewed legacy question-bank workflows and fixed existing features.",
+    description:
+      "Reviewed legacy question-bank workflows and fixed existing features.",
     stack: "Legacy workflows · Application maintenance",
   },
 ];
@@ -89,9 +129,21 @@ export const about = {
 
 export const skills = [
   { icon: Server, label: "Backend", value: "Laravel, Livewire, Node.js" },
-  { icon: PanelsTopLeft, label: "Frontend", value: "React, Vue.js, Nuxt, HTML, CSS" },
-  { icon: CodeXml, label: "Languages", value: "PHP, JavaScript, TypeScript, Solidity, Python" },
-  { icon: Database, label: "Data & tools", value: "MariaDB, MySQL, Git, Postman, VS Code" },
+  {
+    icon: PanelsTopLeft,
+    label: "Frontend",
+    value: "React, Vue.js, Nuxt, HTML, CSS",
+  },
+  {
+    icon: CodeXml,
+    label: "Languages",
+    value: "PHP, JavaScript, TypeScript, Solidity, Python",
+  },
+  {
+    icon: Database,
+    label: "Data & tools",
+    value: "MariaDB, MySQL, Git, Postman, VS Code",
+  },
   { icon: Sprout, label: "Currently learning", value: "Go and PostgreSQL" },
 ];
 

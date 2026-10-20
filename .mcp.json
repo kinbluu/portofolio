@@ -3,19 +3,12 @@
     "astro_docs": {
       "type": "stdio",
       "command": "bunx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://mcp.docs.astro.build/mcp"
-      ]
+      "args": ["-y", "mcp-remote", "https://mcp.docs.astro.build/mcp"]
     },
     "pencil": {
       "type": "stdio",
       "command": "/opt/pen-dev/resources/app.asar.unpacked/out/mcp-server-linux-x64",
-      "args": [
-        "--app",
-        "desktop"
-      ]
+      "args": ["--app", "desktop"]
     }
   }
 }

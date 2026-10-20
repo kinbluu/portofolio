@@ -41,10 +41,13 @@ interface Props {
   github: string;
 }
 
-const fallbackError = "Maaf, asisten sedang tidak bisa menjawab. Coba lagi sebentar lagi.";
+const fallbackError =
+  "Maaf, asisten sedang tidak bisa menjawab. Coba lagi sebentar lagi.";
 
 function describeError(error: Error) {
-  return "code" in error && error.code === chatRejectedCode ? error.message : fallbackError;
+  return "code" in error && error.code === chatRejectedCode
+    ? error.message
+    : fallbackError;
 }
 
 const chatOptions = createChatClientOptions({
@@ -71,11 +74,16 @@ const chip =
 const roundButton =
   "grid size-11 shrink-0 place-items-center rounded-pill bg-accent text-paper hover:bg-accent-hover disabled:pointer-events-none disabled:opacity-50 motion-safe:transition-colors lg:size-[42px]";
 
-const hidePanel = (event: MouseEvent<HTMLElement>) => event.currentTarget.closest<HTMLElement>("[popover]")?.hidePopover();
+const hidePanel = (event: MouseEvent<HTMLElement>) =>
+  event.currentTarget.closest<HTMLElement>("[popover]")?.hidePopover();
 
 function MarkdownLink({ href = "", ...props }: ComponentPropsWithoutRef<"a">) {
-  if (href.startsWith("#")) return <a {...props} href={href} onClick={hidePanel} />;
-  if (/^https?:/i.test(href)) return <a {...props} href={href} target="_blank" rel="noopener noreferrer" />;
+  if (href.startsWith("#"))
+    return <a {...props} href={href} onClick={hidePanel} />;
+  if (/^https?:/i.test(href))
+    return (
+      <a {...props} href={href} target="_blank" rel="noopener noreferrer" />
+    );
   return <a {...props} href={href} />;
 }
 
@@ -83,7 +91,11 @@ const markdownComponents = { a: MarkdownLink };
 
 function SectionLink({ section }: { section: PageSection }) {
   return (
-    <a href={`#${section}`} onClick={hidePanel} className={`${chip} inline-flex items-center gap-1.5`}>
+    <a
+      href={`#${section}`}
+      onClick={hidePanel}
+      className={`${chip} inline-flex items-center gap-1.5`}
+    >
       Lihat bagian {pageSectionLabels[section]}
       <ArrowUpRight size={14} />
     </a>
@@ -113,9 +125,19 @@ function ContactCard({ email, github }: { email: string; github: string }) {
   );
 }
 
-function MessageView({ message, email, github }: { message: ChatMessage; email: string; github: string }) {
+function MessageView({
+  message,
+  email,
+  github,
+}: {
+  message: ChatMessage;
+  email: string;
+  github: string;
+}) {
   if (message.role === "user") {
-    const text = message.parts.map((part) => (part.type === "text" ? part.content : "")).join("");
+    const text = message.parts
+      .map((part) => (part.type === "text" ? part.content : ""))
+      .join("");
     return <p className={userBubble}>{text}</p>;
   }
 
@@ -124,13 +146,19 @@ function MessageView({ message, email, github }: { message: ChatMessage; email: 
       if (!part.content.trim()) return null;
       return (
         <div key={index} className={assistantBubble}>
-          <TextPart content={part.content} className="chat-markdown" components={markdownComponents} />
+          <TextPart
+            content={part.content}
+            className="chat-markdown"
+            components={markdownComponents}
+          />
         </div>
       );
     }
     if (part.type !== "tool-call" || part.input === undefined) return null;
-    if (part.name === "show_section") return <SectionLink key={part.id} section={part.input.section} />;
-    if (part.name === "show_contact") return <ContactCard key={part.id} email={email} github={github} />;
+    if (part.name === "show_section")
+      return <SectionLink key={part.id} section={part.input.section} />;
+    if (part.name === "show_contact")
+      return <ContactCard key={part.id} email={email} github={github} />;
     return null;
   });
 }
@@ -157,10 +185,19 @@ function ChatView({
   github,
 }: Props & { chat?: ChatState }) {
   const [input, setInput] = useState("");
-  const { scrollRef, contentRef, scrollToBottom, state } = useStickToBottom({ initial: "instant", resize: "smooth" });
+  const { scrollRef, contentRef, scrollToBottom, state } = useStickToBottom({
+    initial: "instant",
+    resize: "smooth",
+  });
   const hostRef = useRef<HTMLDivElement>(null);
   const [initializeScrollbars] = useOverlayScrollbars({
-    options: { scrollbars: { theme: "os-theme-rm3", autoHide: "move", autoHideSuspend: true } },
+    options: {
+      scrollbars: {
+        theme: "os-theme-rm3",
+        autoHide: "move",
+        autoHideSuspend: true,
+      },
+    },
     defer: true,
   });
 
@@ -186,10 +223,16 @@ function ChatView({
   const messages = chat?.messages ?? [];
   const isLoading = chat?.isLoading ?? false;
   const error = chat?.error;
-  const limitReached = messages.filter((message) => message.role === "user").length >= chatLimits.turns;
+  const limitReached =
+    messages.filter((message) => message.role === "user").length >=
+    chatLimits.turns;
   const last = messages.at(-1);
   const typing =
-    isLoading && !(last?.role === "assistant" && last.parts.some((part) => part.type === "text" && part.content.trim()));
+    isLoading &&
+    !(
+      last?.role === "assistant" &&
+      last.parts.some((part) => part.type === "text" && part.content.trim())
+    );
 
   const send = (text: string) => {
     const content = text.trim();
@@ -214,7 +257,10 @@ function ChatView({
         onReset={messages.length > 0 ? chat?.reset : undefined}
       />
       <div ref={hostRef} className="min-h-0 flex-1 bg-soft">
-        <div ref={scrollRef} className="h-full overflow-y-auto overscroll-contain">
+        <div
+          ref={scrollRef}
+          className="h-full overflow-y-auto overscroll-contain"
+        >
           <div
             ref={contentRef}
             role="log"
@@ -239,10 +285,17 @@ function ChatView({
               </div>
             )}
             {messages.map((message) => (
-              <MessageView key={message.id} message={message} email={email} github={github} />
+              <MessageView
+                key={message.id}
+                message={message}
+                email={email}
+                github={github}
+              />
             ))}
             {typing && (
-              <div className={`${assistantBubble} flex items-center gap-1 py-3.5`}>
+              <div
+                className={`${assistantBubble} flex items-center gap-1 py-3.5`}
+              >
                 {[0, 200, 400].map((delay) => (
                   <span
                     key={delay}
@@ -254,9 +307,16 @@ function ChatView({
               </div>
             )}
             {error && !isLoading && (
-              <div role="alert" className={`${assistantBubble} flex flex-col items-start gap-1.5`}>
+              <div
+                role="alert"
+                className={`${assistantBubble} flex flex-col items-start gap-1.5`}
+              >
                 <p>{describeError(error)}</p>
-                <button type="button" className="hit-target text-caption/[1.5] font-medium text-accent" onClick={chat?.retry}>
+                <button
+                  type="button"
+                  className="hit-target text-caption/[1.5] font-medium text-accent"
+                  onClick={chat?.retry}
+                >
                   Coba lagi
                 </button>
               </div>
@@ -274,7 +334,10 @@ function ChatView({
           </div>
         </div>
       </div>
-      <form onSubmit={submit} className="flex items-center gap-2 border-t border-line p-3 lg:gap-2.5 lg:px-4 lg:py-3.5">
+      <form
+        onSubmit={submit}
+        className="flex items-center gap-2 border-t border-line p-3 lg:gap-2.5 lg:px-4 lg:py-3.5"
+      >
         <label htmlFor="chat-message" className="sr-only">
           Pertanyaan
         </label>
@@ -292,11 +355,21 @@ function ChatView({
           className="h-11 min-w-0 flex-1 rounded-pill bg-soft px-4 text-body/[1.5] text-ink placeholder:text-muted disabled:opacity-60 lg:h-[42px]"
         />
         {isLoading ? (
-          <button type="button" aria-label="Hentikan jawaban" className={roundButton} onClick={chat?.stop}>
+          <button
+            type="button"
+            aria-label="Hentikan jawaban"
+            className={roundButton}
+            onClick={chat?.stop}
+          >
             <Square size={14} fill="currentColor" />
           </button>
         ) : (
-          <button type="submit" aria-label="Kirim pertanyaan" disabled={!chat || limitReached} className={roundButton}>
+          <button
+            type="submit"
+            aria-label="Kirim pertanyaan"
+            disabled={!chat || limitReached}
+            className={roundButton}
+          >
             <Send size={18} />
           </button>
         )}
@@ -306,7 +379,8 @@ function ChatView({
 }
 
 function LiveChatPanel(props: Props) {
-  const { messages, sendMessage, isLoading, error, stop, reload, clear } = useChat(chatOptions);
+  const { messages, sendMessage, isLoading, error, stop, reload, clear } =
+    useChat(chatOptions);
   const chat: ChatState = {
     messages,
     isLoading,

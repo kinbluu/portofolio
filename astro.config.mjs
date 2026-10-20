@@ -30,8 +30,16 @@ export default defineConfig({
   ],
   env: {
     schema: {
-      GITHUB_USERNAME: envField.string({ context: "server", access: "public", default: "kinkenkan298" }),
-      GEMINI_API_KEY: envField.string({ context: "server", access: "secret", optional: true }),
+      GITHUB_USERNAME: envField.string({
+        context: "server",
+        access: "public",
+        default: "kinkenkan298",
+      }),
+      GEMINI_API_KEY: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+      }),
     },
   },
   vite: {
