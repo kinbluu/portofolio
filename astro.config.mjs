@@ -4,7 +4,12 @@ import cloudflare from "@astrojs/cloudflare";
 import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 
+// Isi domain production di sini (mis. "https://rahmat.dev"). Selama kosong, canonical, og:url,
+// og:image absolut, sitemap, dan link sitemap di robots.txt tidak di-generate.
+const site = undefined;
+
 export default defineConfig({
+  site,
   adapter: cloudflare({ imageService: "compile" }),
   session: false,
   integrations: [react()],

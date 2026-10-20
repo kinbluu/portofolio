@@ -24,8 +24,8 @@ export const profile = {
     "everyday work easier.",
   ],
   email: "mrahmatmuttaqin@gmail.com",
-  linkedin: "https://www.linkedin.com/in/",
-  phone: "+62",
+  linkedin: "https://www.linkedin.com/in/mochammad-rahmat-muttaqin",
+  phone: "+6285182120736",
   github: "https://github.com/kinkenkan298",
 };
 
