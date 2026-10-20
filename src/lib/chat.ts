@@ -66,6 +66,38 @@ export const pageSections = [
 
 export type PageSection = (typeof pageSections)[number];
 
+/**
+ * Normalized href the assistant may render as clickable (page section, Rahmat's email, his GitHub profile/repos), else null.
+ * Paths are compared after WHATWG URL normalization, so `../` and `%2e%2e` cannot escape to another account.
+ */
+export function allowedChatLink(
+  href: string,
+  email: string,
+  github: string,
+): string | null {
+  if (href.startsWith("#"))
+    return (pageSections as readonly string[]).includes(href.slice(1))
+      ? href
+      : null;
+  if (href === `mailto:${email}`) return href;
+  let url: URL;
+  try {
+    url = new URL(href);
+  } catch {
+    return null;
+  }
+  const profile = new URL(github);
+  const inProfile =
+    url.pathname === profile.pathname ||
+    url.pathname.startsWith(`${profile.pathname}/`);
+  return url.origin === profile.origin &&
+    !url.username &&
+    !url.password &&
+    inProfile
+    ? url.href
+    : null;
+}
+
 export const pageSectionLabels: Record<PageSection, string> = {
   work: "Pekerjaan",
   experience: "Pengalaman",

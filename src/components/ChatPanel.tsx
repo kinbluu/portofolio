@@ -11,6 +11,7 @@ import { ArrowUpRight, Mail, Send, Square } from "lucide-react";
 import { useOverlayScrollbars } from "overlayscrollbars-react";
 import {
   useEffect,
+  useMemo,
   useRef,
   useState,
   useSyncExternalStore,
@@ -22,6 +23,7 @@ import { useStickToBottom } from "use-stick-to-bottom";
 import {
   chatLimits,
   chatRejectedCode,
+  allowedChatLink,
   pageSectionLabels,
   showContactTool,
   showSectionTool,
@@ -77,17 +79,46 @@ const roundButton =
 const hidePanel = (event: MouseEvent<HTMLElement>) =>
   event.currentTarget.closest<HTMLElement>("[popover]")?.hidePopover();
 
-function MarkdownLink({ href = "", ...props }: ComponentPropsWithoutRef<"a">) {
-  if (href.startsWith("#"))
-    return <a {...props} href={href} onClick={hidePanel} />;
-  if (/^https?:/i.test(href))
-    return (
-      <a {...props} href={href} target="_blank" rel="noopener noreferrer" />
-    );
-  return <a {...props} href={href} />;
+export function ChatMarkdown({
+  content,
+  email,
+  github,
+}: {
+  content: string;
+  email: string;
+  github: string;
+}) {
+  // Model output is untrusted: only Rahmat's own links stay clickable, images render as alt text (no remote fetch).
+  const components = useMemo(
+    () => ({
+      a: ({ href = "", children }: ComponentPropsWithoutRef<"a">) => {
+        const safe = allowedChatLink(href, email, github);
+        if (!safe) return <span>{children}</span>;
+        if (safe.startsWith("#"))
+          return (
+            <a href={safe} onClick={hidePanel}>
+              {children}
+            </a>
+          );
+        if (safe.startsWith("mailto:")) return <a href={safe}>{children}</a>;
+        return (
+          <a href={safe} target="_blank" rel="noopener noreferrer">
+            {children}
+          </a>
+        );
+      },
+      img: ({ alt }: ComponentPropsWithoutRef<"img">) => <span>{alt}</span>,
+    }),
+    [email, github],
+  );
+  return (
+    <TextPart
+      content={content}
+      className="chat-markdown"
+      components={components}
+    />
+  );
 }
-
-const markdownComponents = { a: MarkdownLink };
 
 function SectionLink({ section }: { section: PageSection }) {
   return (
@@ -146,11 +177,7 @@ function MessageView({
       if (!part.content.trim()) return null;
       return (
         <div key={index} className={assistantBubble}>
-          <TextPart
-            content={part.content}
-            className="chat-markdown"
-            components={markdownComponents}
-          />
+          <ChatMarkdown content={part.content} email={email} github={github} />
         </div>
       );
     }
