@@ -143,7 +143,11 @@ export const skills = [
     label: "Data & tools",
     value: "MariaDB, MySQL, Git, Postman, VS Code",
   },
-  { icon: Sprout, label: "Currently learning", value: "Go and PostgreSQL" },
+  {
+    icon: Sprout,
+    label: "Currently learning",
+    value: "Mobile development with Expo",
+  },
 ];
 
 export const contact = {
