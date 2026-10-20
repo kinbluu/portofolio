@@ -6,7 +6,8 @@ const year = new Date().getFullYear();
 
 <footer
   class="flex flex-col gap-2 pt-8 text-micro text-muted lg:flex-row lg:justify-between lg:gap-6 lg:pt-10 lg:text-caption"
+  data-skeleton-reveal
 >
-  <p>© {year} {profile.name}</p>
-  <p>Based in {profile.location}</p>
+  <p data-skeleton-item>© {year} {profile.name}</p>
+  <p data-skeleton-item>Based in {profile.location}</p>
 </footer>

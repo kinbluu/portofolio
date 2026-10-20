@@ -24,11 +24,11 @@ const updatedOn = new Intl.DateTimeFormat("en-GB", {
 
 <div class="flex flex-col gap-5">
   <div class="flex flex-col gap-1">
-    <p class="type-stat">
+    <p class="type-stat" data-skeleton-item>
       <span class="lg:hidden">{count.format(recent.total)} contributions</span>
       <span class="max-lg:hidden">{count.format(year.total)} contributions</span>
     </p>
-    <p class="text-micro text-muted lg:text-caption">
+    <p class="text-micro text-muted lg:text-caption" data-skeleton-item>
       <span class="lg:hidden">Last 90 days</span>
       <span class="max-lg:hidden">Last year</span>
       {" "}· Updated {updatedOn}
@@ -37,7 +37,7 @@ const updatedOn = new Intl.DateTimeFormat("en-GB", {
   <!-- ponytail: 90-day view has ~13 columns, capped so tablets don't get giant cells. -->
   <ContributionGrid view={recent} class="max-w-96 lg:hidden" />
   <ContributionGrid view={year} class="max-lg:hidden" />
-  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between" data-skeleton-item>
     <TextLink href={`https://github.com/${calendar.login}`} class="font-medium">@{calendar.login}</TextLink>
     <div class="flex items-center gap-2 text-micro text-muted">
       <span>Less</span>

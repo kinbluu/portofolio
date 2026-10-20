@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "overlayscrollbars/overlayscrollbars.scriptingenabled.css";
+@import "./skeleton.css";
 
 :root {
   color-scheme: light dark;

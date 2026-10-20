@@ -15,27 +15,29 @@ const facts = [
 ---
 
 <section
+  id="top"
   aria-labelledby="intro-title"
   class="flex flex-col gap-10 py-10 lg:flex-row lg:items-center lg:gap-16 lg:pt-16 lg:pb-14"
+  data-skeleton-reveal
 >
   <div class="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6">
-    <h1 id="intro-title" class="type-h3 motion-safe:enter-0">{profile.name}</h1>
-    <p class="type-display text-balance motion-safe:enter-1">{profile.headlineLines.join(" ")}</p>
-    <p class="flex items-center gap-3 text-micro text-muted motion-safe:enter-2 lg:text-body">
+    <h1 id="intro-title" class="type-h3" data-skeleton-item>{profile.name}</h1>
+    <p class="type-display text-balance" data-skeleton-item>{profile.headlineLines.join(" ")}</p>
+    <p class="flex items-center gap-3 text-micro text-muted lg:text-body" data-skeleton-item>
       <MapPin size={16} class="shrink-0" />
       {profile.location} · {profile.role}
     </p>
-    <div class="flex items-center gap-2 pt-1 motion-safe:enter-3 lg:gap-3">
-      <Button href={`mailto:${profile.email}`}>Let’s talk</Button>
-      <Button href={profile.linkedin} variant="secondary">LinkedIn</Button>
+    <div class="flex items-center gap-2 pt-1 lg:gap-3">
+      <Button href={`mailto:${profile.email}`} data-skeleton-item="pill">Let’s talk</Button>
+      <Button href={profile.linkedin} variant="secondary" data-skeleton-item="pill">LinkedIn</Button>
     </div>
   </div>
-  <dl class="w-90 shrink-0 rounded-md bg-soft px-6 py-2 ring-1 ring-line ring-inset max-lg:hidden motion-safe:enter-3">
+  <dl class="w-90 shrink-0 rounded-md bg-soft px-6 py-2 ring-1 ring-line ring-inset max-lg:hidden">
     {
       facts.map(({ label, value }, index) => (
         <div class:list={["flex flex-col gap-1 py-4", index > 0 && "border-t border-line"]}>
-          <dt class="text-caption text-muted">{label}</dt>
-          <dd class="text-body font-medium">{value}</dd>
+          <dt class="text-caption text-muted" data-skeleton-item>{label}</dt>
+          <dd class="text-body font-medium" data-skeleton-item>{value}</dd>
         </div>
       ))
     }
