@@ -44,5 +44,8 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    // @lucide/astro ships raw .ts/.astro; skip pre-bundling so icons aren't discovered mid-request,
+    // which re-optimizes deps and loads a second React copy in workerd SSR (invalid hook call).
+    optimizeDeps: { exclude: ["@lucide/astro"] },
   },
 });
