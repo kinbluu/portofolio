@@ -1,12 +1,16 @@
 ---
 import { buildCalendarView, contributionLevelClasses, getContributionCalendar } from "../lib/github";
+import snapshot from "../data/github-snapshot.json";
 import ContributionGrid from "./ContributionGrid.astro";
 import TextLink from "./ui/TextLink.astro";
 
-// Rendered at build as the fallback, then re-rendered live as a server island (see GitHubActivity).
-Astro.response.headers.set("Cache-Control", "public, max-age=3600");
-
 const calendar = await getContributionCalendar();
+// Rendered at build as the fallback, then re-rendered live as a server island (see GitHubActivity).
+// Don't let browsers pin the snapshot fallback; live data matches the server's 1h TTL.
+Astro.response.headers.set(
+  "Cache-Control",
+  calendar.capturedAt === snapshot.capturedAt ? "no-store" : "public, max-age=3600",
+);
 const year = buildCalendarView(calendar.days);
 const recent = buildCalendarView(calendar.days, 90);
 const count = new Intl.NumberFormat("en-US");

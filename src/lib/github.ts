@@ -9,16 +9,26 @@ interface CalendarResponse {
   contributions: ContributionDay[];
 }
 
-let calendar: Promise<ContributionCalendar> | undefined;
+// Module scope outlives requests in a warm Worker, so cache with a TTL matching the island's
+// Cache-Control. Only settled data is stored: Workers bind in-flight I/O to the request that
+// started it, so sharing a pending Promise can hang later requests if that one is cancelled.
+// ponytail: concurrent cold requests each fetch once; add a per-request dedupe if that matters.
+const ttl = 3_600_000;
+let cached: { at: number; calendar: ContributionCalendar } | undefined;
 
-export function getContributionCalendar() {
-  calendar ??= fetchContributionCalendar().catch((error: unknown) => {
+export async function getContributionCalendar(): Promise<ContributionCalendar> {
+  if (cached && Date.now() - cached.at < ttl) return cached.calendar;
+  try {
+    const calendar = await fetchContributionCalendar();
+    cached = { at: Date.now(), calendar };
+    return calendar;
+  } catch (error) {
+    // Failures are never cached: the next request retries upstream.
     console.warn(
       `[github] ${error instanceof Error ? error.message : String(error)}, using the design snapshot.`,
     );
     return snapshot as ContributionCalendar;
-  });
-  return calendar;
+  }
 }
 
 async function fetchContributionCalendar(): Promise<ContributionCalendar> {
