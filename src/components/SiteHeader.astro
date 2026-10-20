@@ -139,8 +139,16 @@ import ThemeToggle from "./ui/ThemeToggle.astro";
     };
 
     opener.addEventListener("click", () => {
-      const { x, y, width, height } = opener.getBoundingClientRect();
-      origin = `${x + width / 2}px ${y + height / 2}px`;
+      // rect center survives active:scale-90 (scales around center); rect size does not
+      const rect = opener.getBoundingClientRect();
+      const cx = rect.x + rect.width / 2;
+      const cy = rect.y + rect.height / 2;
+      origin = `${cx}px ${cy}px`;
+      // sticky/tablet layout shifts opener; match close button to it
+      const panel = menu.firstElementChild as HTMLElement;
+      const inset = parseFloat(getComputedStyle(menu).paddingTop);
+      panel.style.paddingTop = `${cy - opener.offsetHeight / 2 - inset}px`;
+      panel.style.paddingRight = `${document.documentElement.clientWidth - cx - opener.offsetWidth / 2 - inset}px`;
       menu.showModal();
       opener.setAttribute("aria-expanded", "true");
       if (!animated) return;
