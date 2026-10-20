@@ -11,7 +11,8 @@ const panelId = "chat-panel";
   popovertarget={panelId}
   aria-label="Buka chat dengan asisten Rahmat"
   lang="id"
-  class="fixed right-4 bottom-6 z-40 grid size-14 place-items-center rounded-pill bg-accent text-paper shadow-launcher hover:-translate-y-0.5 hover:bg-accent-hover motion-safe:transition-[background-color,transform] lg:right-18 lg:bottom-16 lg:size-15"
+  data-chat-launcher
+  class="fixed right-4 bottom-6 z-40 grid size-14 place-items-center rounded-pill bg-accent text-paper shadow-launcher hover:-translate-y-0.5 hover:bg-accent-hover motion-safe:transition-[background-color,translate,opacity] max-lg:data-hidden:not-focus-visible:pointer-events-none max-lg:data-hidden:not-focus-visible:translate-y-24 max-lg:data-hidden:not-focus-visible:opacity-0 lg:right-18 lg:bottom-16 lg:size-15"
 >
   <MessageCircle size={26} />
   <span
@@ -39,3 +40,23 @@ const panelId = "chat-panel";
     github={profile.github}
   />
 </div>
+
+<script>
+  import { launcherHidden } from "../scripts/chat-launcher";
+
+  // Hidden state yields to :focus-visible in CSS, so Tab still reaches the launcher.
+  const launcher = document.querySelector<HTMLElement>("[data-chat-launcher]");
+  const panel = document.querySelector<HTMLElement>("#chat-panel");
+  let lastY = scrollY;
+
+  addEventListener(
+    "scroll",
+    () => {
+      const hidden = launcherHidden(lastY, scrollY, !!panel?.matches(":popover-open"));
+      if (hidden === undefined) return;
+      lastY = scrollY;
+      launcher?.toggleAttribute("data-hidden", hidden);
+    },
+    { passive: true },
+  );
+</script>
