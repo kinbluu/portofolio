@@ -127,19 +127,6 @@
   }
 }
 
-@utility type-headline {
-  font-family: var(--font-manrope);
-  font-weight: 400;
-  font-size: 26px;
-  line-height: 1.35;
-  letter-spacing: -0.5px;
-  @variant lg {
-    font-size: 38px;
-    line-height: 1.3;
-    letter-spacing: -1px;
-  }
-}
-
 @utility type-feature {
   font-family: var(--font-manrope);
   font-weight: 600;

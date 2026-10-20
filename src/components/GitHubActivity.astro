@@ -2,7 +2,6 @@
 import { buildCalendarView, contributionLevelClasses, getContributionCalendar } from "../lib/github";
 import ContributionGrid from "./ContributionGrid.astro";
 import GitHubContributions from "./GitHubContributions";
-import GithubIcon from "./icons/GithubIcon.astro";
 import TextLink from "./ui/TextLink.astro";
 
 const calendar = await getContributionCalendar();
@@ -19,10 +18,7 @@ const capturedOn = new Intl.DateTimeFormat("en-GB", {
 ---
 
 <section id="github" aria-labelledby="github-title" class="flex flex-col gap-5 pb-12 lg:pb-16">
-  <div class="flex items-center gap-3" data-reveal>
-    <GithubIcon size={24} />
-    <h2 id="github-title" class="type-h2">GitHub activity</h2>
-  </div>
+  <h2 id="github-title" class="type-h2" data-reveal>GitHub activity.</h2>
   <div class="flex min-w-0 flex-col gap-5 rounded-md bg-soft p-5 ring-1 ring-line ring-inset lg:rounded-lg lg:p-7" data-reveal>
     <GitHubContributions username={calendar.login} client:only="react">
       <div slot="fallback" class="flex flex-col gap-5" data-github-snapshot>

@@ -14,7 +14,6 @@ import Wrench from "@lucide/astro/icons/wrench";
 
 export const profile = {
   name: "Mochammad Rahmat Muttaqin",
-  nameLines: ["Mochammad", "Rahmat Muttaqin"],
   wordmark: "Rahmat.",
   role: "Full Stack Developer",
   location: "Surabaya, Indonesia",
@@ -148,7 +147,7 @@ export const skills = [
 ];
 
 export const contact = {
-  title: "Have something in mind?",
+  title: "Let’s build something useful.",
   description: "Web apps, APIs or a better workflow. Let’s talk.",
 };
 

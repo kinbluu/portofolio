@@ -1,24 +1,43 @@
 ---
 import MapPin from "@lucide/astro/icons/map-pin";
-import { profile } from "../data/profile";
+import { experience, featuredRole, profile, skills } from "../data/profile";
+import { buildCalendarView, getContributionCalendar } from "../lib/github";
 import Button from "./ui/Button.astro";
+
+const [previous] = experience;
+const github = buildCalendarView((await getContributionCalendar()).days);
+const facts = [
+  { label: "Now", value: featuredRole.employer },
+  { label: "Previously", value: `${previous.title} · ${previous.organization}` },
+  { label: "Learning", value: skills.find((skill) => skill.label === "Currently learning")?.value },
+  { label: "GitHub", value: `${new Intl.NumberFormat("en-US").format(github.total)} contributions in the last year` },
+];
 ---
 
-<section aria-labelledby="intro-title" class="flex flex-col gap-5 py-10 lg:gap-6 lg:pt-16 lg:pb-14">
-  <p class="flex items-center gap-3 text-micro text-muted motion-safe:enter-0 lg:text-body">
-    <MapPin size={16} class="shrink-0" />
-    {profile.location} · {profile.role}
-  </p>
-  <h1 id="intro-title" class="type-display motion-safe:enter-1">
-    {profile.nameLines[0]}{" "}<br class="lg:hidden" />
-    {profile.nameLines[1]}
-  </h1>
-  <p class="type-headline motion-safe:enter-2">
-    {profile.headlineLines[0]}{" "}<br class="max-lg:hidden" />
-    {profile.headlineLines[1]}
-  </p>
-  <div class="flex items-center gap-2 motion-safe:enter-3 lg:gap-3">
-    <Button href={`mailto:${profile.email}`}>Let’s talk</Button>
-    <Button href={profile.linkedin} variant="secondary">LinkedIn</Button>
+<section
+  aria-labelledby="intro-title"
+  class="flex flex-col gap-10 py-10 lg:flex-row lg:items-center lg:gap-16 lg:pt-16 lg:pb-14"
+>
+  <div class="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6">
+    <h1 id="intro-title" class="type-h3 motion-safe:enter-0">{profile.name}</h1>
+    <p class="type-display text-balance motion-safe:enter-1">{profile.headlineLines.join(" ")}</p>
+    <p class="flex items-center gap-3 text-micro text-muted motion-safe:enter-2 lg:text-body">
+      <MapPin size={16} class="shrink-0" />
+      {profile.location} · {profile.role}
+    </p>
+    <div class="flex items-center gap-2 pt-1 motion-safe:enter-3 lg:gap-3">
+      <Button href={`mailto:${profile.email}`}>Let’s talk</Button>
+      <Button href={profile.linkedin} variant="secondary">LinkedIn</Button>
+    </div>
   </div>
+  <dl class="w-90 shrink-0 rounded-md bg-soft px-6 py-2 ring-1 ring-line ring-inset max-lg:hidden motion-safe:enter-3">
+    {
+      facts.map(({ label, value }, index) => (
+        <div class:list={["flex flex-col gap-1 py-4", index > 0 && "border-t border-line"]}>
+          <dt class="text-caption text-muted">{label}</dt>
+          <dd class="text-body font-medium">{value}</dd>
+        </div>
+      ))
+    }
+  </dl>
 </section>
