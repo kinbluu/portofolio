@@ -24,6 +24,7 @@ const firstDay = days.find((day) => day)?.date;
     aria-label={label}
     class="grid grid-flow-col grid-rows-7 gap-[3px] lg:gap-1"
     style={columns}
+    data-reveal-cells
   >
     {
       days.map((day) =>
@@ -64,7 +65,7 @@ const firstDay = days.find((day) => day)?.date;
       const content = this.querySelector<HTMLElement>("[data-tooltip-content]");
       const cells = [...this.querySelectorAll<HTMLElement>("[data-contribution-cell]")];
       if (!tooltip || !content) return;
-      const grid = this.querySelector<HTMLElement>('[role="group"]');
+      const grid = this.querySelector<HTMLElement>("[data-reveal-cells]");
       const stopReveal = grid ? revealCells(grid) : () => {};
 
       const controller = new AbortController();

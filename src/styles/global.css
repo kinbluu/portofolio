@@ -256,7 +256,8 @@
   }
 
   @media print {
-    [data-reveal] {
+    [data-reveal],
+    [data-reveal-cells] > * {
       opacity: 1 !important;
       translate: none !important;
     }
