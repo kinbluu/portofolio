@@ -8,6 +8,18 @@ astro dev --background
 
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
+## Checks
+
+Run before committing:
+
+```
+bun fmt    # format (Prettier style, built into Bun)
+bun lint   # lint
+bun check  # typecheck, runs the `check` script (astro check), which also covers .astro files
+```
+
+Use `bun fmt --check` to verify formatting without writing. Do not call `prettier`, `tsc` or `bunx astro check` directly.
+
 ## Documentation
 
 Full documentation: https://docs.astro.build

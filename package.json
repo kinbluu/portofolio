@@ -9,7 +9,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "typecheck": "astro check",
+    "check": "astro check",
     "astro": "astro",
     "generate-types": "wrangler types"
   },
