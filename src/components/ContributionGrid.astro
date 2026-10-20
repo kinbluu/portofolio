@@ -9,19 +9,32 @@ interface Props {
 const { view, class: className } = Astro.props;
 const count = new Intl.NumberFormat("en-US");
 const label = `${count.format(view.total)} contributions from ${view.from} to ${view.to}`;
+// Labels and cells share one column template, so month names line up with their weeks at any width.
+const columns = `grid-template-columns: repeat(${view.weeks.length}, minmax(0, 1fr))`;
 ---
 
-<div role="img" aria-label={label} class:list={["grid auto-cols-fr grid-flow-col", className]} data-reveal-cells>
-  {
-    view.weeks.flat().map((day) =>
-      day ? (
-        <span
-          class:list={["rounded-xs", contributionLevelClasses[day.level]]}
-          title={`${day.count} ${day.count === 1 ? "contribution" : "contributions"} on ${day.date}`}
-        />
-      ) : (
-        <span />
-      ),
-    )
-  }
+<div class:list={["flex flex-col gap-2", className]}>
+  <div class="grid gap-x-[3px] text-micro text-muted lg:gap-x-1" style={columns} aria-hidden="true">
+    {view.months.map(({ week, label }) => <span style={`grid-column: ${week + 1} / span 3`}>{label}</span>)}
+  </div>
+  <div
+    role="img"
+    aria-label={label}
+    class="grid grid-flow-col grid-rows-7 gap-[3px] lg:gap-1"
+    style={columns}
+    data-reveal-cells
+  >
+    {
+      view.weeks.flat().map((day) =>
+        day ? (
+          <span
+            class:list={["aspect-square rounded-xs", contributionLevelClasses[day.level]]}
+            title={`${count.format(day.count)} ${day.count === 1 ? "contribution" : "contributions"} on ${day.date}`}
+          />
+        ) : (
+          <span class="aspect-square" />
+        ),
+      )
+    }
+  </div>
 </div>
