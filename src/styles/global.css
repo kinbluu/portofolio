@@ -254,4 +254,11 @@
       scroll-behavior: smooth;
     }
   }
+
+  @media print {
+    [data-reveal] {
+      opacity: 1 !important;
+      translate: none !important;
+    }
+  }
 }

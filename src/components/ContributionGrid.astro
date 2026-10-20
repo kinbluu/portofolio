@@ -53,6 +53,7 @@ const firstDay = days.find((day) => day)?.date;
 
 <script>
   import { contributionTooltipPosition } from "../scripts/contribution-tooltip";
+  import { revealCells } from "../scripts/reveal";
 
   class ContributionGrid extends HTMLElement {
     private cleanup?: () => void;
@@ -63,6 +64,8 @@ const firstDay = days.find((day) => day)?.date;
       const content = this.querySelector<HTMLElement>("[data-tooltip-content]");
       const cells = [...this.querySelectorAll<HTMLElement>("[data-contribution-cell]")];
       if (!tooltip || !content) return;
+      const grid = this.querySelector<HTMLElement>('[role="group"]');
+      const stopReveal = grid ? revealCells(grid) : () => {};
 
       const controller = new AbortController();
       const options = { signal: controller.signal };
@@ -140,6 +143,7 @@ const firstDay = days.find((day) => day)?.date;
       window.addEventListener("resize", hide, options);
       this.cleanup = () => {
         controller.abort();
+        stopReveal();
         hide();
       };
     }

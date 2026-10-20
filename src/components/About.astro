@@ -9,12 +9,12 @@ import IconTile from "./ui/IconTile.astro";
   class="flex flex-col gap-8 border-t border-line pt-10 pb-12 lg:flex-row lg:gap-20 lg:pt-14 lg:pb-16"
 >
   <div class="flex flex-1 flex-col gap-6">
-    <h2 id="about-title" class="type-h2">
+    <h2 id="about-title" class="type-h2" data-reveal>
       {about.titleLines[0]}<br />
       {about.titleLines[1]}
     </h2>
-    <p class="text-body-l text-muted">{about.description}</p>
-    <ul class="flex flex-col gap-4 pt-2">
+    <p class="text-body-l text-muted" data-reveal>{about.description}</p>
+    <ul class="flex flex-col gap-4 pt-2" data-reveal>
       {
         about.practices.map(({ icon: Icon, label }) => (
           <li class="flex items-center gap-3 text-body">
@@ -26,11 +26,11 @@ import IconTile from "./ui/IconTile.astro";
     </ul>
   </div>
   <div class="flex flex-1 flex-col gap-4 lg:gap-5">
-    <h3 class="type-h2">My everyday toolkit.</h3>
+    <h3 class="type-h2" data-reveal>My everyday toolkit.</h3>
     <ul class="flex flex-col gap-4 lg:gap-5">
       {
         skills.map(({ icon: Icon, label, value }) => (
-          <li class="flex gap-4 border-b border-line pb-4">
+          <li class="flex gap-4 border-b border-line pb-4" data-reveal>
             <IconTile>
               <Icon size={20} />
             </IconTile>

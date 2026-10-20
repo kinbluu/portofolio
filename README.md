@@ -40,7 +40,7 @@ All commands are run from the root of the project, from a terminal:
 
 ## Loading states
 
-Static portfolio sections render immediately, without scroll-triggered loading masks. Only the deferred GitHub calendar shows a loading placeholder.
+Intro uses CSS `enter-N` rise-in on load; below-the-fold sections fade in on scroll via `src/scripts/reveal.ts` (Motion, `[data-reveal]`), disabled for `prefers-reduced-motion`. Only the deferred GitHub calendar shows a loading placeholder.
 
 `src/components/ui/Skeleton.astro` adapts the [shadcn/ui Skeleton](https://ui.shadcn.com/docs/components/skeleton) pattern to Astro and the existing theme tokens, without adding client-side JavaScript. `GitHubCalendarSkeleton.astro` composes it into the calendar's responsive layout, uses one shared pulse, and disables motion for `prefers-reduced-motion`. Astro replaces it as soon as the server island responds; there is no artificial delay.
 
