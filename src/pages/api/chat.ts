@@ -6,8 +6,9 @@ import {
   type RunErrorEvent,
 } from "@tanstack/ai";
 import { createGeminiChat } from "@tanstack/ai-gemini";
+import { createGroqText } from "@tanstack/ai-groq";
 import type { APIRoute } from "astro";
-import { GEMINI_API_KEY } from "astro:env/server";
+import { GEMINI_API_KEY, GROQ_API_KEY } from "astro:env/server";
 import { env } from "cloudflare:workers";
 import {
   chatLimits,
@@ -52,7 +53,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const reject = (message: string) =>
     toServerSentEventsResponse(rejection({ threadId, runId, message }));
 
-  if (!GEMINI_API_KEY)
+  if (!GEMINI_API_KEY && !GROQ_API_KEY)
     return reject("Asisten belum siap digunakan. Silakan coba lagi nanti.");
 
   const { success } = await env.CHAT_RATE_LIMITER.limit({ key: clientAddress });
@@ -73,17 +74,28 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
 
   const abortController = new AbortController();
-  const stream = chat({
-    adapter: createGeminiChat("gemini-3.8-flash", GEMINI_API_KEY),
+  const base = {
     messages,
     threadId,
     runId,
     systemPrompts: [chatSystemPrompt],
     tools: chatTools,
-    reasoning: "low",
-    modelOptions: { maxOutputTokens: 1024 },
     abortController,
-  });
+  };
+  // Groq dipakai bila GROQ_API_KEY ada; selain itu Gemini.
+  const stream = GROQ_API_KEY
+    ? chat({
+        ...base,
+        adapter: createGroqText("openai/gpt-oss-20b", GROQ_API_KEY),
+        reasoning: "low",
+        modelOptions: { max_completion_tokens: 1024 },
+      })
+    : chat({
+        ...base,
+        adapter: createGeminiChat("gemini-3.1-flash-lite", GEMINI_API_KEY!),
+        reasoning: "minimal",
+        modelOptions: { maxOutputTokens: 1024 },
+      });
 
   return toServerSentEventsResponse(stream, { abortController });
 };
