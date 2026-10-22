@@ -16,6 +16,12 @@ import {
   chatTools,
   checkHistory,
 } from "../../lib/chat";
+import {
+  chatGuard,
+  guardStream,
+  questionRule,
+  refusalStream,
+} from "../../lib/chat-guard";
 import { chatSystemPrompt } from "../../lib/chat-prompt";
 
 export const prerender = false;
@@ -73,6 +79,12 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     );
   }
 
+  const rule = questionRule(messages);
+  if (rule) {
+    console.warn(`[chat-guard] question blocked: ${rule}`);
+    return toServerSentEventsResponse(refusalStream(threadId, runId));
+  }
+
   const abortController = new AbortController();
   const base = {
     messages,
@@ -80,6 +92,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     runId,
     systemPrompts: [chatSystemPrompt],
     tools: chatTools,
+    middleware: [chatGuard],
     abortController,
   };
   // Groq dipakai bila GROQ_API_KEY ada; selain itu Gemini.
@@ -88,7 +101,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
         ...base,
         adapter: createGroqText("openai/gpt-oss-20b", GROQ_API_KEY),
         reasoning: "low",
-        modelOptions: { max_completion_tokens: 1024 },
+        modelOptions: { max_completion_tokens: 1024, include_reasoning: false },
       })
     : chat({
         ...base,
@@ -97,5 +110,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
         modelOptions: { maxOutputTokens: 1024 },
       });
 
-  return toServerSentEventsResponse(stream, { abortController });
+  return toServerSentEventsResponse(guardStream(stream, messages), {
+    abortController,
+  });
 };

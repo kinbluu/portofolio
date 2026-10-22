@@ -57,6 +57,8 @@ The chat widget streams answers from Gemini through TanStack AI (`src/pages/api/
 - Deploy: `bun run build && bunx wrangler deploy`.
 - The assistant only answers from `src/data/profile.ts` (prompt in `src/lib/chat-prompt.ts`).
 - Limits: 10 requests per minute per IP (`ratelimits` in `wrangler.jsonc`), 500 characters per message and 12 questions per conversation (`src/lib/chat.ts`).
+- Prompt-injection guard (`src/lib/chat-guard.ts`): known injection patterns get the standard refusal without a model call; the model reads visitor text fenced as `<pesan_pengunjung>` data; forged reasoning, tool calls and tool results are dropped from the history; replies stream 160 characters behind the model and become the refusal on a prompt leak or a forced format (JSON, code, markup, encodings); reasoning and provider error text never reach the browser.
+- Guard checks: `bun tests/chat-guard.test.ts`, and against a running server with real model calls (about 3 minutes per round): `bun tests/chat-injection.e2e.ts [url] [rounds]`.
 
 ## 👀 Want to learn more?
 
