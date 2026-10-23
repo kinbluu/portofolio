@@ -25,6 +25,7 @@ import {
   chatRejectedCode,
   allowedChatLink,
   pageSectionLabels,
+  type ChatContacts,
   showContactTool,
   showSectionTool,
   type PageSection,
@@ -41,6 +42,7 @@ interface Props {
   suggestions: string[];
   email: string;
   github: string;
+  linkedin: string;
 }
 
 const fallbackError =
@@ -81,18 +83,16 @@ const hidePanel = (event: MouseEvent<HTMLElement>) =>
 
 export function ChatMarkdown({
   content,
-  email,
-  github,
+  contacts,
 }: {
   content: string;
-  email: string;
-  github: string;
+  contacts: ChatContacts;
 }) {
   // Model output is untrusted: only Rahmat's own links stay clickable, images render as alt text (no remote fetch).
   const components = useMemo(
     () => ({
       a: ({ href = "", children }: ComponentPropsWithoutRef<"a">) => {
-        const safe = allowedChatLink(href, email, github);
+        const safe = allowedChatLink(href, contacts);
         if (!safe) return <span>{children}</span>;
         if (safe.startsWith("#"))
           return (
@@ -109,7 +109,7 @@ export function ChatMarkdown({
       },
       img: ({ alt }: ComponentPropsWithoutRef<"img">) => <span>{alt}</span>,
     }),
-    [email, github],
+    [contacts],
   );
   return (
     <TextPart
@@ -133,7 +133,11 @@ function SectionLink({ section }: { section: PageSection }) {
   );
 }
 
-function ContactCard({ email, github }: { email: string; github: string }) {
+function ContactCard({
+  contacts: { email, github, linkedin },
+}: {
+  contacts: ChatContacts;
+}) {
   return (
     <div className="flex w-full flex-col gap-2 rounded-[16px_16px_16px_4px] bg-paper p-3 ring-1 ring-line ring-inset">
       <a
@@ -143,27 +147,33 @@ function ContactCard({ email, github }: { email: string; github: string }) {
         <Mail size={16} className="shrink-0" />
         <span className="truncate">{email}</span>
       </a>
-      <a
-        href={github}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex h-11 items-center justify-center gap-2 rounded-pill bg-paper px-4 text-body font-medium text-ink ring-1 ring-line ring-inset hover:ring-ink motion-safe:transition-colors"
-      >
-        GitHub
-        <ArrowUpRight size={16} />
-      </a>
+      <div className="grid grid-cols-2 gap-2">
+        {[
+          { label: "LinkedIn", href: linkedin },
+          { label: "GitHub", href: github },
+        ].map(({ label, href }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-pill bg-paper px-4 text-body font-medium text-ink ring-1 ring-line ring-inset hover:ring-ink motion-safe:transition-colors"
+          >
+            {label}
+            <ArrowUpRight size={16} />
+          </a>
+        ))}
+      </div>
     </div>
   );
 }
 
 function MessageView({
   message,
-  email,
-  github,
+  contacts,
 }: {
   message: ChatMessage;
-  email: string;
-  github: string;
+  contacts: ChatContacts;
 }) {
   if (message.role === "user") {
     const text = message.parts
@@ -177,7 +187,7 @@ function MessageView({
       if (!part.content.trim()) return null;
       return (
         <div key={index} className={assistantBubble}>
-          <ChatMarkdown content={part.content} email={email} github={github} />
+          <ChatMarkdown content={part.content} contacts={contacts} />
         </div>
       );
     }
@@ -185,7 +195,7 @@ function MessageView({
     if (part.name === "show_section")
       return <SectionLink key={part.id} section={part.input.section} />;
     if (part.name === "show_contact")
-      return <ContactCard key={part.id} email={email} github={github} />;
+      return <ContactCard key={part.id} contacts={contacts} />;
     return null;
   });
 }
@@ -210,8 +220,13 @@ function ChatView({
   suggestions,
   email,
   github,
+  linkedin,
 }: Props & { chat?: ChatState }) {
   const [input, setInput] = useState("");
+  const contacts = useMemo(
+    () => ({ email, github, linkedin }),
+    [email, github, linkedin],
+  );
   const { scrollRef, contentRef, scrollToBottom, state } = useStickToBottom({
     initial: "instant",
     resize: "smooth",
@@ -315,8 +330,7 @@ function ChatView({
               <MessageView
                 key={message.id}
                 message={message}
-                email={email}
-                github={github}
+                contacts={contacts}
               />
             ))}
             {typing && (

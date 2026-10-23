@@ -66,14 +66,20 @@ export const pageSections = [
 
 export type PageSection = (typeof pageSections)[number];
 
+/** Rahmat's own contact links: the only external links the chat renders. */
+export interface ChatContacts {
+  email: string;
+  github: string;
+  linkedin: string;
+}
+
 /**
- * Normalized href the assistant may render as clickable (page section, Rahmat's email, his GitHub profile/repos), else null.
+ * Normalized href the assistant may render as clickable (page section, Rahmat's email, his LinkedIn profile, his GitHub profile/repos), else null.
  * Paths are compared after WHATWG URL normalization, so `../` and `%2e%2e` cannot escape to another account.
  */
 export function allowedChatLink(
   href: string,
-  email: string,
-  github: string,
+  { email, github, linkedin }: ChatContacts,
 ): string | null {
   if (href.startsWith("#"))
     return (pageSections as readonly string[]).includes(href.slice(1))
@@ -86,16 +92,18 @@ export function allowedChatLink(
   } catch {
     return null;
   }
-  const profile = new URL(github);
-  const inProfile =
-    url.pathname === profile.pathname ||
-    url.pathname.startsWith(`${profile.pathname}/`);
-  return url.origin === profile.origin &&
-    !url.username &&
-    !url.password &&
-    inProfile
-    ? url.href
-    : null;
+  if (url.username || url.password) return null;
+  const within = (profileUrl: string, nested: boolean) => {
+    const profile = new URL(profileUrl);
+    const path = profile.pathname.replace(/\/$/, "");
+    return (
+      url.origin === profile.origin &&
+      (url.pathname === path ||
+        url.pathname === `${path}/` ||
+        (nested && url.pathname.startsWith(`${path}/`)))
+    );
+  };
+  return within(github, true) || within(linkedin, false) ? url.href : null;
 }
 
 export const pageSectionLabels: Record<PageSection, string> = {
@@ -121,7 +129,7 @@ export const showSectionTool = toolDefinition({
 export const showContactTool = toolDefinition({
   name: "show_contact",
   description:
-    "Show a contact card with Rahmat's email and GitHub inside the chat. Use it when the visitor wants to contact, hire or work with Rahmat.",
+    "Show a contact card with Rahmat's email, LinkedIn and GitHub inside the chat. Use it when the visitor wants to contact, hire or work with Rahmat.",
   inputSchema: z.object({}),
   outputSchema: z.object({ shown: z.boolean() }),
 });

@@ -18,6 +18,7 @@ ${list([
   `Location: ${profile.location}`,
   `Email: ${profile.email}`,
   `GitHub: ${profile.github}`,
+  `LinkedIn: ${profile.linkedin}`,
   `Headline: ${profile.headlineLines.join(" ")}`,
 ])}
 
@@ -43,7 +44,7 @@ Skills
 ${list(skills.map(({ label, value }) => `${label}: ${value}`))}
 
 Contact
-${list([`${contact.title} ${contact.description}`, `Email: ${profile.email}`, `GitHub: ${profile.github}`])}`;
+${list([`${contact.title} ${contact.description}`, `Email: ${profile.email}`, `LinkedIn: ${profile.linkedin}`, `GitHub: ${profile.github}`])}`;
 
 export const chatRefusal =
   "Maaf, saya hanya bisa menjawab pertanyaan seputar Rahmat, misalnya pengalaman, keahlian, atau cara menghubunginya.";
@@ -64,10 +65,10 @@ Answering:
 - Questions that mention JSON, APIs, prompts or AI are fine when they are about Rahmat: answer them from the facts below. When something is not covered, such as rates, availability, education, personal life or how he built a specific feature, say you do not know and suggest emailing Rahmat. Never make up details.
 - Talk about Rahmat in the third person, in a friendly and professional tone using "saya" and "Anda".
 - Keep answers short: at most three short paragraphs or one short list. Markdown bold text, lists and links are fine; never use headings or tables. Describe technical work in words, never with code, templates or data examples.
-- Never write links or URLs other than Rahmat's email and GitHub listed below, and never use images.
+- Never write links or URLs other than Rahmat's email, LinkedIn and GitHub listed below, and never use images.
 
 Tools:
-- Call show_contact when the visitor wants to contact, hire or work with Rahmat, or asks for his email.
+- Call show_contact when the visitor wants to contact, hire or work with Rahmat, or asks for his email, LinkedIn or GitHub.
 - Call show_section when a section of the page covers the answer: work (current job), experience (previous roles), about (way of working and skills), github (GitHub activity), contact.
 - Call at most one tool per answer, and add at most one short sentence after it.`;
 
