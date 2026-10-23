@@ -15,6 +15,7 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
+  type ClipboardEvent,
   type ComponentPropsWithoutRef,
   type MouseEvent,
   type SubmitEvent,
@@ -223,6 +224,7 @@ function ChatView({
   linkedin,
 }: Props & { chat?: ChatState }) {
   const [input, setInput] = useState("");
+  const [clipped, setClipped] = useState(false);
   const contacts = useMemo(
     () => ({ email, github, linkedin }),
     [email, github, linkedin],
@@ -280,8 +282,25 @@ function ChatView({
     const content = text.trim();
     if (!chat || !content || isLoading || limitReached) return;
     setInput("");
+    setClipped(false);
     chat.send(content);
     void scrollToBottom();
+  };
+
+  const maxLength = chatLimits.messageLength;
+  const nearMaxLength = input.length >= maxLength * 0.8;
+  const atMaxLength = input.length >= maxLength;
+  const lengthNotice = clipped
+    ? `Teks dipotong ke ${maxLength} karakter.`
+    : atMaxLength
+      ? `Batas ${maxLength} karakter tercapai.`
+      : "";
+
+  const paste = (event: ClipboardEvent<HTMLInputElement>) => {
+    const field = event.currentTarget;
+    const selected = (field.selectionEnd ?? 0) - (field.selectionStart ?? 0);
+    const pasted = event.clipboardData.getData("text").length;
+    setClipped(field.value.length - selected + pasted > maxLength);
   };
 
   const submit = (event: SubmitEvent<HTMLFormElement>) => {
@@ -377,43 +396,66 @@ function ChatView({
       </div>
       <form
         onSubmit={submit}
-        className="flex items-center gap-2 border-t border-line p-3 lg:gap-2.5 lg:px-4 lg:py-3.5"
+        className="flex flex-col gap-1.5 border-t border-line p-3 lg:px-4 lg:py-3.5"
       >
-        <label htmlFor="chat-message" className="sr-only">
-          Pertanyaan
-        </label>
-        <input
-          id="chat-message"
-          name="message"
-          type="text"
-          required
-          autoComplete="off"
-          maxLength={chatLimits.messageLength}
-          disabled={!chat || limitReached}
-          placeholder="Tanyakan tentang Rahmat…"
-          value={input}
-          onChange={(event) => setInput(event.target.value)}
-          className="h-11 min-w-0 flex-1 rounded-pill bg-soft px-4 text-body/[1.5] text-ink placeholder:text-muted disabled:opacity-60 lg:h-[42px]"
-        />
-        {isLoading ? (
-          <button
-            type="button"
-            aria-label="Hentikan jawaban"
-            className={roundButton}
-            onClick={chat?.stop}
-          >
-            <Square size={14} fill="currentColor" />
-          </button>
-        ) : (
-          <button
-            type="submit"
-            aria-label="Kirim pertanyaan"
+        <p
+          id="chat-message-limit"
+          aria-live="polite"
+          className={
+            nearMaxLength
+              ? `flex items-center justify-between gap-3 px-4 text-micro ${lengthNotice ? "font-medium text-accent" : "text-muted"}`
+              : "sr-only"
+          }
+        >
+          <span>{lengthNotice}</span>
+          {nearMaxLength && (
+            <span className="shrink-0 tabular-nums" aria-hidden="true">
+              {input.length}/{maxLength}
+            </span>
+          )}
+        </p>
+        <div className="flex items-center gap-2 lg:gap-2.5">
+          <label htmlFor="chat-message" className="sr-only">
+            Pertanyaan
+          </label>
+          <input
+            id="chat-message"
+            name="message"
+            type="text"
+            required
+            autoComplete="off"
+            maxLength={maxLength}
+            aria-describedby="chat-message-limit"
             disabled={!chat || limitReached}
-            className={roundButton}
-          >
-            <Send size={18} />
-          </button>
-        )}
+            placeholder="Tanyakan tentang Rahmat…"
+            value={input}
+            onPaste={paste}
+            onChange={(event) => {
+              setInput(event.target.value);
+              if (event.target.value.length < maxLength) setClipped(false);
+            }}
+            className="h-11 min-w-0 flex-1 rounded-pill bg-soft px-4 text-body/[1.5] text-ink placeholder:text-muted disabled:opacity-60 lg:h-[42px]"
+          />
+          {isLoading ? (
+            <button
+              type="button"
+              aria-label="Hentikan jawaban"
+              className={roundButton}
+              onClick={chat?.stop}
+            >
+              <Square size={14} fill="currentColor" />
+            </button>
+          ) : (
+            <button
+              type="submit"
+              aria-label="Kirim pertanyaan"
+              disabled={!chat || limitReached}
+              className={roundButton}
+            >
+              <Send size={18} />
+            </button>
+          )}
+        </div>
       </form>
     </>
   );
