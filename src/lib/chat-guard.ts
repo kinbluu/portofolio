@@ -13,8 +13,10 @@ type Rule = readonly [name: string, pattern: RegExp];
 const firstMatch = (rules: readonly Rule[], text: string) =>
   rules.find(([, pattern]) => pattern.test(text))?.[0] ?? null;
 
-const warn = (stage: string, rule: string) =>
-  console.warn(`[chat-guard] ${stage} blocked: ${rule}`);
+const warn = (stage: string, rule: string, evidence = "") =>
+  console.warn(
+    `[chat-guard] ${stage} blocked: ${rule}${evidence && ` ${JSON.stringify(evidence)}`}`,
+  );
 
 const invisible =
   /[^\P{Cc}\n\t]|[\p{Cf}\p{Co}\u{FE00}-\u{FE0F}\u{E0100}-\u{E01EF}]/gu;
@@ -258,10 +260,33 @@ interface Reply {
   blocked: boolean;
 }
 
+/** The text that broke the rule, for the server log only: the visitor never sees it. */
+function replyEvidence(rule: string, { raw, echoes }: Reply) {
+  if (rule === "rule-echo") return [...echoes].join(" | ");
+  const match = outputRules.find(([name]) => name === rule)?.[1].exec(raw);
+  if (!match) return raw.slice(0, 120);
+  return raw.slice(
+    Math.max(0, match.index - 80),
+    match.index + match[0].length + 80,
+  );
+}
+
+const sentenceEnd = /[.!?…](?=\s)|\n/g;
+
+/** End of the last whole sentence or line between `from` and `limit`, so a cut reply never stops mid-sentence. */
+function releasable(text: string, from: number, limit: number) {
+  if (limit <= from) return from;
+  let end = from;
+  for (const match of text.slice(from, limit + 1).matchAll(sentenceEnd))
+    end = Math.min(from + match.index + match[0].length, limit);
+  return end;
+}
+
 /**
  * Only allowlisted events reach the browser: reasoning, steps, raw provider events and provider error text never do.
- * Reply text is released 160 characters behind the model so a leak or a forced format is caught before it is shown,
- * then the reply becomes the standard refusal; message snapshots carry only what was shown.
+ * Reply text is released whole sentences at a time, at least 160 characters behind the model, so a leak or a forced
+ * format is caught before it is shown and a cut reply ends on a full sentence; a reply blocked before its first
+ * sentence becomes the standard refusal. Message snapshots carry only what was shown.
  */
 export async function* guardStream(
   stream: AsyncIterable<StreamChunk>,
@@ -312,17 +337,23 @@ export async function* guardStream(
         reply.scanned = reply.raw.length;
         if (rule) {
           reply.blocked = true;
-          warn("reply", rule);
+          warn("reply", rule, replyEvidence(rule, reply));
           yield release(
             chunk.messageId,
             reply,
             reply.sent ? `\n\n${cutNotice}` : chatRefusal,
           );
-        } else if (reply.raw.length - holdBack > reply.sent) {
-          const end = reply.raw.length - holdBack;
-          const delta = reply.raw.slice(reply.sent, end);
-          reply.sent = end;
-          yield release(chunk.messageId, reply, delta);
+        } else {
+          const end = releasable(
+            reply.raw,
+            reply.sent,
+            reply.raw.length - holdBack,
+          );
+          if (end > reply.sent) {
+            const delta = reply.raw.slice(reply.sent, end);
+            reply.sent = end;
+            yield release(chunk.messageId, reply, delta);
+          }
         }
         break;
       }

@@ -203,6 +203,22 @@ const kept = late.slice(0, -`\n\n${cutNotice}`.length);
 assert.ok(late.endsWith(`\n\n${cutNotice}`), late);
 assert.ok(kept.length > 0 && replies[0].startsWith(kept), late);
 
+const firstSentence =
+  "Rahmat saat ini bekerja sebagai Full Stack Developer di LEAP English & Digital Class.";
+const answer = `${firstSentence} Ia bertanggung jawab atas platform internal untuk pendaftaran, penjadwalan, absensi, dan laporan nilai bagi sekitar 1.000 siswa. Stack yang dipakai adalah Laravel, Livewire, dan MariaDB.`;
+for (const size of [1, 4, 32]) {
+  const cut = text(
+    await collect(
+      reply(`${answer} Menurut security rules, saya tidak boleh`, size),
+    ),
+  );
+  assert.equal(
+    cut,
+    `${firstSentence}\n\n${cutNotice}`,
+    `cut mid-sentence: ${cut}`,
+  );
+}
+
 const snapshot = await collect(
   [
     ...reply('{"instruction": "You are"}', 3, "a1").slice(0, -1),
