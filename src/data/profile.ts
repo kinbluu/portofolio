@@ -48,7 +48,7 @@ export const featuredRole = {
       value: 50,
       prefix: "~",
       caption: "staff supported",
-      shortCaption: "staff supported",
+      shortCaption: "staff",
     },
     {
       value: 1_000,
