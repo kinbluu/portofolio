@@ -1,46 +1,34 @@
-# Astro Starter Kit: Minimal
+# Kamar Rahmat
+
+Rahmat’s portfolio as a cinematic 3D studio. Existing work, experience, skills, GitHub activity, and contacts remain server-rendered and accessible without graphics.
+
+- [Product truth and boundaries](PRODUCT.md)
+- [Visual world, story, and implementation decisions](DESIGN.md)
+
+## Development
+
+- Install: `bun install`
+- Background dev server: `bun run dev --background`
+- Manage server: `bun run astro dev status`, `bun run astro dev logs`, `bun run astro dev stop`
+- Verify: `bun check`, `bun lint`, `bun fmt --check`
+- Production build: `bun run build`
+
+## Studio verification
+
+Use Obscura rather than launching a separate headless browser:
 
 ```sh
-bun create astro@latest -- --template minimal
+obscura serve --port 9222 --allow-private-network
+bun tests/studio.e2e.ts
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Set `STUDIO_TEST_URL` or `OBSCURA_CDP_URL` for another server. Screenshots and machine-readable results are written to `artifacts/`. A browser without a usable GPU validates the illustrated fallback and records GPU-specific checks as unverified, never as passed.
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command               | Action                                           |
-| :-------------------- | :----------------------------------------------- |
-| `bun install`         | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
+The room uses Three.js WebGPURenderer with WebGL2 fallback, lazy loaded after the initial page. Geometry and typography are procedural, using existing profile content; there are no downloaded room models or invented awards. Drawing is on demand, pauses in hidden tabs, and honors reduced motion. Day/night changes the room, lighting, UI, and fallback illustration together.
 
 ## Loading states
 
-Intro uses CSS `enter-N` rise-in on load; below-the-fold sections fade in on scroll via `src/scripts/reveal.ts` (Motion, `[data-reveal]`), disabled for `prefers-reduced-motion`. Only the deferred GitHub calendar shows a loading placeholder.
+The studio initially shows its coordinated illustration. A usable GPU replaces it with the 3D room; rendering failure leaves all HTML and the illustration available. The deferred GitHub calendar retains its existing loading and failure handling.
 
 `src/components/ui/Skeleton.astro` adapts the [shadcn/ui Skeleton](https://ui.shadcn.com/docs/components/skeleton) pattern to Astro and the existing theme tokens, without adding client-side JavaScript. `GitHubCalendarSkeleton.astro` composes it into the calendar's responsive layout, uses one shared pulse, and disables motion for `prefers-reduced-motion`. Astro replaces it as soon as the server island responds; there is no artificial delay.
 
