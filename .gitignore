@@ -30,3 +30,4 @@ pnpm-debug.log*
 .empryo
 
 /dogfood-output
+/artifacts/
