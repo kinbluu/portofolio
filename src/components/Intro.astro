@@ -1,44 +1,42 @@
 ---
-import MapPin from "@lucide/astro/icons/map-pin";
-import { experience, featuredRole, profile, skills } from "../data/profile";
-import { buildCalendarView, getContributionCalendar } from "../lib/github";
-import Button from "./ui/Button.astro";
-
-const [previous] = experience;
-const github = buildCalendarView((await getContributionCalendar()).days);
-const facts = [
-  { label: "Now", value: featuredRole.employer },
-  { label: "Previously", value: `${previous.title} · ${previous.organization}` },
-  { label: "Learning", value: skills.find((skill) => skill.label === "Currently learning")?.value },
-  { label: "GitHub", value: `${new Intl.NumberFormat("en-US").format(github.total)} contributions in the last year` },
-];
+import ArrowDownRight from "@lucide/astro/icons/arrow-down-right";
+import { profile } from "../data/profile";
 ---
 
 <section
   id="top"
   aria-labelledby="intro-title"
-  class="flex flex-col gap-10 py-10 lg:flex-row lg:items-center lg:gap-16 lg:pt-16 lg:pb-14"
+  class="studio-chapter studio-intro"
+  data-studio-chapter
+  data-studio-side="left"
+  data-studio-label="The room"
 >
-  <div class="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6">
-    <h1 id="intro-title" class="type-h3 motion-safe:enter-0">{profile.name}</h1>
-    <p class="type-display text-balance motion-safe:enter-1">{profile.headlineLines.join(" ")}</p>
-    <p class="flex items-center gap-3 text-micro text-muted motion-safe:enter-2 lg:text-body">
-      <MapPin size={16} class="shrink-0" />
-      {profile.location} · {profile.role}
+  <div class="studio-copy">
+    <p class="studio-person">{profile.name}</p>
+    <h1 id="intro-title">
+      {profile.headlineLines[0]} <em>{profile.headlineLines[1]}</em>
+    </h1>
+    <p class="studio-intro-role">
+      {profile.role}
+      <span aria-hidden="true"> / </span>
+      {profile.location}
     </p>
-    <div class="flex items-center gap-2 pt-1 motion-safe:enter-3 lg:gap-3">
-      <Button href={`mailto:${profile.email}`}>Let’s talk</Button>
-      <Button href={profile.linkedin} variant="secondary">LinkedIn</Button>
+    <div class="studio-intro-links">
+      <a class="studio-link" href={"mailto:" + profile.email}>
+        Let’s talk <ArrowDownRight size={17} />
+      </a>
+      <a
+        class="studio-quiet-link"
+        href={profile.linkedin}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        LinkedIn
+      </a>
     </div>
+    <a href="#work" class="studio-enter">
+      <span class="studio-enter-line" aria-hidden="true"></span>Scroll to step
+      inside <ArrowDownRight size={16} />
+    </a>
   </div>
-  <dl class="w-90 shrink-0 rounded-md bg-soft px-6 py-2 ring-1 ring-line ring-inset max-lg:hidden motion-safe:enter-3">
-    {
-      facts.map(({ label, value }, index) => (
-        <div class:list={["flex flex-col gap-1 py-4", index > 0 && "border-t border-line"]}>
-          <dt class="text-caption text-muted">{label}</dt>
-          <dd class="text-body font-medium">{value}</dd>
-        </div>
-      ))
-    }
-  </dl>
 </section>

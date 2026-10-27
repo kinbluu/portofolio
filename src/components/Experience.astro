@@ -5,25 +5,25 @@ import { experience } from "../data/profile";
 <section
   id="experience"
   aria-labelledby="experience-title"
-  class="flex flex-col gap-7 py-12 lg:gap-8 lg:py-16"
+  class="studio-chapter"
+  data-studio-chapter
+  data-studio-side="left"
+  data-studio-label="The collected experience"
 >
-  <h2 id="experience-title" class="type-h2" data-reveal>Along the way.</h2>
-  <ol class="flex flex-col gap-7 lg:gap-8">
-    {
-      experience.map(({ icon: Icon, ...role }) => (
-        <li class="flex flex-col gap-3 border-t border-line pt-6 lg:flex-row lg:gap-10 lg:pt-7" data-reveal>
-          <p class="text-caption text-muted lg:w-54 lg:shrink-0 lg:text-body">{role.dates}</p>
-          <div class="flex min-w-0 flex-1 flex-col gap-2">
-            <h3 class="flex items-center gap-3 type-h3">
-              <Icon size={18} class="shrink-0 text-accent" />
-              {role.title}
-            </h3>
-            <p class="text-body text-muted">{role.organization}</p>
-            <p class="text-body-l">{role.description}</p>
-            <p class="text-caption text-muted">{role.stack}</p>
-          </div>
+  <div class="studio-copy">
+    <h2 id="experience-title">
+      Along <em>the way.</em>
+    </h2>
+    <ol class="studio-experience">
+      {experience.map((role) => (
+        <li>
+          <p class="studio-meta">{role.dates}</p>
+          <h3>{role.title}</h3>
+          <p class="studio-organization">{role.organization}</p>
+          <p class="studio-description">{role.description}</p>
+          <p class="studio-role-stack">{role.stack}</p>
         </li>
-      ))
-    }
-  </ol>
+      ))}
+    </ol>
+  </div>
 </section>

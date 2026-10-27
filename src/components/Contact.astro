@@ -1,22 +1,36 @@
 ---
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
 import { contact, profile } from "../data/profile";
-import Button from "./ui/Button.astro";
-import TextLink from "./ui/TextLink.astro";
 ---
 
 <section
   id="contact"
   aria-labelledby="contact-title"
-  class="flex flex-col gap-4 rounded-md bg-soft px-5 py-7 lg:rounded-lg lg:p-10"
-  data-reveal
+  class="studio-chapter studio-contact"
+  data-studio-chapter
+  data-studio-side="left"
+  data-studio-label="An open invitation"
 >
-  <h2 id="contact-title" class="type-h2">{contact.title}</h2>
-  <p class="text-body-l text-muted">{contact.description}</p>
-  <div class="flex flex-col items-start gap-6 pt-3 lg:flex-row lg:items-center lg:justify-between">
-    <Button href={`mailto:${profile.email}`}>{profile.email}</Button>
-    <div class="flex gap-6">
-      <TextLink href={profile.linkedin}>LinkedIn</TextLink>
-      <TextLink href={`tel:${profile.phone}`}>Phone</TextLink>
+  <div class="studio-copy">
+    <h2 id="contact-title">{contact.title}</h2>
+    <p class="studio-description">{contact.description}</p>
+    <a class="studio-contact-email" href={"mailto:" + profile.email}>
+      {profile.email}
+      <ArrowUpRight size={20} />
+    </a>
+    <div class="studio-contact-links">
+      <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">
+        LinkedIn <ArrowUpRight size={14} />
+      </a>
+      <a href={profile.github} target="_blank" rel="noopener noreferrer">
+        GitHub <ArrowUpRight size={14} />
+      </a>
+      <a href={"tel:" + profile.phone}>
+        Phone <ArrowUpRight size={14} />
+      </a>
     </div>
+    <a class="studio-back" href="#top">
+      Back to the room ↑
+    </a>
   </div>
 </section>

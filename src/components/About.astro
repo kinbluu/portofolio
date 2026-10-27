@@ -1,46 +1,38 @@
 ---
 import { about, skills } from "../data/profile";
-import IconTile from "./ui/IconTile.astro";
 ---
 
 <section
   id="about"
   aria-labelledby="about-title"
-  class="flex flex-col gap-8 border-t border-line pt-10 pb-12 lg:flex-row lg:gap-20 lg:pt-14 lg:pb-16"
+  class="studio-chapter"
+  data-studio-chapter
+  data-studio-side="right"
+  data-studio-label="The everyday tools"
 >
-  <div class="flex flex-1 flex-col gap-6">
-    <h2 id="about-title" class="type-h2" data-reveal>
-      {about.titleLines[0]}<br />
-      {about.titleLines[1]}
+  <div class="studio-copy">
+    <h2 id="about-title">
+      {about.titleLines[0]}
+      <br />
+      <em>{about.titleLines[1]}</em>
     </h2>
-    <p class="text-body-l text-muted" data-reveal>{about.description}</p>
-    <ul class="flex flex-col gap-4 pt-2" data-reveal>
-      {
-        about.practices.map(({ icon: Icon, label }) => (
-          <li class="flex items-center gap-3 text-body">
-            <Icon size={18} class="shrink-0 text-accent" />
-            {label}
-          </li>
-        ))
-      }
+    <p class="studio-description">{about.description}</p>
+    <ul class="studio-practices">
+      {about.practices.map(({ icon: Icon, label }) => (
+        <li>
+          <Icon size={16} />
+          {label}
+        </li>
+      ))}
     </ul>
-  </div>
-  <div class="flex flex-1 flex-col gap-4 lg:gap-5">
-    <h3 class="type-h2" data-reveal>My everyday toolkit.</h3>
-    <ul class="flex flex-col gap-4 lg:gap-5">
-      {
-        skills.map(({ icon: Icon, label, value }) => (
-          <li class="flex gap-4 border-b border-line pb-4" data-reveal>
-            <IconTile>
-              <Icon size={20} />
-            </IconTile>
-            <div class="flex min-w-0 flex-1 flex-col gap-1">
-              <p class="text-caption text-muted">{label}</p>
-              <p class="text-body-l">{value}</p>
-            </div>
-          </li>
-        ))
-      }
-    </ul>
+    <h3 class="studio-toolkit-title">My everyday toolkit.</h3>
+    <dl class="studio-toolkit">
+      {skills.map(({ label, value }) => (
+        <div>
+          <dt>{label}</dt>
+          <dd>{value}</dd>
+        </div>
+      ))}
+    </dl>
   </div>
 </section>

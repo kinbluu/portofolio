@@ -16,6 +16,15 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.google(),
+      name: "DM Serif Display",
+      cssVariable: "--font-dm-serif",
+      weights: [400],
+      styles: ["normal", "italic"],
+      subsets: ["latin"],
+      fallbacks: ["serif"],
+    },
+    {
+      provider: fontProviders.google(),
       name: "Manrope",
       cssVariable: "--font-manrope",
       weights: [400, 600, 700],

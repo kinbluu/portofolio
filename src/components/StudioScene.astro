@@ -1,0 +1,88 @@
+---
+import {
+  about,
+  experience,
+  featuredRole,
+  profile,
+  skills,
+} from "../data/profile";
+import snapshot from "../data/github-snapshot.json";
+const chapters = [
+  { id: "top", label: "The room" },
+  { id: "work", label: "Work" },
+  { id: "experience", label: "Experience" },
+  { id: "about", label: "About" },
+  { id: "github", label: "GitHub" },
+  { id: "contact", label: "Contact" },
+];
+const content = {
+  name: profile.wordmark,
+  role: profile.role,
+  project: "LEAP",
+  modules: featuredRole.modules.map((item) => item.name),
+  figures: featuredRole.figures.map((item) => ({
+    value: item.prefix + new Intl.NumberFormat("en-US").format(item.value),
+    label: item.caption,
+  })),
+  books: skills.slice(0, 4).map((item) => item.label),
+  experience: experience.map((item) => item.title),
+  about: about.titleLines,
+  calendar: snapshot.days.slice(-364).map((item) => item.level),
+};
+---
+
+<div
+  class="studio-scene"
+  data-studio-root
+  data-studio-state="loading"
+  data-studio-config={JSON.stringify(content)}
+>
+  <img
+    src="/studio-preview.svg"
+    class="studio-fallback-light"
+    alt=""
+    width="960"
+    height="800"
+    data-studio-fallback
+    fetchpriority="high"
+  />
+  <img
+    src="/studio-preview-dark.svg"
+    class="studio-fallback-dark"
+    alt=""
+    width="960"
+    height="800"
+    data-studio-fallback
+  />
+  <canvas
+    data-studio-canvas
+    role="img"
+    aria-label="Rahmat’s 3D studio: a workbench, bookshelves and a wall of work. Use the chapter links to explore the same content."
+  ></canvas>
+  <p class="studio-scene-caption">
+    <span data-studio-scene-label>01 / The room</span>
+    <span class="studio-renderer" data-studio-renderer-label>
+      Illustrated view
+    </span>
+  </p>
+</div>
+<nav class="studio-chapters" aria-label="Story chapters">
+  {chapters.map((chapter, index) => (
+    <a
+      href={"#" + chapter.id}
+      data-studio-chapter-link
+      aria-label={chapter.label}
+      title={chapter.label}
+      aria-current={index === 0 ? "step" : undefined}
+    >
+      {String(index + 1).padStart(2, "0")}
+    </a>
+  ))}
+</nav>
+<div class="studio-progress" aria-hidden="true">
+  <span></span>
+</div>
+<script>
+  import { mountStudio } from "../scripts/studio";
+  mountStudio();
+</script>
