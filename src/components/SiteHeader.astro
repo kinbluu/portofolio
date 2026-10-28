@@ -64,9 +64,9 @@ import ThemeToggle from "./ui/ThemeToggle.astro";
   <dialog
     id="site-menu"
     aria-label="Menu"
-    class="m-0 h-dvh max-h-none w-full max-w-none bg-canvas p-3 text-ink backdrop:bg-transparent"
+    class="fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none bg-canvas p-3 text-ink backdrop:bg-transparent"
   >
-    <div class="flex h-full flex-col gap-8 rounded-lg bg-paper px-5 pt-7 pb-6">
+    <div class="flex h-full min-h-0 flex-col gap-8 overflow-y-auto overscroll-contain rounded-lg bg-paper px-5 pt-7 pb-6">
       <div class="flex items-center justify-between border-b border-line pb-4">
         <a href="#top" class="type-wordmark">
           {profile.wordmark}

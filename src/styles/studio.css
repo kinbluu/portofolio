@@ -9,6 +9,9 @@
   --rm3-accent-hover: light-dark(#883522, #f4bd9e);
   --rm3-tint: light-dark(#f0ddd0, #4a3427);
   --rm3-online: light-dark(#5c7953, #a3b18a);
+  --rm3-on-ink-muted: light-dark(#d8cfc0, #655b4e);
+  --rm3-shadow: light-dark(#332f2726, #00000040);
+  --rm3-shadow-strong: light-dark(#332f2733, #00000066);
   --rm3-gh-0: light-dark(#e0d9cb, #40392e);
   --rm3-gh-1: light-dark(#b8c0a4, #566244);
   --rm3-gh-2: light-dark(#8c9e72, #7c8c5e);
@@ -115,6 +118,15 @@ body {
 }
 .studio-motion:hover {
   color: var(--rm3-accent);
+}
+.studio-header:has(#site-menu[open]) {
+  z-index: 50;
+}
+.studio-header:has(#site-menu[open]) .studio-header-nav {
+  visibility: hidden;
+}
+#site-menu[open] {
+  z-index: 1;
 }
 #site-menu:not([open]),
 #chat-panel {
@@ -291,7 +303,7 @@ body {
   transition: transform 200ms;
 }
 .studio-link:hover svg {
-  transform: translate(2px, -2px);
+  transform: translate(2px, 2px);
 }
 .studio-quiet-link {
   color: var(--rm3-muted);
@@ -306,7 +318,7 @@ body {
   align-items: center;
   gap: 12px;
   margin-top: clamp(42px, 7vh, 90px);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--rm3-muted);
   width: fit-content;
   white-space: nowrap;
@@ -329,29 +341,32 @@ body {
 }
 .studio-meta {
   color: var(--rm3-muted);
-  font-size: 12px;
-  line-height: 1.9;
+  font-size: 13px;
+  line-height: 1.8;
 }
 .studio-description {
-  font-size: 15px;
-  line-height: 1.85;
+  font-size: 16px;
+  line-height: 1.75;
   max-width: 47ch;
   margin-top: 18px;
 }
 .studio-figures {
-  display: flex;
-  gap: 26px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
   padding-block: 25px;
   margin-top: 18px;
   border-block: 1px solid var(--rm3-line);
 }
 .studio-figures > div {
+  min-width: 0;
   display: flex;
   flex-direction: column-reverse;
   gap: 5px;
 }
 .studio-figures dt {
-  font-size: 11px;
+  font-size: 12px;
+  line-height: 1.5;
   color: var(--rm3-muted);
 }
 .studio-figures dd {
@@ -364,7 +379,7 @@ body {
   flex-wrap: wrap;
   gap: 10px 20px;
   margin-top: 20px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--rm3-muted);
 }
 .studio-details {
@@ -379,6 +394,9 @@ body {
   cursor: pointer;
   list-style: none;
   font-size: 13px;
+}
+.studio-details summary:hover {
+  color: var(--rm3-accent);
 }
 .studio-details summary::-webkit-details-marker {
   display: none;
@@ -429,12 +447,12 @@ body {
   letter-spacing: -0.5px;
 }
 .studio-organization {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--rm3-muted);
   margin-top: 7px;
 }
 .studio-role-stack {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.9;
   margin-top: 15px;
   color: var(--rm3-muted);
@@ -444,7 +462,7 @@ body {
   flex-wrap: wrap;
   gap: 12px 18px;
   margin-top: 22px;
-  font-size: 12px;
+  font-size: 13px;
 }
 .studio-practices li {
   display: flex;
@@ -495,7 +513,13 @@ body {
   border-bottom: 1px solid var(--rm3-accent);
   color: var(--rm3-accent);
   font-size: clamp(13px, 1.3vw, 21px);
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+}
+.studio-contact-email svg {
+  flex-shrink: 0;
+}
+.studio-contact-email:hover {
+  color: var(--rm3-accent-hover);
 }
 .studio-contact-links {
   display: flex;
@@ -517,7 +541,7 @@ body {
 .studio-back {
   display: inline-block;
   margin-top: 52px;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--rm3-muted);
   padding-block: 10px;
 }
@@ -530,28 +554,29 @@ body {
   gap: 16px;
   padding: 26px var(--studio-space);
   background: var(--rm3-canvas);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--rm3-muted);
 }
 .studio-chapters {
   position: fixed;
-  left: 18px;
+  left: max(0px, calc(var(--studio-space) - 46px));
   top: 50%;
   transform: translateY(-50%);
   z-index: 20;
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 0;
 }
 .studio-chapters a {
-  width: 34px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--rm3-muted);
   transition: color 160ms;
 }
+.studio-chapters a:hover,
 .studio-chapters a[aria-current] {
   color: var(--rm3-accent);
   font-weight: 700;
@@ -581,6 +606,10 @@ body {
   transform: scaleX(var(--studio-progress, 0));
   transform-origin: left;
 }
+[data-chat-launcher][data-hidden]:not([data-focused]) {
+  opacity: 0;
+  pointer-events: none;
+}
 [data-motion-paused="true"] [data-reveal] {
   opacity: 1 !important;
   translate: none !important;
@@ -598,9 +627,6 @@ body {
   }
   .studio-desktop-nav {
     gap: 20px;
-  }
-  .studio-chapters {
-    left: 5px;
   }
 }
 @media (width >= 1900px) {
@@ -658,7 +684,7 @@ body {
     font-size: 24px;
   }
   .studio-figures dt {
-    font-size: 10px;
+    font-size: 11px;
   }
 }
 @media (width < 700px) {
@@ -686,7 +712,7 @@ body {
     left: auto;
     right: 24px;
     bottom: 5px;
-    font-size: 9px;
+    font-size: 10px;
     gap: 12px;
   }
   .studio-chapter {
@@ -714,7 +740,7 @@ body {
     padding-top: calc(46svh + 52px);
   }
   .studio-person {
-    font-size: 11px;
+    font-size: 12px;
     margin-bottom: 18px;
   }
   .studio-intro h1 {
@@ -725,7 +751,7 @@ body {
     text-wrap: pretty;
   }
   .studio-intro-role {
-    font-size: 11px;
+    font-size: 12px;
     margin-top: 20px;
   }
   .studio-intro-role span {
@@ -742,21 +768,22 @@ body {
     font-size: 42px;
     margin-bottom: 24px;
   }
-  .studio-contact h2 {
-    font-size: 44px;
+  .studio-chapter.studio-contact h2 {
+    font-size: clamp(34px, 9.5vw, 44px);
+    overflow-wrap: break-word;
   }
   .studio-description {
-    font-size: 14px;
+    font-size: 15px;
   }
   .studio-meta {
-    font-size: 11px;
+    font-size: 12px;
   }
   .studio-figures {
     justify-content: space-between;
     gap: 8px;
   }
   .studio-figures dt {
-    font-size: 10px;
+    font-size: 11px;
   }
   .studio-figures dd {
     font-size: 26px;
@@ -807,6 +834,9 @@ body {
 .studio-copy {
   max-width: 560px;
 }
+.studio-copy-wide {
+  max-width: 650px;
+}
 .studio-wordmark,
 .studio-link,
 .studio-quiet-link,
@@ -834,9 +864,9 @@ body {
   border-top: 1px solid var(--rm3-ink);
   border-bottom: 1px solid var(--rm3-line);
   color: var(--rm3-muted);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   line-height: 1.4;
   text-transform: uppercase;
 }
@@ -915,7 +945,7 @@ body {
   }
   .studio-kicker,
   .studio-section-label {
-    font-size: 9px;
+    font-size: 11px;
   }
   .studio-kicker {
     margin-bottom: 24px;
@@ -931,7 +961,7 @@ body {
     font-size: clamp(40px, 10vw, 52px);
   }
   .studio-figures dd {
-    font-size: 30px;
+    font-size: clamp(26px, 7.5vw, 30px);
   }
 }
 
