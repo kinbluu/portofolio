@@ -20,12 +20,12 @@ const content = {
   role: profile.role,
   project: "LEAP",
   modules: featuredRole.modules.map((item) => item.name),
-  figures: featuredRole.figures.map((item) => ({
-    value: item.prefix + new Intl.NumberFormat("en-US").format(item.value),
-    label: item.caption,
-  })),
+  practices: about.practices.map((item) => item.label),
   books: skills.slice(0, 4).map((item) => item.label),
-  experience: experience.map((item) => item.title),
+  experience: experience.map((item) => ({
+    title: item.studioTitle,
+    organization: item.studioOrganization,
+  })),
   about: about.titleLines,
   calendar: snapshot.days.slice(-364).map((item) => item.level),
 };

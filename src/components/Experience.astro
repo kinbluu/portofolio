@@ -11,12 +11,16 @@ import { experience } from "../data/profile";
   data-studio-label="The collected experience"
 >
   <div class="studio-copy">
+    <p class="studio-section-label">
+      <span>02 / Experience</span>
+      <span>Career notes</span>
+    </p>
     <h2 id="experience-title">
       Along <em>the way.</em>
     </h2>
     <ol class="studio-experience">
       {experience.map((role) => (
-        <li>
+        <li data-experience-item>
           <p class="studio-meta">{role.dates}</p>
           <h3>{role.title}</h3>
           <p class="studio-organization">{role.organization}</p>

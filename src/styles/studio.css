@@ -173,6 +173,10 @@ body {
 .studio-scene > img {
   transition: opacity 500ms;
 }
+.studio-scene[data-studio-assembly="playing"] canvas,
+.studio-scene[data-studio-assembly="playing"] > img {
+  transition-duration: 120ms;
+}
 .studio-scene[data-studio-state="ready"] canvas {
   opacity: 1;
 }
@@ -224,24 +228,14 @@ body {
   position: absolute;
   inset: -40px -45px;
   z-index: -1;
-  background: linear-gradient(
-    90deg,
-    var(--rm3-canvas) 60%,
-    color-mix(in srgb, var(--rm3-canvas), transparent 12%) 84%,
-    transparent
-  );
+  background: linear-gradient(90deg, var(--rm3-canvas) 92%, transparent);
   pointer-events: none;
 }
 [data-studio-side="right"] .studio-copy {
   grid-column: 8 / span 5;
 }
 [data-studio-side="right"] .studio-copy::before {
-  background: linear-gradient(
-    270deg,
-    var(--rm3-canvas) 65%,
-    color-mix(in srgb, var(--rm3-canvas), transparent 10%) 84%,
-    transparent
-  );
+  background: linear-gradient(270deg, var(--rm3-canvas) 92%, transparent);
 }
 .studio-intro {
   min-height: 100svh;
@@ -800,6 +794,147 @@ body {
     transition: none;
   }
 }
+
+.studio-header {
+  border-bottom: 1px solid var(--rm3-line);
+}
+.studio-wordmark {
+  letter-spacing: -0.06em;
+}
+.studio-chapter {
+  min-height: 105svh;
+}
+.studio-copy {
+  max-width: 560px;
+}
+.studio-wordmark,
+.studio-link,
+.studio-quiet-link,
+.studio-enter,
+.studio-contact-links a,
+.studio-back {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
+}
+#experience {
+  min-height: 118svh;
+}
+#github,
+#contact {
+  min-height: 90svh;
+}
+.studio-kicker,
+.studio-section-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-block: 12px;
+  border-top: 1px solid var(--rm3-ink);
+  border-bottom: 1px solid var(--rm3-line);
+  color: var(--rm3-muted);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+.studio-kicker {
+  margin-bottom: 32px;
+}
+.studio-section-label {
+  margin-bottom: 34px;
+}
+.studio-intro h1 {
+  font-family: var(--studio-display);
+  font-size: clamp(42px, 4.3vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.studio-intro h1 em {
+  color: var(--rm3-accent);
+}
+.studio-intro-role {
+  margin-top: 14px;
+}
+.studio-intro-links {
+  margin-top: 22px;
+}
+.studio-enter {
+  margin-top: 36px;
+}
+.studio-chapter h2 {
+  font-size: clamp(42px, 3.8vw, 64px);
+  line-height: 1.05;
+}
+.studio-figures {
+  justify-content: space-between;
+}
+.studio-figures dd {
+  font-family: var(--studio-display);
+  font-size: clamp(30px, 3vw, 44px);
+}
+.studio-experience {
+  gap: 0;
+}
+.studio-experience li {
+  padding-block: 22px;
+}
+.studio-toolkit-title {
+  font-family: var(--studio-display);
+  font-size: 23px;
+  font-weight: 400;
+}
+.studio-footer {
+  border-top: 1px solid var(--rm3-line);
+}
+@media (width < 1024px) {
+  .studio-intro h1 {
+    font-size: clamp(40px, 5.3vw, 56px);
+  }
+}
+@media (width < 700px) {
+  .studio-scene {
+    height: 38svh;
+  }
+  .studio-chapter {
+    min-height: 100svh;
+    padding-top: calc(38svh + 70px);
+  }
+  .studio-intro {
+    padding-top: calc(38svh + 62px);
+  }
+  #experience {
+    min-height: 110svh;
+  }
+  #github,
+  #contact {
+    min-height: 95svh;
+  }
+  .studio-kicker,
+  .studio-section-label {
+    font-size: 9px;
+  }
+  .studio-kicker {
+    margin-bottom: 24px;
+  }
+  .studio-section-label {
+    margin-bottom: 28px;
+  }
+  .studio-intro h1 {
+    font-size: clamp(34px, 9.5vw, 46px);
+    line-height: 1.08;
+  }
+  .studio-chapter h2 {
+    font-size: clamp(40px, 10vw, 52px);
+  }
+  .studio-figures dd {
+    font-size: 30px;
+  }
+}
+
 @media print {
   .studio-header,
   .studio-scene,

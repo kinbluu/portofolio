@@ -6,6 +6,9 @@ export function mountStudio() {
   const chapters = [
     ...document.querySelectorAll<HTMLElement>("[data-studio-chapter]"),
   ];
+  const experienceItems = [
+    ...document.querySelectorAll<HTMLElement>("[data-experience-item]"),
+  ];
   const button = document.querySelector<HTMLButtonElement>(
     "[data-studio-motion]",
   );
@@ -90,6 +93,21 @@ export function mountStudio() {
       String(Math.min(1, distance / Math.max(1, positions.at(-1)!))),
     );
     room?.setView(progress, paused);
+    let activeExperience = -1;
+    if (chapters[index].id === "experience") {
+      let nearest = Number.POSITIVE_INFINITY;
+      experienceItems.forEach((item, itemIndex) => {
+        const bounds = item.getBoundingClientRect();
+        const distance = Math.abs(
+          bounds.top + bounds.height / 2 - innerHeight / 2,
+        );
+        if (distance < nearest) {
+          nearest = distance;
+          activeExperience = itemIndex;
+        }
+      });
+    }
+    room?.setExperience(activeExperience);
   };
   const schedule = () => {
     if (!frame) frame = requestAnimationFrame(update);
@@ -158,7 +176,9 @@ export function mountStudio() {
         return;
       }
       room.setView(progress, paused);
+      room.startAssembly();
       root.dataset.studioState = "ready";
+      schedule();
     } catch {
       root.dataset.studioState = "fallback";
       root.dataset.studioSettled = "true";

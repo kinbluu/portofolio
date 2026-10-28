@@ -38,7 +38,7 @@ export const navigation = [
 
 export const featuredRole = {
   badge: "Current work",
-  dates: "Jan 2026 — Present",
+  dates: "Jan 2026 to Present",
   titleLines: ["Software behind", "the classroom."],
   employer: "Full Stack Developer · LEAP English & Digital Class",
   description:
@@ -96,18 +96,22 @@ export const featuredRole = {
 
 export const experience = [
   {
-    dates: "Feb — Apr 2026",
+    dates: "Feb to Apr 2026",
     icon: Workflow,
     title: "Backend Developer",
+    studioTitle: "Backend",
+    studioOrganization: "Inimedia",
     organization: "PT Inimedia Kreatif Indonesia · Freelance",
     description:
       "Payment APIs, authentication, webhook retries and reconciliation in a Node.js microservices backend.",
     stack: "Node.js · Microservices · JWT · API keys · RBAC",
   },
   {
-    dates: "Dec 2025 — Jan 2026",
+    dates: "Dec 2025 to Jan 2026",
     icon: Wrench,
     title: "Full Stack Web Developer",
+    studioTitle: "Full Stack",
+    studioOrganization: "LEAP",
     organization: "LEAP English & Digital Class · Internship",
     description:
       "Reviewed legacy question-bank workflows and fixed existing features.",

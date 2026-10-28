@@ -6,9 +6,9 @@ export interface StudioContent {
   role: string;
   project: string;
   modules: string[];
-  figures: { value: string; label: string }[];
+  practices: string[];
   books: string[];
-  experience: string[];
+  experience: { title: string; organization: string }[];
   about: string[];
   calendar: number[];
 }
@@ -17,14 +17,16 @@ export interface StudioRoom {
   setView(progress: number, paused: boolean): void;
   setTheme(): void;
   dispose(): void;
+  startAssembly(): void;
+  setExperience(index: number): void;
 }
 
 const poses = [
   { position: [10.8, 8.2, 11.8], target: [0, 1.4, 0], shift: 0 },
-  { position: [3.5, 3.8, 5.4], target: [-1.6, 1.45, -1.9], shift: -1 },
-  { position: [2.2, 3.8, 5.2], target: [-3, 1.5, -0.5], shift: 0 },
-  { position: [5.5, 4.6, 6.8], target: [-0.8, 1.2, 0.3], shift: -1 },
-  { position: [4.6, 3.5, 2.8], target: [1.8, 2.1, -3.3], shift: 0 },
+  { position: [-0.65, 2.55, -0.25], target: [-1.45, 1.97, -2.505], shift: -1 },
+  { position: [-0.4, 2.2, -0.6], target: [-3.43, 1.53, -1.65], shift: 0 },
+  { position: [2, 3.15, -0.05], target: [1.25, 2.65, -3.446], shift: -1 },
+  { position: [1.1, 1.95, -1.35], target: [2.9, 1.1, -3.446], shift: 0.15 },
   { position: [10.2, 7.5, 12.5], target: [0, 1.3, 0], shift: 0 },
 ];
 
@@ -65,6 +67,22 @@ export async function createStudioRoom(
     paint: (ctx: CanvasRenderingContext2D, w: number, h: number) => void;
   }[] = [];
   const pickables: THREE.Object3D[] = [];
+  const experienceFolders: THREE.Group[] = [];
+  let activeExperience = -1;
+  const assemblyParts: {
+    group: THREE.Group;
+    delay: number;
+    offset: THREE.Vector3;
+  }[] = [];
+  let parent: THREE.Object3D = scene;
+  let assemblyElapsed = 0;
+  let assembling = false;
+  function assemblyPart(delay: number, x: number, y: number, z: number) {
+    const group = new THREE.Group();
+    scene.add(group);
+    assemblyParts.push({ group, delay, offset: new THREE.Vector3(x, y, z) });
+    parent = group;
+  }
   const lifecycle = new AbortController();
   const { signal } = lifecycle;
   const colors: Record<string, string> = {};
@@ -132,7 +150,7 @@ export async function createStudioRoom(
     item.position.set(x, y, z);
     item.castShadow = true;
     item.receiveShadow = true;
-    scene.add(item);
+    parent.add(item);
     if (chapter) {
       item.userData.chapter = chapter;
       pickables.push(item);
@@ -259,17 +277,22 @@ export async function createStudioRoom(
   grain.wrapS = grain.wrapT = THREE.RepeatWrapping;
   grain.repeat.set(2, 3);
   material("floor").map = grain;
+  assemblyPart(0, 0, -1.8, 0);
   box(8.2, 0.2, 7.25, 0, -0.12, 0, "floor", undefined, 0.06);
   for (let i = -3; i <= 3; i++)
     box(0.012, 0.006, 7.1, i, 0.005, 0, "wood", undefined, 0.001);
+  assemblyPart(0.2, 0, 2.2, -0.6);
   const back = box(8.15, 4.2, 0.16, 0, 2.05, -3.58, "wall", undefined, 0.015);
   back.castShadow = false;
+  assemblyPart(0.35, -1.8, 0.8, 0);
   const left = box(0.16, 4.2, 7.2, -4.04, 2.05, 0, "wall", undefined, 0.015);
   left.castShadow = false;
+  assemblyPart(0.52, 0, 1.5, 0);
   box(8.1, 0.14, 0.05, 0, 0.08, -3.46, "trim");
   box(0.05, 0.14, 7.1, -3.94, 0.08, 0, "trim");
   box(8.15, 0.05, 0.2, 0, 4.16, -3.58, "trim");
   box(0.2, 0.05, 7.2, -4.04, 4.16, 0, "trim");
+  assemblyPart(0.85, 0, 1.4, 0);
   const rug = box(4, 0.025, 2.65, 0.55, 0.015, 1.1, "rug", undefined, 0.08);
   rug.rotation.y = -0.12;
   for (const z of [-0.15, 2.3]) {
@@ -286,6 +309,7 @@ export async function createStudioRoom(
     );
     edge.rotation.y = -0.12;
   }
+  assemblyPart(0.75, -1.4, 0.4, 0);
   box(0.045, 2.25, 2.05, -3.93, 2.5, 1.4, "trim");
   const glass = box(
     0.025,
@@ -305,6 +329,7 @@ export async function createStudioRoom(
   box(0.07, 0.045, 1.95, -3.86, 2.5, 1.4, "trim");
   for (let i = 0; i < 7; i++)
     cylinder(0.035, 0.035, 2.55, -3.78, 2.2, 2.45 + i * 0.042, "paper");
+  assemblyPart(1.0, 0, 2, -0.5);
   box(2.9, 0.13, 1.35, -1.6, 1.23, -2.22, "wood", "work", 0.045);
   for (const x of [-2.85, -0.36])
     for (const z of [-2.75, -1.72])
@@ -318,16 +343,16 @@ export async function createStudioRoom(
   const screen = texture(1024, 640, (ctx, w, h) => {
     ctx.fillStyle = colors.dark;
     ctx.fillRect(0, 0, w, h);
-    text(ctx, content.project, 54, 85, 52, colors.paper, 600);
-    text(ctx, "Software behind the classroom.", 54, 135, 25, colors.paper);
+    text(ctx, content.project, 54, 105, 82, colors.paper, 600);
+    text(ctx, "Software behind the classroom.", 54, 157, 34, colors.paper);
     content.modules.forEach((name, i) => {
       const x = 54 + (i % 2) * 460,
         y = 197 + Math.floor(i / 2) * 178;
       ctx.strokeStyle = colors.metal;
       ctx.lineWidth = 2;
       ctx.strokeRect(x, y, 410, 136);
-      text(ctx, "0" + (i + 1), x + 22, y + 38, 20, colors.sage);
-      text(ctx, name, x + 22, y + 94, 30, colors.paper, 500);
+      text(ctx, "0" + (i + 1), x + 22, y + 38, 26, colors.sage);
+      text(ctx, name, x + 22, y + 104, 52, colors.paper, 500);
     });
   });
   art(1.31, 0.82, -1.45, 1.97, -2.505, screen, "work");
@@ -375,6 +400,7 @@ export async function createStudioRoom(
   const lamp = new THREE.PointLight(colors.light, 5, 3, 2);
   lamp.position.set(-2.75, 1.93, -2.55);
   scene.add(lamp);
+  assemblyPart(1.5, 0, 1.5, 0.8);
   box(0.86, 0.16, 0.8, -1.55, 0.66, -0.75, "sage", "about", 0.12);
   box(0.86, 0.72, 0.16, -1.55, 1.06, -0.38, "sage", "about", 0.12);
   cylinder(0.035, 0.035, 0.51, -1.55, 0.32, -0.75, "dark");
@@ -382,12 +408,14 @@ export async function createStudioRoom(
     const foot = box(0.82, 0.045, 0.08, -1.55, 0.07, -0.75, "dark");
     foot.rotation.y = angle;
   }
+  assemblyPart(1.25, -1.2, 1.4, 0);
   for (const y of [0.22, 1.1, 2, 2.9])
     box(0.58, 0.1, 2.2, -3.63, y, -1.55, "wood", "experience");
   for (const z of [-2.65, -0.45])
     box(0.58, 2.8, 0.065, -3.63, 1.6, z, "wood", "experience");
   for (let shelf = 0; shelf < 3; shelf++)
     for (let i = 0; i < 8; i++) {
+      if (shelf === 1 && i < 7) continue;
       const height = 0.44 + ((i * 7 + shelf * 3) % 5) * 0.065;
       const book = box(
         0.37,
@@ -402,7 +430,44 @@ export async function createStudioRoom(
       );
       if (i === 7) book.rotation.x = 0.13;
     }
+  content.experience.forEach((item, index) => {
+    const shelf = parent;
+    const folder = new THREE.Group();
+    shelf.add(folder);
+    parent = folder;
+    const z = index === 0 ? -1.28 : -2.1;
+    box(
+      0.4,
+      0.8,
+      0.7,
+      -3.56,
+      1.55,
+      z,
+      index === 0 ? "sage" : "clay",
+      "experience",
+      0.02,
+    );
+    const label = texture(512, 640, (ctx, w, h) => {
+      ctx.fillStyle = colors.paper;
+      ctx.fillRect(0, 0, w, h);
+      text(ctx, item.title, 44, 260, 90, colors.dark, 600);
+      text(ctx, item.organization, 44, 370, 72, colors.dark, 500);
+    });
+    const face = mesh(
+      geometry("folder-label", () => new THREE.PlaneGeometry(0.62, 0.55)),
+      new THREE.MeshBasicMaterial({ map: label, toneMapped: false }),
+      -3.345,
+      1.6,
+      z,
+      "experience",
+    );
+    face.rotation.y = Math.PI / 2;
+    face.castShadow = false;
+    experienceFolders.push(folder);
+    parent = shelf;
+  });
   cylinder(0.15, 0.12, 0.23, -3.55, 3.07, -1, "paper", "experience");
+  assemblyPart(1.6, 0, 1.2, -0.4);
   const print = texture(768, 960, (ctx, w, h) => {
     ctx.fillStyle = colors.paper;
     ctx.fillRect(0, 0, w, h);
@@ -414,12 +479,14 @@ export async function createStudioRoom(
     ctx.moveTo(75, 380);
     ctx.lineTo(690, 380);
     ctx.stroke();
-    content.figures.forEach((figure, i) => {
-      text(ctx, figure.value, 80, 495 + i * 145, 66, colors.dark, 500);
-      text(ctx, figure.label, 315, 485 + i * 145, 28, colors.dark);
+    content.practices.forEach((practice, i) => {
+      const y = 500 + i * 145;
+      text(ctx, "0" + (i + 1), 75, y, 30, colors.clay, 600);
+      text(ctx, practice, 150, y, 56, colors.dark, 500);
     });
   });
-  art(1.5, 1.85, 1.25, 2.65, -3.46, print, "work");
+  art(1.5, 1.85, 1.25, 2.65, -3.46, print, "about");
+  assemblyPart(1.72, 0.8, 1.1, 0);
   const calendar = texture(1024, 640, (ctx, w, h) => {
     ctx.fillStyle = colors.dark;
     ctx.fillRect(0, 0, w, h);
@@ -446,18 +513,21 @@ export async function createStudioRoom(
     text(ctx, content.name, 55, 560, 30, colors.paper, 500);
   });
   art(1.55, 1.05, 2.9, 1.1, -3.46, calendar, "github");
+  assemblyPart(1.55, -0.8, 1.6, 0.5);
   box(2.3, 0.48, 1.1, -2.6, 0.38, 1.8, "wood", "about", 0.07);
   box(2.15, 0.2, 1.03, -2.6, 0.72, 1.8, "paper", "about", 0.14);
   box(0.17, 0.54, 1.13, -3.7, 0.74, 1.8, "wood", "about", 0.06);
   box(0.17, 0.54, 1.13, -1.5, 0.74, 1.8, "wood", "about", 0.06);
   const pillow = box(0.6, 0.18, 0.63, -3.18, 0.92, 1.8, "clay", "about", 0.1);
   pillow.rotation.z = -0.1;
+  assemblyPart(1.8, 0.8, 1.5, 0.5);
   cylinder(0.53, 0.51, 0.09, 0.8, 0.66, 0.8, "wood", "about");
   cylinder(0.055, 0.075, 0.59, 0.8, 0.32, 0.8, "dark");
   cylinder(0.3, 0.33, 0.045, 0.8, 0.035, 0.8, "dark");
   const book = box(0.38, 0.07, 0.52, 0.8, 0.75, 0.8, "sage", "about", 0.008);
   book.rotation.y = 0.2;
   box(0.32, 0.025, 0.44, 0.87, 0.8, 0.77, "paper", "about", 0.004);
+  assemblyPart(1.95, 1, 1.5, 0);
   cylinder(0.32, 0.25, 0.52, 3.2, 0.28, -2.45, "clay");
   cylinder(0.27, 0.27, 0.01, 3.2, 0.55, -2.45, "dark");
   for (let i = 0; i < 9; i++) {
@@ -523,6 +593,7 @@ export async function createStudioRoom(
   const pointer = new THREE.Vector2();
   const raycaster = new THREE.Raycaster();
   const hit = (event: PointerEvent | MouseEvent) => {
+    if (assembling) return undefined;
     const bounds = canvas.getBoundingClientRect();
     pointer.set(
       ((event.clientX - bounds.left) / bounds.width) * 2 - 1,
@@ -552,6 +623,33 @@ export async function createStudioRoom(
     },
     { signal },
   );
+  function finishAssembly(state: "complete" | "skipped" = "complete") {
+    assembling = false;
+    for (const part of assemblyParts) {
+      part.group.position.set(0, 0, 0);
+      part.group.visible = true;
+    }
+    root.dataset.studioAssembly = state;
+    root.dataset.studioAssemblyProgress = "1";
+    sun.shadow.needsUpdate = true;
+  }
+  function startAssembly() {
+    if (paused || lastProgress > 0.05) {
+      finishAssembly("skipped");
+      requestDraw();
+      return;
+    }
+    assembling = true;
+    assemblyElapsed = 0;
+    previousTime = 0;
+    for (const part of assemblyParts) {
+      part.group.position.copy(part.offset);
+      part.group.visible = false;
+    }
+    root.dataset.studioAssembly = "playing";
+    root.dataset.studioAssemblyProgress = "0";
+    requestDraw();
+  }
   function draw(time: number) {
     frame = 0;
     if (disposed || document.hidden) return;
@@ -559,7 +657,41 @@ export async function createStudioRoom(
       ? Math.min((time - previousTime) / 1000, 0.05)
       : 0.016;
     previousTime = time;
+    if (assembling) {
+      assemblyElapsed += elapsed;
+      for (const part of assemblyParts) {
+        const progress = THREE.MathUtils.clamp(
+          (assemblyElapsed - part.delay) / 0.8,
+          0,
+          1,
+        );
+        part.group.visible = progress > 0;
+        part.group.position
+          .copy(part.offset)
+          .multiplyScalar((1 - progress) ** 3);
+      }
+      root.dataset.studioAssemblyProgress = String(
+        Math.min(1, assemblyElapsed / 2.75),
+      );
+      sun.shadow.needsUpdate = true;
+      if (assemblyElapsed >= 2.75) finishAssembly();
+    }
     const amount = 1 - Math.exp(-elapsed * 8);
+    let foldersSettled = true;
+    experienceFolders.forEach((folder, index) => {
+      const target = !paused && index === activeExperience ? 0.28 : 0;
+      const distance = target - folder.position.x;
+      if (paused || Math.abs(distance) < 0.002) {
+        folder.position.x = target;
+      } else {
+        folder.position.x += distance * amount;
+        foldersSettled = false;
+      }
+      if (distance !== 0) sun.shadow.needsUpdate = true;
+    });
+    root.dataset.experienceFolderOffsets = experienceFolders
+      .map((folder) => folder.position.x.toFixed(3))
+      .join(",");
     camera.position.lerp(goalPosition, amount);
     look.lerp(goalLook, amount);
     shift += (goalShift - shift) * amount;
@@ -580,8 +712,10 @@ export async function createStudioRoom(
     root.dataset.studioPose = [...camera.position.toArray(), ...look.toArray()]
       .map((v) => v.toFixed(3))
       .join(",");
-    root.dataset.studioSettled = String(settled);
-    if (!settled) requestDraw();
+    root.dataset.studioSettled = String(
+      settled && !assembling && foldersSettled,
+    );
+    if (!settled || assembling || !foldersSettled) requestDraw();
   }
   function requestDraw() {
     if (initialized && !frame && !disposed && !document.hidden) {
@@ -589,13 +723,28 @@ export async function createStudioRoom(
       frame = requestAnimationFrame(draw);
     }
   }
+  function setExperience(index: number) {
+    if (activeExperience === index) return;
+    activeExperience = index;
+    root.dataset.experienceFolder = String(index);
+    requestDraw();
+  }
   function setView(progress: number, stop: boolean) {
     lastProgress = progress;
     paused = stop;
+    if (assembling && (stop || progress > 0.05)) finishAssembly();
     const at = stop ? 0 : Math.min(progress, poses.length - 1);
-    const i = Math.floor(at),
+    const viewAt =
+      at >= 2 && at < 3
+        ? 2 + Math.max(0, (at - 2.62) / 0.38)
+        : at >= 3 && at < 4
+          ? 3 + Math.max(0, (at - 3.6) / 0.4)
+          : at >= 4 && at < 5
+            ? 4 + Math.max(0, (at - 4.6) / 0.4)
+            : at;
+    const i = Math.floor(viewAt),
       next = Math.min(i + 1, poses.length - 1);
-    const t = at - i,
+    const t = viewAt - i,
       mix = t * t * (3 - 2 * t);
     goalPosition
       .fromArray(poses[i].position)
@@ -603,9 +752,35 @@ export async function createStudioRoom(
     goalLook
       .fromArray(poses[i].target)
       .lerp(new THREE.Vector3(...poses[next].target), mix);
-    if (innerWidth < 700)
+    if (innerWidth < 700) {
       goalPosition.sub(goalLook).multiplyScalar(1.12).add(goalLook);
+    } else if (innerWidth < 1024) {
+      const workInfluence = Math.max(0, 1 - Math.abs(viewAt - 1));
+      const experienceInfluence = Math.max(0, 1 - Math.abs(viewAt - 2));
+      const aboutInfluence = Math.max(0, 1 - Math.abs(viewAt - 3));
+      const githubInfluence = Math.max(0, 1 - Math.abs(viewAt - 4));
+      const tabletScale = Math.max(
+        1.8,
+        (root.clientHeight / innerWidth) * 2.55,
+      );
+      const experienceScale = Math.max(
+        1.4,
+        (root.clientHeight / innerWidth) * 1.9,
+      );
+      goalPosition
+        .sub(goalLook)
+        .multiplyScalar(
+          1 +
+            (tabletScale - 1) * (workInfluence + aboutInfluence) +
+            (experienceScale - 1) * (experienceInfluence + githubInfluence),
+        )
+        .add(goalLook);
+    }
     goalShift = poses[i].shift + (poses[next].shift - poses[i].shift) * mix;
+    if (innerWidth >= 1024 && innerWidth < 1280) {
+      const githubInfluence = Math.max(0, 1 - Math.abs(viewAt - 4));
+      goalShift += ((1280 - innerWidth) / 256) * 0.2 * githubInfluence;
+    }
     if (stop) {
       camera.position.copy(goalPosition);
       look.copy(goalLook);
@@ -707,6 +882,8 @@ export async function createStudioRoom(
       : "WebGL2";
   requestDraw();
   return {
+    startAssembly,
+    setExperience,
     setView,
     setTheme,
     dispose,

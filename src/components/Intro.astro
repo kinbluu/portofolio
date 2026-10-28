@@ -12,6 +12,10 @@ import { profile } from "../data/profile";
   data-studio-label="The room"
 >
   <div class="studio-copy">
+    <p class="studio-kicker">
+      <span>Developer portfolio</span>
+      <span>Surabaya, ID</span>
+    </p>
     <p class="studio-person">{profile.name}</p>
     <h1 id="intro-title">
       {profile.headlineLines[0]} <em>{profile.headlineLines[1]}</em>
@@ -35,8 +39,8 @@ import { profile } from "../data/profile";
       </a>
     </div>
     <a href="#work" class="studio-enter">
-      <span class="studio-enter-line" aria-hidden="true"></span>Scroll to step
-      inside <ArrowDownRight size={16} />
+      <span class="studio-enter-line" aria-hidden="true"></span>Read about LEAP{" "}
+      <ArrowDownRight size={16} />
     </a>
   </div>
 </section>
