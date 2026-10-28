@@ -16,7 +16,7 @@ Canonical UI and room colors live in src/styles/studio.css. The original rm3 tok
 
 The room remains the setting, while the reading layer takes cues from a personal work journal: a slogan-led introduction with the name as supporting context, ruled section labels, and prominent figures drawn from real work. The rules organize the story; they are not decoration. The room and text retain their alternating positions, with a shorter room stage on mobile to bring the introduction into view sooner.
 
-Section labels and supporting text remain readable on small screens. Chapter links have generous targets, the mobile menu scrolls within the viewport, and the chat launcher yields to overlapping content while remaining reachable by keyboard.
+Chapter labels, IDs, and numbers share `src/data/studio-chapters.ts` across the sections and chapter navigation. Section labels and supporting text remain readable on small screens. Chapter links have generous targets, the mobile menu scrolls within the viewport, and the chat launcher yields to overlapping content while remaining reachable by keyboard.
 
 ## Design read
 

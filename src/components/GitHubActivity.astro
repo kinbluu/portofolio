@@ -1,10 +1,12 @@
 ---
 import GitHubCalendar from "./GitHubCalendar.astro";
 import GitHubCalendarSkeleton from "./GitHubCalendarSkeleton.astro";
+import { studioChapter } from "../data/studio-chapters";
+const chapter = studioChapter("github");
 ---
 
 <section
-  id="github"
+  id={chapter.id}
   aria-labelledby="github-title"
   class="studio-chapter"
   data-studio-chapter
@@ -13,7 +15,9 @@ import GitHubCalendarSkeleton from "./GitHubCalendarSkeleton.astro";
 >
   <div class="studio-copy studio-copy-wide">
     <p class="studio-section-label">
-      <span>04 / GitHub</span>
+      <span>
+        {chapter.number} / {chapter.label}
+      </span>
       <span>Contribution history</span>
     </p>
     <h2 id="github-title">

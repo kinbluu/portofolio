@@ -1,10 +1,12 @@
 ---
 import ArrowDownRight from "@lucide/astro/icons/arrow-down-right";
 import { profile } from "../data/profile";
+import { studioChapter } from "../data/studio-chapters";
+const chapter = studioChapter("top");
 ---
 
 <section
-  id="top"
+  id={chapter.id}
   aria-labelledby="intro-title"
   class="studio-chapter studio-intro"
   data-studio-chapter
@@ -13,7 +15,9 @@ import { profile } from "../data/profile";
 >
   <div class="studio-copy">
     <p class="studio-kicker">
-      <span>Developer portfolio</span>
+      <span>
+        {chapter.number} / {chapter.label}
+      </span>
       <span>Surabaya, ID</span>
     </p>
     <p class="studio-person">{profile.name}</p>

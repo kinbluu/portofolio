@@ -1,9 +1,11 @@
 ---
 import { experience } from "../data/profile";
+import { studioChapter } from "../data/studio-chapters";
+const chapter = studioChapter("experience");
 ---
 
 <section
-  id="experience"
+  id={chapter.id}
   aria-labelledby="experience-title"
   class="studio-chapter"
   data-studio-chapter
@@ -12,7 +14,9 @@ import { experience } from "../data/profile";
 >
   <div class="studio-copy">
     <p class="studio-section-label">
-      <span>02 / Experience</span>
+      <span>
+        {chapter.number} / {chapter.label}
+      </span>
       <span>Career notes</span>
     </p>
     <h2 id="experience-title">

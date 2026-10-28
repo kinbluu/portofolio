@@ -22,6 +22,59 @@ try {
       '!!document.querySelector("[data-studio-root][data-studio-state=ready], [data-studio-root][data-studio-state=fallback]")',
       { timeout: 60000 },
     );
+    const chapters = await page.evaluate(() => {
+      const sections = [
+        ...document.querySelectorAll<HTMLElement>("[data-studio-chapter]"),
+      ];
+      const links = [
+        ...document.querySelectorAll<HTMLAnchorElement>(
+          "[data-studio-chapter-link]",
+        ),
+      ];
+      return sections.map((section, index) => ({
+        id: section.id,
+        number: links[index]?.textContent?.trim(),
+        name: links[index]?.getAttribute("aria-label"),
+        href: links[index]?.getAttribute("href"),
+        label: section
+          .querySelector(
+            ".studio-section-label > span:first-child, .studio-kicker > span:first-child",
+          )
+          ?.textContent?.replace(/\s+/g, " ")
+          .trim(),
+      }));
+    });
+    assert.equal(chapters.length, 6);
+    for (const [index, chapter] of chapters.entries()) {
+      const number = String(index + 1).padStart(2, "0");
+      assert.equal(chapter.href, `#${chapter.id}`);
+      assert.equal(chapter.number, number);
+      assert.equal(chapter.label, `${number} / ${chapter.name}`);
+      await page.evaluate(
+        (id) =>
+          document.getElementById(id)!.scrollIntoView({ behavior: "instant" }),
+        chapter.id,
+      );
+      await page.waitForFunction(
+        (id, expected) => {
+          const active = document.querySelector<HTMLAnchorElement>(
+            "[data-studio-chapter-link][aria-current]",
+          );
+          const caption = document.querySelector("[data-studio-scene-label]");
+          return (
+            active?.hash === `#${id}` &&
+            caption?.textContent?.trim().startsWith(`${expected} / `)
+          );
+        },
+        { timeout: 15000 },
+        chapter.id,
+        number,
+      );
+    }
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+    await page.waitForFunction(
+      'document.querySelector("[data-studio-root]")?.dataset.activeChapter === "top"',
+    );
     if (width >= 1024) {
       const targets = await page.$$eval(".studio-chapters a", (links) =>
         links.map((link) => {
@@ -180,7 +233,7 @@ try {
     "Short-screen menu links should remain reachable",
   );
   console.log(
-    "PASS studio polish: chapter targets, launcher clearance, and short-screen menu",
+    "PASS studio polish: synchronized chapters, launcher clearance, and short-screen menu",
   );
 } finally {
   await page.close();
