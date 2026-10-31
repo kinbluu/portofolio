@@ -40,6 +40,17 @@ Kontribusi GitHub dimuat melalui server island dan memiliki fallback cache. Saat
 
 Tes portofolio di atas memeriksa kegagalan HTTP 503 dan koneksi terputus melalui Obscura, serta menguji chat dengan respons lokal yang disimulasikan tanpa memanggil penyedia AI.
 
+## Visitor counter
+
+The footer counts estimated unique browsers from the time the counter is enabled. A random ID is saved in the browser's local storage and in D1; refreshing does not add another visit. Clearing site data, using private browsing, or using another browser or device can be counted again. Visitors without JavaScript or writable local storage are not counted. The count is hidden if the service is unavailable.
+
+The database stores the random ID indefinitely, not names or email addresses. Cloudflare may process request IP addresses for rate limiting and logs. Review the privacy notice and applicable storage-consent requirements for your audience. Rate limiting reduces abuse, but bots and cleared browser data can still inflate the count.
+
+- Local setup: `bunx wrangler d1 migrations apply VISITOR_DB --local` before starting the dev server. Local data is separate from production.
+- Production setup: create a D1 database with `bunx wrangler d1 create portofolio-visitors`, add the returned `database_name` and `database_id` to the existing `VISITOR_DB` binding in `wrangler.jsonc`, then run `bunx wrangler d1 migrations apply VISITOR_DB --remote` before deploying. If a database has already been created for this binding, use its existing name and ID instead of creating another.
+- An ID-less binding may cause Wrangler to provision a database automatically during deployment; migrations still need to be applied separately. D1 usage is subject to Cloudflare's quotas and pricing.
+- Tests: `bun tests/visitor-count.test.ts` uses an isolated local D1 database; `bun tests/visitor-count.e2e.ts` uses the running local server and adds test visits to its database.
+
 ## 💬 Chat assistant
 
 Asisten AI mengalirkan jawaban melalui TanStack AI (`src/pages/api/chat.ts`) di Cloudflare Workers. Groq digunakan bila `GROQ_API_KEY` tersedia; jika tidak, digunakan Gemini dengan `GEMINI_API_KEY`.

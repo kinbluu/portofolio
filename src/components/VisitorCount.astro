@@ -1,0 +1,43 @@
+<p data-visitor-count hidden></p>
+
+<script>
+  import { isVisitorId } from "../lib/visitor-id";
+
+  const output = document.querySelector<HTMLElement>("[data-visitor-count]");
+  const storageKey = "portfolio-visitor-id";
+
+  function visitorId(): string | undefined {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (isVisitorId(saved)) return saved;
+      const id = crypto.randomUUID();
+      localStorage.setItem(storageKey, id);
+      return localStorage.getItem(storageKey) === id ? id : undefined;
+    } catch {
+      return undefined;
+    }
+  }
+
+  if (output) {
+    const id = visitorId();
+    fetch(
+      "/api/visitors",
+      id ? { method: "POST", headers: { "X-Visitor-Id": id } } : {},
+    )
+      .then(async (response) => {
+        if (!response.ok) return;
+        const data: unknown = await response.json();
+        if (!data || typeof data !== "object" || !("count" in data)) return;
+        const { count } = data;
+        if (
+          typeof count !== "number" ||
+          !Number.isSafeInteger(count) ||
+          count < 0
+        )
+          return;
+        output.textContent = `${new Intl.NumberFormat("en-US").format(count)} unique ${count === 1 ? "visitor" : "visitors"}`;
+        output.hidden = false;
+      })
+      .catch(() => {});
+  }
+</script>

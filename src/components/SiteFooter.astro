@@ -1,5 +1,6 @@
 ---
 import { profile } from "../data/profile";
+import VisitorCount from "./VisitorCount.astro";
 const year = new Date().getFullYear();
 ---
 
@@ -8,5 +9,6 @@ const year = new Date().getFullYear();
     © {year} {profile.name}
   </p>
   <p>{profile.location}</p>
+  <VisitorCount />
   <a href="#top">Back to top</a>
 </footer>

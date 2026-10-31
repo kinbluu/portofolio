@@ -8,7 +8,16 @@
     "directory": "./dist",
     "binding": "ASSETS",
   },
+  "d1_databases": [{ "binding": "VISITOR_DB" }],
   "ratelimits": [
+    {
+      "name": "VISITOR_RATE_LIMITER",
+      "namespace_id": "4322",
+      "simple": {
+        "limit": 60,
+        "period": 60,
+      },
+    },
     {
       "name": "CHAT_RATE_LIMITER",
       "namespace_id": "4321",
