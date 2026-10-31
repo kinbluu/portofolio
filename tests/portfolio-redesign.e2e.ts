@@ -29,6 +29,22 @@ async function verifyPortfolio(
           viewport: document.documentElement.clientWidth,
           document: document.documentElement.scrollWidth,
           language: document.documentElement.lang,
+          assistantLanguage: document
+            .querySelector("#assistant")
+            ?.getAttribute("lang"),
+          locale: document
+            .querySelector('meta[property="og:locale"]')
+            ?.getAttribute("content"),
+          description: document
+            .querySelector('meta[name="description"]')
+            ?.getAttribute("content"),
+          navigationLabels: [
+            ...document.querySelectorAll(".site-desktop-nav a"),
+          ].map((link) => link.textContent?.trim()),
+          headline: document.querySelector("h1")?.textContent?.trim(),
+          assistantPlaceholder: document
+            .querySelector("#chat-message")
+            ?.getAttribute("placeholder"),
           headings: [...document.querySelectorAll("h1")].filter(
             (h) => h.getClientRects().length && h.textContent?.trim(),
           ).length,
@@ -65,7 +81,23 @@ async function verifyPortfolio(
         state.document <= state.viewport,
         `horizontal overflow at ${width}px: ${state.document} > ${state.viewport}`,
       );
-      assert.equal(state.language, "id");
+      assert.equal(state.language, "en");
+      assert.equal(state.assistantLanguage, "en");
+      assert.equal(state.locale, "en_US");
+      assert.match(state.description ?? "", /Full Stack Developer in Surabaya/);
+      assert.deepEqual(state.navigationLabels, [
+        "Work",
+        "Experience",
+        "GitHub",
+        "About",
+        "AI Assistant",
+        "Contact",
+      ]);
+      assert.equal(
+        state.headline,
+        "I build web applications that make everyday work easier.",
+      );
+      assert.equal(state.assistantPlaceholder, "Ask about Rahmat…");
       assert.equal(state.headings, 1, `expected one visible h1 at ${width}px`);
       assert.equal(state.main, 1);
       assert.ok(
@@ -154,12 +186,12 @@ async function verifyPortfolio(
     );
     assert.match(
       html,
-      /Asisten ini memerlukan JavaScript/,
+      /This assistant requires JavaScript/,
       "SSR must include the assistant fallback",
     );
     assert.match(
       html,
-      /Aktivitas GitHub tidak tersedia saat ini/,
+      /GitHub activity is currently unavailable/,
       "SSR must include the GitHub fallback",
     );
     await page.setViewport({ width: 390, height: 900, deviceScaleFactor: 1 });
@@ -228,7 +260,7 @@ async function verifyMockChat(page: import("puppeteer-core").Page) {
       {
         type: "TEXT_MESSAGE_CONTENT",
         messageId: "test",
-        delta: "Ini jawaban uji.",
+        delta: "This is a test response.",
         timestamp,
       },
       { type: "TEXT_MESSAGE_END", messageId: "test", timestamp },
@@ -261,7 +293,7 @@ async function verifyMockChat(page: import("puppeteer-core").Page) {
       () =>
         document
           .querySelector("#assistant")
-          ?.textContent?.includes("Ini jawaban uji."),
+          ?.textContent?.includes("This is a test response."),
       { timeout: 10_000 },
     );
     assert.equal(intercepted, 1, "chat request must be intercepted locally");

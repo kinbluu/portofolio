@@ -7,14 +7,14 @@ interface Props {
 }
 
 const { view, class: className } = Astro.props;
-const count = new Intl.NumberFormat("id-ID");
-const dateFormat = new Intl.DateTimeFormat("id-ID", {
+const count = new Intl.NumberFormat("en-US");
+const dateFormat = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
   month: "long",
   year: "numeric",
   timeZone: "UTC",
 });
-const label = `${count.format(view.total)} kontribusi dari ${dateFormat.format(new Date(`${view.from}T00:00:00Z`))} sampai ${dateFormat.format(new Date(`${view.to}T00:00:00Z`))}`;
+const label = `${count.format(view.total)} contributions from ${dateFormat.format(new Date(`${view.from}T00:00:00Z`))} to ${dateFormat.format(new Date(`${view.to}T00:00:00Z`))}`;
 // Labels and cells share one column template, so month names line up with their weeks at any width.
 const columns = `grid-template-columns: repeat(${view.weeks.length}, minmax(0, 1fr))`;
 const days = view.weeks.flat();
@@ -46,7 +46,7 @@ const firstDay = days.find((day) => day)?.date;
             contributionLevelClasses[day.level],
           ]}
           role="img"
-          aria-label={`${count.format(day.count)} kontribusi pada ${dateFormat.format(new Date(`${day.date}T00:00:00Z`))}`}
+          aria-label={`${count.format(day.count)} ${day.count === 1 ? "contribution" : "contributions"} on ${dateFormat.format(new Date(`${day.date}T00:00:00Z`))}`}
           tabindex={day.date === firstDay ? 0 : -1}
           data-contribution-cell
         />

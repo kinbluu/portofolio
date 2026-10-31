@@ -8,12 +8,12 @@ const panelId = "chat-panel";
 <section
   id="assistant"
   aria-labelledby="assistant-title"
-  lang="id"
+  lang="en"
   class="chat-section"
 >
   <div class="chat-section-heading">
-    <h2 id="assistant-title">Asisten AI</h2>
-    <p>Tanyakan tentang pengalaman dan pekerjaan Rahmat.</p>
+    <h2 id="assistant-title">AI assistant</h2>
+    <p>Ask about Rahmat's experience and work.</p>
   </div>
   <div id={panelId} class="chat-panel">
     <noscript>
@@ -23,8 +23,8 @@ const panelId = "chat-panel";
         }
       </style>
       <p class="chat-no-script">
-        Asisten ini memerlukan JavaScript. Kamu tetap bisa menghubungi Rahmat
-        melalui <a href={`mailto:${profile.email}`}>{profile.email}</a>.
+        This assistant requires JavaScript. You can still contact Rahmat at
+        <a href={`mailto:${profile.email}`}>{profile.email}</a>.
       </p>
     </noscript>
     <ChatPanel

@@ -20,7 +20,7 @@ const views = [
     hidden
     class="flex flex-col gap-5 motion-safe:animate-pulse [&_[data-slot=skeleton]]:animate-none"
   >
-    <span class="sr-only">Memuat aktivitas GitHub…</span>
+    <span class="sr-only">Loading GitHub activity…</span>
     <div class="flex flex-col gap-1" aria-hidden="true">
       <div class="flex h-[1.25em] items-center type-stat">
         <Skeleton class="h-[0.8em] w-72 max-w-full" />
@@ -81,10 +81,10 @@ const views = [
   </div>
   <div data-github-error>
     <p class="mb-3 text-body-l text-muted">
-      Aktivitas GitHub tidak tersedia saat ini.
+      GitHub activity is currently unavailable.
     </p>
     <TextLink href={`https://github.com/${calendar.login}`}>
-      Lihat aktivitas di GitHub
+      View activity on GitHub
     </TextLink>
   </div>
 </github-calendar-fallback>

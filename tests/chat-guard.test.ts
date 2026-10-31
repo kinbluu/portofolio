@@ -10,10 +10,12 @@ import {
   providerView,
   questionRule,
 } from "../src/lib/chat-guard";
-assert.match(chatSystemPrompt, /~50 staf yang didukung/);
-assert.match(chatSystemPrompt, /~1\.000 siswa yang dikelola/);
-assert.doesNotMatch(chatSystemPrompt, /4 modul dalam satu aplikasi/);
+assert.match(chatSystemPrompt, /~50 staff supported/);
+assert.match(chatSystemPrompt, /~1,000 students managed/);
+assert.doesNotMatch(chatSystemPrompt, /4 modules in one application/);
 assert.match(chatSystemPrompt, /count and details need confirmation/);
+assert.match(chatSystemPrompt, /Always reply in English/);
+assert.doesNotMatch(chatSystemPrompt, /Always reply in Bahasa Indonesia/);
 
 import { chatRefusal, chatSystemPrompt } from "../src/lib/chat-prompt";
 
@@ -98,6 +100,9 @@ assert.ok(
 
 const replies = [
   "Keahlian Rahmat meliputi:\n\n- **Backend:** Laravel, Livewire, Node.js  \n- **Frontend:** React, Vue.js, Nuxt, HTML, CSS  \n- **Database & Tools:** MariaDB, MySQL, Git, Postman, VS Code",
+  "Rahmat is a full stack developer at LEAP English & Digital Class. He works on an internal platform for registration and class schedules.",
+  "Rahmat uses Laravel, Livewire, MariaDB, Node.js, and React.",
+  "Hello! I'm Rahmat's AI assistant. Ask me about his experience, skills, or how to contact him.",
   "Ya, Rahmat memiliki keahlian sebagai Full Stack Developer dengan pengalaman mengembangkan **REST API** menggunakan **Laravel** dan **Node.js** yang mengembalikan JSON dengan aman dan konsisten.",
   "Anda bisa menghubungi Rahmat lewat email <mrahmatmuttaqin@gmail.com> atau [GitHub](https://github.com/kinkenkan298/portfolio-website).<br>Ia biasanya membalas dalam satu hari.",
   "Halo! Saya asisten AI Rahmat. Silakan tanyakan pengalaman, keahlian, atau cara menghubunginya.",

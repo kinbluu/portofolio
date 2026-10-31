@@ -38,8 +38,8 @@ export default function ChatHeader({
           <button
             type="button"
             onClick={onReset}
-            aria-label="Mulai percakapan baru"
-            title="Mulai percakapan baru"
+            aria-label="Start a new conversation"
+            title="Start a new conversation"
             className="hit-target text-paper focus-visible:outline-paper"
           >
             <RotateCcw size={18} />

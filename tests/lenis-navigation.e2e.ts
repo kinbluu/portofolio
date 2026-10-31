@@ -204,7 +204,7 @@ async function verifyAssistantNavigation(
               {
                 type: "TEXT_MESSAGE_CONTENT",
                 messageId: "test",
-                delta: "Berikut pengalamannya.",
+                delta: "Here is his experience.",
                 timestamp,
               },
               { type: "TEXT_MESSAGE_END", messageId: "test", timestamp },
@@ -226,7 +226,7 @@ async function verifyAssistantNavigation(
       () =>
         document
           .querySelector("#assistant")
-          ?.textContent?.includes("Berikut pengalamannya."),
+          ?.textContent?.includes("Here is his experience."),
       { timeout: 10_000 },
     );
     await page.waitForFunction(

@@ -238,7 +238,7 @@ export const chatGuard: ChatMiddleware = {
 const holdBack = 160;
 
 export const cutNotice =
-  "Maaf, sisa jawaban ini tidak bisa ditampilkan. Untuk detailnya, silakan hubungi Rahmat lewat email.";
+  "Sorry, the rest of this answer cannot be displayed. Please email Rahmat for details.";
 
 const passThrough = new Set<string>([
   EventType.RUN_STARTED,
@@ -382,7 +382,7 @@ export async function* guardStream(
       case EventType.RUN_ERROR:
         yield {
           ...chunk,
-          message: "Asisten gagal menjawab.",
+          message: "The assistant could not respond.",
           error: undefined,
         };
         break;

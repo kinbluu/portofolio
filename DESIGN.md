@@ -6,7 +6,7 @@
 - Referensi visual: [refrensi.jpeg](./refrensi.jpeg). Gunakan sebagai inspirasi, bukan sebagai desain untuk disalin seluruhnya.
 - Catatan diskusi: [DESIGN-DRAFT.md](./DESIGN-DRAFT.md). Struktur dokumen ini mengikuti contoh [example-design.md](./example-design.md), bukan palet atau isi portofolio dalam contoh tersebut.
 - Sumber fakta profil dan pengalaman: [src/data/profile.ts](./src/data/profile.ts). Jangan menambahkan pengalaman, proyek, hasil, logo, atau klaim yang belum terverifikasi.
-- [PRODUCT.md](./PRODUCT.md) selaras dengan arah redesign ini. Halaman utama sekarang menggunakan konten bahasa Indonesia tanpa merender studio 3D.
+- [PRODUCT.md](./PRODUCT.md) selaras dengan arah redesign ini. Halaman utama menggunakan konten bahasa Inggris tanpa merender studio 3D.
 
 ## Tujuan dan karakter
 
@@ -76,7 +76,7 @@ Nilai implementasi awal berada di `src/styles/portfolio.css` dan masih dapat dis
 
 ## Konten dan suara
 
-- Gunakan bahasa Indonesia pada konten portofolio. Asisten AI tetap menggunakan perilaku dan bahasa yang ada saat ini.
+- Gunakan bahasa Inggris pada konten portofolio dan respons asisten AI.
 - Tulis dengan singkat dan spesifik; utamakan peran dan kontribusi nyata daripada slogan atau paragraf pengisi.
 - Peran dan riwayat mengacu pada `src/data/profile.ts`. Terjemahan tidak boleh mengubah makna atau menambahkan klaim.
 - Bila angka cakupan LEAP ditampilkan, pertahankan penanda perkiraan untuk sekitar 50 staf dan 1.000 siswa. Jumlah serta rincian modul perlu dikonfirmasi sebelum diklaim sebagai fakta final.

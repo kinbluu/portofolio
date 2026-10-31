@@ -60,22 +60,24 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     toServerSentEventsResponse(rejection({ threadId, runId, message }));
 
   if (!GEMINI_API_KEY && !GROQ_API_KEY)
-    return reject("Asisten belum siap digunakan. Silakan coba lagi nanti.");
+    return reject(
+      "The assistant is not available yet. Please try again later.",
+    );
 
   const { success } = await env.CHAT_RATE_LIMITER.limit({ key: clientAddress });
   if (!success)
     return reject(
-      "Terlalu banyak pesan dalam waktu singkat. Tunggu sebentar, lalu coba lagi.",
+      "Too many messages in a short time. Please wait a moment and try again.",
     );
 
   if (problem === "length") {
     return reject(
-      "Percakapan sudah mencapai batas. Mulai percakapan baru untuk lanjut.",
+      "This conversation has reached its limit. Start a new conversation to continue.",
     );
   }
   if (problem === "message") {
     return reject(
-      `Pesan harus berupa teks, maksimal ${chatLimits.messageLength} karakter.`,
+      `Messages must be text and no longer than ${chatLimits.messageLength} characters.`,
     );
   }
 

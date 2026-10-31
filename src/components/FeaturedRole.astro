@@ -20,15 +20,15 @@ const chapter = studioChapter("work");
         .filter((figure) => figure.prefix === "~")
         .map((figure) => (
           <div>
-            <dt>{figure.shortCaption} · perkiraan</dt>
+            <dt>{figure.shortCaption} · approximate</dt>
             <dd>
               {figure.prefix}
-              {new Intl.NumberFormat("id-ID").format(figure.value)}
+              {new Intl.NumberFormat("en-US").format(figure.value)}
             </dd>
           </div>
         ))}
     </dl>
-    <p class="editorial-tags" aria-label="Teknologi">
+    <p class="editorial-tags" aria-label="Technologies">
       {featuredRole.stack.join(" · ")}
     </p>
   </div>

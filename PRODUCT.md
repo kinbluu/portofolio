@@ -12,7 +12,7 @@ Recruiters, prospective clients, and developers all belong here. The first viewp
 - LEAP: approximately 50 staff and approximately 1,000 students. Preserve approximation markers and the distinction between work impact and personal awards. The profile lists four modules and their details, but those still require confirmation before being presented as verified facts.
 - The GitHub server island owns the live calendar and its cached fallback. Present contributions in their own section after experience.
 - No invented awards, certifications, projects, screenshots, testimonials, or personal interests.
-- Main portfolio copy is in Indonesian; preserve the assistant's existing Indonesian behavior.
+- Portfolio copy and assistant responses are in English.
 
 ## Platform and boundaries
 

@@ -10,14 +10,14 @@ const chapter = studioChapter("about");
   class="editorial-section"
 >
   <div class="editorial-inner editorial-measure">
-    <h2 id="about-title">Tentang saya</h2>
+    <h2 id="about-title">About me</h2>
     <p class="editorial-copy">{about.description}</p>
     <ul class="editorial-practices">
       {about.practices.map(({ label }) => (
         <li>{label}</li>
       ))}
     </ul>
-    <h3 class="editorial-subtitle">Keahlian dan perangkat</h3>
+    <h3 class="editorial-subtitle">Skills and tools</h3>
     <dl class="editorial-skills">
       {skills.map(({ label, value }) => (
         <div>

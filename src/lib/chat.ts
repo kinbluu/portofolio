@@ -107,11 +107,11 @@ export function allowedChatLink(
 }
 
 export const pageSectionLabels: Record<PageSection, string> = {
-  work: "Pekerjaan",
-  experience: "Pengalaman",
-  about: "Tentang",
+  work: "Work",
+  experience: "Experience",
+  about: "About",
   github: "GitHub",
-  contact: "Kontak",
+  contact: "Contact",
 };
 
 export const showSectionTool = toolDefinition({

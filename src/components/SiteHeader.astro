@@ -6,7 +6,7 @@ import { navigation, profile } from "../data/profile";
   <a class="site-wordmark" href="#top">
     {profile.wordmark}
   </a>
-  <nav class="site-desktop-nav" aria-label="Navigasi utama">
+  <nav class="site-desktop-nav" aria-label="Main navigation">
     {navigation.map((link) => (
       <a href={link.href}>{link.label}</a>
     ))}
@@ -15,7 +15,7 @@ import { navigation, profile } from "../data/profile";
     <summary>
       Menu <span aria-hidden="true">+</span>
     </summary>
-    <nav aria-label="Navigasi seluler">
+    <nav aria-label="Mobile navigation">
       {navigation.map((link) => (
         <a href={link.href}>{link.label}</a>
       ))}

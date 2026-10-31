@@ -46,7 +46,7 @@ interface Props {
 }
 
 const fallbackError =
-  "Maaf, asisten sedang tidak bisa menjawab. Coba lagi sebentar lagi.";
+  "Sorry, the assistant can't respond right now. Please try again shortly.";
 
 function describeError(error: Error) {
   return "code" in error && error.code === chatRejectedCode
@@ -119,7 +119,7 @@ function SectionLink({ section }: { section: PageSection }) {
 
       className={`${chip} inline-flex items-center gap-1.5`}
     >
-      Lihat bagian {pageSectionLabels[section]}
+      View {pageSectionLabels[section]}
       <ArrowUpRight size={14} />
     </a>
   );
@@ -281,9 +281,9 @@ function ChatView({
   const nearMaxLength = input.length >= maxLength * 0.8;
   const atMaxLength = input.length >= maxLength;
   const lengthNotice = clipped
-    ? `Teks dipotong ke ${maxLength} karakter.`
+    ? `Text was shortened to ${maxLength} characters.`
     : atMaxLength
-      ? `Batas ${maxLength} karakter tercapai.`
+      ? `The ${maxLength}-character limit has been reached.`
       : "";
 
   const paste = (event: ClipboardEvent<HTMLInputElement>) => {
@@ -352,7 +352,7 @@ function ChatView({
                     style={{ animationDelay: `${delay}ms` }}
                   ></span>
                 ))}
-                <span className="sr-only">Asisten sedang mengetik…</span>
+                <span className="sr-only">Assistant is typing…</span>
               </div>
             )}
             {error && !isLoading && (
@@ -366,17 +366,18 @@ function ChatView({
                   className="hit-target text-caption/[1.5] font-medium text-accent"
                   onClick={chat?.retry}
                 >
-                  Coba lagi
+                  Try again
                 </button>
               </div>
             )}
             {limitReached && !isLoading && (
               <div className="flex flex-col items-center gap-2 py-1 text-center">
                 <p className="text-caption/[1.5] text-muted">
-                  Percakapan sudah mencapai batas {chatLimits.turns} pertanyaan.
+                  This conversation has reached its limit of {chatLimits.turns}{" "}
+                  questions.
                 </p>
                 <button type="button" className={chip} onClick={chat?.reset}>
-                  Mulai percakapan baru
+                  Start a new conversation
                 </button>
               </div>
             )}
@@ -405,7 +406,7 @@ function ChatView({
         </p>
         <div className="flex items-center gap-2 lg:gap-2.5">
           <label htmlFor="chat-message" className="sr-only">
-            Pertanyaan
+            Question
           </label>
           <input
             id="chat-message"
@@ -416,7 +417,7 @@ function ChatView({
             maxLength={maxLength}
             aria-describedby="chat-message-limit"
             disabled={!chat || limitReached}
-            placeholder="Tanyakan tentang Rahmat…"
+            placeholder="Ask about Rahmat…"
             value={input}
             onPaste={paste}
             onChange={(event) => {
@@ -428,7 +429,7 @@ function ChatView({
           {isLoading ? (
             <button
               type="button"
-              aria-label="Hentikan jawaban"
+              aria-label="Stop response"
               className={roundButton}
               onClick={chat?.stop}
             >
@@ -437,7 +438,7 @@ function ChatView({
           ) : (
             <button
               type="submit"
-              aria-label="Kirim pertanyaan"
+              aria-label="Send question"
               disabled={!chat || limitReached}
               className={roundButton}
             >
