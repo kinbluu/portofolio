@@ -10,6 +10,11 @@ import {
   providerView,
   questionRule,
 } from "../src/lib/chat-guard";
+assert.match(chatSystemPrompt, /~50 staf yang didukung/);
+assert.match(chatSystemPrompt, /~1\.000 siswa yang dikelola/);
+assert.doesNotMatch(chatSystemPrompt, /4 modul dalam satu aplikasi/);
+assert.match(chatSystemPrompt, /count and details need confirmation/);
+
 import { chatRefusal, chatSystemPrompt } from "../src/lib/chat-prompt";
 
 const attacks = [

@@ -7,8 +7,14 @@ interface Props {
 }
 
 const { view, class: className } = Astro.props;
-const count = new Intl.NumberFormat("en-US");
-const label = `${count.format(view.total)} contributions from ${view.from} to ${view.to}`;
+const count = new Intl.NumberFormat("id-ID");
+const dateFormat = new Intl.DateTimeFormat("id-ID", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+});
+const label = `${count.format(view.total)} kontribusi dari ${dateFormat.format(new Date(`${view.from}T00:00:00Z`))} sampai ${dateFormat.format(new Date(`${view.to}T00:00:00Z`))}`;
 // Labels and cells share one column template, so month names line up with their weeks at any width.
 const columns = `grid-template-columns: repeat(${view.weeks.length}, minmax(0, 1fr))`;
 const days = view.weeks.flat();
@@ -16,8 +22,14 @@ const firstDay = days.find((day) => day)?.date;
 ---
 
 <contribution-grid class:list={["flex flex-col gap-2", className]}>
-  <div class="grid gap-x-[3px] text-micro text-muted lg:gap-x-1" style={columns} aria-hidden="true">
-    {view.months.map(({ week, label }) => <span style={`grid-column: ${week + 1} / span 3`}>{label}</span>)}
+  <div
+    class="grid gap-x-[3px] text-micro text-muted lg:gap-x-1"
+    style={columns}
+    aria-hidden="true"
+  >
+    {view.months.map(({ week, label }) => (
+      <span style={`grid-column: ${week + 1} / span 3`}>{label}</span>
+    ))}
   </div>
   <div
     role="group"
@@ -26,21 +38,22 @@ const firstDay = days.find((day) => day)?.date;
     style={columns}
     data-reveal-cells
   >
-    {
-      days.map((day) =>
-        day ? (
-          <span
-            class:list={["aspect-square rounded-xs", contributionLevelClasses[day.level]]}
-            role="img"
-            aria-label={`${count.format(day.count)} ${day.count === 1 ? "contribution" : "contributions"} on ${day.date}`}
-            tabindex={day.date === firstDay ? 0 : -1}
-            data-contribution-cell
-          />
-        ) : (
-          <span class="aspect-square" />
-        ),
-      )
-    }
+    {days.map((day) =>
+      day ? (
+        <span
+          class:list={[
+            "aspect-square rounded-xs",
+            contributionLevelClasses[day.level],
+          ]}
+          role="img"
+          aria-label={`${count.format(day.count)} kontribusi pada ${dateFormat.format(new Date(`${day.date}T00:00:00Z`))}`}
+          tabindex={day.date === firstDay ? 0 : -1}
+          data-contribution-cell
+        />
+      ) : (
+        <span class="aspect-square" />
+      ),
+    )}
   </div>
   <div
     class="contribution-tooltip fixed z-50 w-max rounded-[6px] bg-ink px-3 py-1.5 text-micro text-paper"
@@ -63,7 +76,9 @@ const firstDay = days.find((day) => day)?.date;
       if (this.cleanup) return;
       const tooltip = this.querySelector<HTMLElement>("[popover]");
       const content = this.querySelector<HTMLElement>("[data-tooltip-content]");
-      const cells = [...this.querySelectorAll<HTMLElement>("[data-contribution-cell]")];
+      const cells = [
+        ...this.querySelectorAll<HTMLElement>("[data-contribution-cell]"),
+      ];
       if (!tooltip || !content) return;
       const grid = this.querySelector<HTMLElement>("[data-reveal-cells]");
       const stopReveal = grid ? revealCells(grid) : () => {};
@@ -98,48 +113,88 @@ const firstDay = days.find((day) => day)?.date;
         tooltip.dataset.side = position.side;
       };
       const cellFor = (target: EventTarget | null) =>
-        target instanceof Element ? target.closest<HTMLElement>("[data-contribution-cell]") : null;
+        target instanceof Element
+          ? target.closest<HTMLElement>("[data-contribution-cell]")
+          : null;
       const closeSoon = () => {
         window.clearTimeout(closeTimer);
         closeTimer = window.setTimeout(hide, 120);
       };
 
-      this.addEventListener("pointerover", (event) => {
-        window.clearTimeout(closeTimer);
-        const cell = cellFor(event.target);
-        if (cell) show(cell);
-        else if (!(event.target instanceof Node && tooltip.contains(event.target))) closeSoon();
-      }, options);
+      this.addEventListener(
+        "pointerover",
+        (event) => {
+          window.clearTimeout(closeTimer);
+          const cell = cellFor(event.target);
+          if (cell) show(cell);
+          else if (!(
+            event.target instanceof Node && tooltip.contains(event.target)
+          ))
+            closeSoon();
+        },
+        options,
+      );
       this.addEventListener("pointerleave", closeSoon, options);
-      this.addEventListener("focusin", (event) => {
-        const cell = cellFor(event.target);
-        if (cell) show(cell);
-      }, options);
-      this.addEventListener("focusout", (event) => {
-        if (!cellFor(event.relatedTarget)) hide();
-      }, options);
-      this.addEventListener("keydown", (event) => {
-        const cell = cellFor(event.target);
-        if (!cell) return;
-        const index = cells.indexOf(cell);
-        const offsets: Record<string, number> = { ArrowUp: -1, ArrowDown: 1, ArrowLeft: -7, ArrowRight: 7 };
-        const nextIndex = event.key === "Home" ? 0
-          : event.key === "End" ? cells.length - 1
-          : event.key in offsets ? index + offsets[event.key] : undefined;
-        if (nextIndex === undefined) return;
-        event.preventDefault();
-        const next = cells[nextIndex];
-        if (!next) return;
-        cell.tabIndex = -1;
-        next.tabIndex = 0;
-        next.focus();
-      }, options);
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") hide();
-      }, options);
-      document.addEventListener("pointerdown", (event) => {
-        if (!(event.target instanceof Node && this.contains(event.target))) hide();
-      }, options);
+      this.addEventListener(
+        "focusin",
+        (event) => {
+          const cell = cellFor(event.target);
+          if (cell) show(cell);
+        },
+        options,
+      );
+      this.addEventListener(
+        "focusout",
+        (event) => {
+          if (!cellFor(event.relatedTarget)) hide();
+        },
+        options,
+      );
+      this.addEventListener(
+        "keydown",
+        (event) => {
+          const cell = cellFor(event.target);
+          if (!cell) return;
+          const index = cells.indexOf(cell);
+          const offsets: Record<string, number> = {
+            ArrowUp: -1,
+            ArrowDown: 1,
+            ArrowLeft: -7,
+            ArrowRight: 7,
+          };
+          const nextIndex =
+            event.key === "Home"
+              ? 0
+              : event.key === "End"
+                ? cells.length - 1
+                : event.key in offsets
+                  ? index + offsets[event.key]
+                  : undefined;
+          if (nextIndex === undefined) return;
+          event.preventDefault();
+          const next = cells[nextIndex];
+          if (!next) return;
+          cell.tabIndex = -1;
+          next.tabIndex = 0;
+          next.focus();
+        },
+        options,
+      );
+      document.addEventListener(
+        "keydown",
+        (event) => {
+          if (event.key === "Escape") hide();
+        },
+        options,
+      );
+      document.addEventListener(
+        "pointerdown",
+        (event) => {
+          if (!(event.target instanceof Node && this.contains(event.target)))
+            hide();
+        },
+        options,
+      );
       window.addEventListener("scroll", hide, { ...options, capture: true });
       window.addEventListener("resize", hide, options);
       this.cleanup = () => {

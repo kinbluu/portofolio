@@ -17,7 +17,6 @@ import {
   useSyncExternalStore,
   type ClipboardEvent,
   type ComponentPropsWithoutRef,
-  type MouseEvent,
   type SubmitEvent,
 } from "react";
 import { useStickToBottom } from "use-stick-to-bottom";
@@ -35,7 +34,6 @@ import ChatHeader from "./ChatHeader";
 import "../styles/chat.css";
 
 interface Props {
-  panelId: string;
   assistant: string;
   initials: string;
   status: string;
@@ -75,12 +73,9 @@ const bubble = "w-fit max-w-[85%] px-3.5 py-2.5 text-body/[1.5] wrap-anywhere";
 const assistantBubble = `${bubble} rounded-[16px_16px_16px_4px] bg-paper ring-1 ring-line ring-inset`;
 const userBubble = `${bubble} ml-auto rounded-[16px_16px_4px_16px] bg-accent text-paper`;
 const chip =
-  "hit-target w-fit rounded-pill bg-paper px-3 py-[7px] text-left text-caption/[1.5] font-medium text-accent ring-1 ring-accent ring-inset hover:bg-tint motion-safe:transition-colors";
+  "hit-target min-h-11 w-fit rounded-pill bg-paper px-3 py-[7px] text-left text-caption/[1.5] font-medium text-accent ring-1 ring-accent ring-inset hover:bg-tint motion-safe:transition-colors";
 const roundButton =
-  "grid size-11 shrink-0 place-items-center rounded-pill bg-accent text-paper hover:bg-accent-hover disabled:pointer-events-none disabled:opacity-50 motion-safe:transition-colors lg:size-[42px]";
-
-const hidePanel = (event: MouseEvent<HTMLElement>) =>
-  event.currentTarget.closest<HTMLElement>("[popover]")?.hidePopover();
+  "grid size-11 shrink-0 place-items-center rounded-pill bg-accent text-paper hover:bg-accent-hover disabled:pointer-events-none disabled:opacity-50 motion-safe:transition-colors";
 
 export function ChatMarkdown({
   content,
@@ -95,12 +90,7 @@ export function ChatMarkdown({
       a: ({ href = "", children }: ComponentPropsWithoutRef<"a">) => {
         const safe = allowedChatLink(href, contacts);
         if (!safe) return <span>{children}</span>;
-        if (safe.startsWith("#"))
-          return (
-            <a href={safe} onClick={hidePanel}>
-              {children}
-            </a>
-          );
+        if (safe.startsWith("#")) return <a href={safe}>{children}</a>;
         if (safe.startsWith("mailto:")) return <a href={safe}>{children}</a>;
         return (
           <a href={safe} target="_blank" rel="noopener noreferrer">
@@ -125,7 +115,7 @@ function SectionLink({ section }: { section: PageSection }) {
   return (
     <a
       href={`#${section}`}
-      onClick={hidePanel}
+
       className={`${chip} inline-flex items-center gap-1.5`}
     >
       Lihat bagian {pageSectionLabels[section]}
@@ -213,7 +203,6 @@ interface ChatState {
 
 function ChatView({
   chat,
-  panelId,
   assistant,
   initials,
   status,
@@ -311,7 +300,6 @@ function ChatView({
   return (
     <>
       <ChatHeader
-        panelId={panelId}
         assistant={assistant}
         initials={initials}
         status={status}
@@ -434,7 +422,7 @@ function ChatView({
               setInput(event.target.value);
               if (event.target.value.length < maxLength) setClipped(false);
             }}
-            className="h-11 min-w-0 flex-1 rounded-pill bg-soft px-4 text-body/[1.5] text-ink placeholder:text-muted disabled:opacity-60 lg:h-[42px]"
+            className="h-11 min-w-0 flex-1 rounded-pill bg-soft px-4 text-body/[1.5] text-ink placeholder:text-muted disabled:opacity-60"
           />
           {isLoading ? (
             <button

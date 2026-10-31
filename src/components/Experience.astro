@@ -7,29 +7,20 @@ const chapter = studioChapter("experience");
 <section
   id={chapter.id}
   aria-labelledby="experience-title"
-  class="studio-chapter"
-  data-studio-chapter
-  data-studio-side="left"
-  data-studio-label="The collected experience"
+  class="editorial-section"
 >
-  <div class="studio-copy">
-    <p class="studio-section-label">
-      <span>
-        {chapter.number} / {chapter.label}
-      </span>
-      <span>Career notes</span>
-    </p>
+  <div class="editorial-inner editorial-measure">
     <h2 id="experience-title">
-      Along <em>the way.</em>
+      Pengalaman <em>kerja.</em>
     </h2>
-    <ol class="studio-experience">
+    <ol class="editorial-experience">
       {experience.map((role) => (
-        <li data-experience-item>
-          <p class="studio-meta">{role.dates}</p>
+        <li>
+          <p class="editorial-meta">{role.dates}</p>
           <h3>{role.title}</h3>
-          <p class="studio-organization">{role.organization}</p>
-          <p class="studio-description">{role.description}</p>
-          <p class="studio-role-stack">{role.stack}</p>
+          <p class="editorial-organization">{role.organization}</p>
+          <p class="editorial-copy">{role.description}</p>
+          <p class="editorial-tags">{role.stack}</p>
         </li>
       ))}
     </ol>

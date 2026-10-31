@@ -1,5 +1,9 @@
 ---
-import { buildCalendarView, contributionLevelClasses, getContributionCalendar } from "../lib/github";
+import {
+  buildCalendarView,
+  contributionLevelClasses,
+  getContributionCalendar,
+} from "../lib/github";
 import snapshot from "../data/github-snapshot.json";
 import ContributionGrid from "./ContributionGrid.astro";
 import TextLink from "./ui/TextLink.astro";
@@ -8,12 +12,14 @@ const calendar = await getContributionCalendar();
 // The server island replaces its loading placeholder; cache live data for the server's 1h TTL.
 Astro.response.headers.set(
   "Cache-Control",
-  calendar.capturedAt === snapshot.capturedAt ? "no-store" : "public, max-age=3600",
+  calendar.capturedAt === snapshot.capturedAt
+    ? "no-store"
+    : "public, max-age=3600",
 );
 const year = buildCalendarView(calendar.days);
 const recent = buildCalendarView(calendar.days, 90);
-const count = new Intl.NumberFormat("en-US");
-const updatedOn = new Intl.DateTimeFormat("en-GB", {
+const count = new Intl.NumberFormat("id-ID");
+const updatedOn = new Intl.DateTimeFormat("id-ID", {
   day: "numeric",
   month: "short",
   year: "numeric",
@@ -24,24 +30,28 @@ const updatedOn = new Intl.DateTimeFormat("en-GB", {
 <div class="flex flex-col gap-5">
   <div class="flex flex-col gap-1">
     <p class="type-stat">
-      <span class="lg:hidden">{count.format(recent.total)} contributions</span>
-      <span class="max-lg:hidden">{count.format(year.total)} contributions</span>
+      <span class="lg:hidden">{count.format(recent.total)} kontribusi</span>
+      <span class="max-lg:hidden">{count.format(year.total)} kontribusi</span>
     </p>
     <p class="text-micro text-muted lg:text-caption">
-      <span class="lg:hidden">Last 90 days</span>
-      <span class="max-lg:hidden">Last year</span>
-      {" "}· Updated {updatedOn}
+      <span class="lg:hidden">90 hari terakhir</span>
+      <span class="max-lg:hidden">1 tahun terakhir</span> · Diperbarui{" "}
+      {updatedOn}
     </p>
   </div>
   <!-- ponytail: 90-day view has ~13 columns, capped so tablets don't get giant cells. -->
   <ContributionGrid view={recent} class="max-w-96 lg:hidden" />
   <ContributionGrid view={year} class="max-lg:hidden" />
   <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-    <TextLink href={`https://github.com/${calendar.login}`} class="font-medium">@{calendar.login}</TextLink>
+    <TextLink href={`https://github.com/${calendar.login}`} class="font-medium">
+      @{calendar.login}
+    </TextLink>
     <div class="flex items-center gap-2 text-micro text-muted">
-      <span>Less</span>
-      {contributionLevelClasses.map((level) => <span class:list={["size-3 rounded-xs", level]} aria-hidden="true" />)}
-      <span>More</span>
+      <span>Lebih sedikit</span>
+      {contributionLevelClasses.map((level) => (
+        <span class:list={["size-3 rounded-xs", level]} aria-hidden="true" />
+      ))}
+      <span>Lebih banyak</span>
     </div>
   </div>
 </div>

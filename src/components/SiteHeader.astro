@@ -1,222 +1,47 @@
 ---
-import ArrowDownRight from "@lucide/astro/icons/arrow-down-right";
-import Menu from "@lucide/astro/icons/menu";
-import X from "@lucide/astro/icons/x";
 import { navigation, profile } from "../data/profile";
-import Button from "./ui/Button.astro";
-import TextLink from "./ui/TextLink.astro";
-import ThemeToggle from "./ui/ThemeToggle.astro";
 ---
 
-<header class="studio-header">
-  <nav aria-label="Primary" class="studio-header-nav">
-    <a href="#top" class="studio-wordmark">
-      {profile.wordmark}
-    </a>
-    <a class="studio-header-location" href="#about">
-      {profile.locationShort}
-    </a>
-    <ul class="studio-desktop-nav">
-      {navigation.map((link) => (
-        <li>
-          <a href={link.href}>{link.label}</a>
-        </li>
-      ))}
-    </ul>
-    <div class="studio-header-actions">
-      <button
-        type="button"
-        class="studio-motion"
-        data-studio-motion
-        aria-label="Pause camera motion"
-        aria-pressed="false"
-        hidden
-      >
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 20 20"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="M7 5v10M13 5v10"
-            stroke="currentColor"
-            stroke-width="1.6"
-            stroke-linecap="round"
-          />
-        </svg>
-        <span data-motion-label>Pause motion</span>
-      </button>
-      <ThemeToggle />
-      <button
-        type="button"
-        class="studio-menu-open"
-        aria-label="Open menu"
-        aria-expanded="false"
-        aria-controls="site-menu"
-        data-menu-open
-      >
-        <Menu size={20} />
-      </button>
-    </div>
+<header class="site-header">
+  <a class="site-wordmark" href="#top">
+    {profile.wordmark}
+  </a>
+  <nav class="site-desktop-nav" aria-label="Navigasi utama">
+    {navigation.map((link) => (
+      <a href={link.href}>{link.label}</a>
+    ))}
   </nav>
-  <dialog
-    id="site-menu"
-    aria-label="Menu"
-    class="fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none bg-canvas p-3 text-ink backdrop:bg-transparent"
-  >
-    <div class="flex h-full min-h-0 flex-col gap-8 overflow-y-auto overscroll-contain rounded-lg bg-paper px-5 pt-7 pb-6">
-      <div class="flex items-center justify-between border-b border-line pb-4">
-        <a href="#top" class="type-wordmark">
-          {profile.wordmark}
-        </a>
-        <div class="flex items-center gap-2">
-          <ThemeToggle />
-          <button
-            type="button"
-            class="grid size-11 place-items-center rounded-pill bg-ink text-paper"
-            aria-label="Close menu"
-            data-menu-close
-          >
-            <X size={20} />
-          </button>
-        </div>
-      </div>
-      <nav aria-label="Menu">
-        <ol>
-          {navigation.map((link, index) => (
-            <li data-menu-item>
-              <a
-                href={link.href}
-                class="group flex h-15 items-center gap-4 border-b border-line"
-              >
-                <span class="w-4 text-micro font-medium text-accent">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span class="flex-1 type-menu group-hover:translate-x-1 group-active:translate-x-1 motion-safe:transition-transform">
-                  {link.label}
-                </span>
-                <ArrowDownRight
-                  size={18}
-                  class="text-muted group-hover:-rotate-45 group-hover:text-ink group-active:-rotate-45 group-active:text-ink motion-safe:transition-[rotate,color]"
-                />
-              </a>
-            </li>
-          ))}
-        </ol>
-      </nav>
-      <div class="mt-auto flex flex-col gap-4" data-menu-item>
-        <Button href={`mailto:${profile.email}`} size="large" class="w-full">
-          Let’s talk
-        </Button>
-        <div class="flex items-center justify-between">
-          <div class="flex gap-5">
-            <TextLink href={profile.linkedin}>LinkedIn</TextLink>
-            <TextLink href={profile.github}>GitHub</TextLink>
-          </div>
-          <p class="text-caption text-muted">{profile.locationShort}</p>
-        </div>
-      </div>
-    </div>
-  </dialog>
+  <details class="site-mobile-menu" data-navigation-menu>
+    <summary>
+      Menu <span aria-hidden="true">+</span>
+    </summary>
+    <nav aria-label="Navigasi seluler">
+      {navigation.map((link) => (
+        <a href={link.href}>{link.label}</a>
+      ))}
+    </nav>
+  </details>
 </header>
 
 <script>
-  import { spring, stagger } from "motion";
-  import { animate } from "motion/mini";
-
-  const menu = document.querySelector<HTMLDialogElement>("#site-menu");
-  const opener = document.querySelector<HTMLButtonElement>("[data-menu-open]");
-
-  if (menu && opener) {
-    const animated = matchMedia(
-      "(prefers-reduced-motion: no-preference)",
-    ).matches;
-    const items = menu.querySelectorAll("[data-menu-item]");
-    const icon = menu.querySelector("[data-menu-close] svg");
-    const openerIcon = opener.querySelector("svg");
-    let origin = "";
-    let closing = false;
-    const circle = (radius: string) => `circle(${radius} at ${origin})`;
-
-    const closeMenu = async () => {
-      if (!animated) return menu.close();
-      if (closing) return;
-      closing = true;
-      await Promise.all([
-        animate(
-          items,
-          { opacity: 0, translate: "0 12px" },
-          {
-            duration: 0.15,
-            ease: "easeIn",
-            delay: stagger(0.03, { from: "last" }),
-          },
-        ),
-        animate(icon, { rotate: "-90deg" }, { duration: 0.24, ease: "easeIn" }),
-        animate(
-          menu,
-          { clipPath: circle("0%") },
-          { duration: 0.3, ease: "easeIn", delay: 0.12 },
-        ),
-      ]);
-      menu.close();
-      animate(
-        openerIcon,
-        { rotate: ["90deg", "0deg"] },
-        { type: spring, visualDuration: 0.3, bounce: 0.25 },
-      );
-      closing = false;
-    };
-
-    opener.addEventListener("click", () => {
-      // rect center survives active:scale-90 (scales around center); rect size does not
-      const rect = opener.getBoundingClientRect();
-      const cx = rect.x + rect.width / 2;
-      const cy = rect.y + rect.height / 2;
-      origin = `${cx}px ${cy}px`;
-      // sticky/tablet layout shifts opener; match close button to it
-      const panel = menu.firstElementChild as HTMLElement;
-      const inset = parseFloat(getComputedStyle(menu).paddingTop);
-      panel.style.paddingTop = `${cy - opener.offsetHeight / 2 - inset}px`;
-      panel.style.paddingRight = `${document.documentElement.clientWidth - cx - opener.offsetWidth / 2 - inset}px`;
-      menu.showModal();
-      opener.setAttribute("aria-expanded", "true");
-      if (!animated) return;
-      animate(
-        menu,
-        { clipPath: [circle("0%"), circle("150%")] },
-        { type: spring, visualDuration: 0.5, bounce: 0 },
-      );
-      animate(
-        icon,
-        { rotate: ["-90deg", "0deg"] },
-        { type: spring, visualDuration: 0.5, bounce: 0.5 },
-      );
-      animate(
-        items,
-        { opacity: [0, 1], translate: ["0 24px", "0 0"] },
-        {
-          type: spring,
-          visualDuration: 0.5,
-          bounce: 0.35,
-          delay: stagger(0.05, { startDelay: 0.1 }),
-        },
-      );
+  const menu = document.querySelector<HTMLDetailsElement>(
+    "[data-navigation-menu]",
+  );
+  menu?.querySelectorAll<HTMLAnchorElement>("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      menu.open = false;
     });
-    menu.addEventListener("close", () =>
-      opener.setAttribute("aria-expanded", "false"),
-    );
-    menu.addEventListener("cancel", (event) => {
+  });
+  menu?.addEventListener("keydown", (event) => {
+    if (
+      event.key === "Enter" &&
+      event.target === menu.querySelector("summary")
+    ) {
       event.preventDefault();
-      closeMenu();
-    });
-    menu
-      .querySelectorAll("a, [data-menu-close]")
-      .forEach((element) => element.addEventListener("click", closeMenu));
-    matchMedia("(width >= 64rem)").addEventListener("change", (event) => {
-      if (event.matches) menu.close();
-    });
-  }
+      menu.open = !menu.open;
+    } else if (event.key === "Escape" && menu.open) {
+      menu.open = false;
+      menu.querySelector<HTMLElement>("summary")?.focus();
+    }
+  });
 </script>

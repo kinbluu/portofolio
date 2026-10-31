@@ -24,41 +24,58 @@ Bun.plugin({
 });
 const { getContributionCalendar } = await import("../src/lib/github");
 
-let now = 0;
-Date.now = () => now;
-let upstream: number | "down" = "down";
-let calls = 0;
-globalThis.fetch = (async () => {
-  calls++;
-  if (upstream === "down") return new Response("", { status: 503 });
-  return Response.json({
-    total: {},
-    contributions: [{ date: "2026-10-20", count: upstream, level: 1 }],
-  });
-}) as typeof fetch;
-console.warn = () => {};
+const originalGlobals = [Date.now, globalThis.fetch, console.warn];
+await verifyGithubCache(getContributionCalendar);
+assert.deepEqual([Date.now, globalThis.fetch, console.warn], originalGlobals);
 
-const count = async () => (await getContributionCalendar()).days.at(-1)?.count;
-const snapshotCount = await count();
-
-upstream = 5;
-assert.equal(
-  await count(),
-  5,
-  "first failure is not cached: next request retries upstream",
-);
-
-upstream = 9;
-now += 59 * 60_000;
-assert.equal(await count(), 5, "within TTL: served from cache");
-now += 60_000;
-assert.equal(await count(), 9, "after TTL: refetched");
-
-upstream = "down";
-now += 60 * 60_000;
-assert.equal(await count(), snapshotCount, "upstream down: snapshot fallback");
-upstream = 11;
-assert.equal(await count(), 11, "recovers on the next request");
-assert.equal(calls, 5);
-
-console.log("PASS github calendar cache");
+async function verifyGithubCache(
+  getContributionCalendar: typeof import("../src/lib/github").getContributionCalendar,
+) {
+  const originalNow = Date.now;
+  const originalFetch = globalThis.fetch;
+  const originalWarn = console.warn;
+  let now = 0;
+  let upstream: number | "down" = "down";
+  let calls = 0;
+  Date.now = () => now;
+  globalThis.fetch = (async () => {
+    calls++;
+    if (upstream === "down") return new Response("", { status: 503 });
+    return Response.json({
+      total: {},
+      contributions: [{ date: "2026-10-20", count: upstream, level: 1 }],
+    });
+  }) as typeof fetch;
+  console.warn = () => {};
+  try {
+    const count = async () =>
+      (await getContributionCalendar()).days.at(-1)?.count;
+    const snapshotCount = await count();
+    upstream = 5;
+    assert.equal(
+      await count(),
+      5,
+      "first failure is not cached: next request retries upstream",
+    );
+    upstream = 9;
+    now += 59 * 60_000;
+    assert.equal(await count(), 5, "within TTL: served from cache");
+    now += 60_000;
+    assert.equal(await count(), 9, "after TTL: refetched");
+    upstream = "down";
+    now += 60 * 60_000;
+    assert.equal(
+      await count(),
+      snapshotCount,
+      "upstream down: snapshot fallback",
+    );
+    upstream = 11;
+    assert.equal(await count(), 11, "recovers on the next request");
+    assert.equal(calls, 5);
+    console.log("PASS github calendar cache");
+  } finally {
+    Date.now = originalNow;
+    globalThis.fetch = originalFetch;
+    console.warn = originalWarn;
+  }
+}

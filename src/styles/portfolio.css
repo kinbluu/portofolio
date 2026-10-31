@@ -1,0 +1,214 @@
+:root {
+  --rm3-canvas: #e9e9eb;
+  --rm3-paper: #fafafa;
+  --rm3-ink: #1c1d20;
+  --rm3-muted: #555b63;
+  --rm3-line: #d6d8dc;
+  --rm3-soft: #f0f1f2;
+  --rm3-accent: #2854a4;
+  --rm3-accent-hover: #1c3e7c;
+  --rm3-tint: #e9eef9;
+  --rm3-online: var(--rm3-accent);
+  --rm3-on-ink-muted: #c5c9d0;
+  --rm3-gh-0: #e1e2e5;
+  --rm3-gh-1: #c8cbd1;
+  --rm3-gh-2: #a8b0bd;
+  --rm3-gh-3: #788cad;
+  --rm3-gh-4: #315fa9;
+  --rm3-shadow: #1c1d2020;
+  --rm3-shadow-strong: #1c1d2030;
+  --rm3-radius-sm: 8px;
+  --rm3-radius-md: 14px;
+  --rm3-radius-lg: 20px;
+  --rm3-radius-xl: 28px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --rm3-canvas: #111214;
+    --rm3-paper: #1b1c20;
+    --rm3-ink: #f3f3f4;
+    --rm3-muted: #b9bdc5;
+    --rm3-line: #43464d;
+    --rm3-soft: #25272c;
+    --rm3-accent: #a9c5ff;
+    --rm3-accent-hover: #c5d8ff;
+    --rm3-tint: #293449;
+    --rm3-on-ink-muted: #50545c;
+    --rm3-gh-0: #34363b;
+    --rm3-gh-1: #596272;
+    --rm3-gh-2: #778cad;
+    --rm3-gh-3: #93acd3;
+    --rm3-gh-4: #b2ceff;
+    --rm3-shadow: #00000055;
+    --rm3-shadow-strong: #00000066;
+  }
+}
+
+body {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.page-shell {
+  width: min(calc(100% - 3rem), 90rem);
+  margin: 1.5rem auto;
+  border: 1px solid var(--rm3-line);
+  border-radius: var(--rm3-radius-xl);
+  background: var(--rm3-paper);
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  inset: 0.75rem auto auto 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--rm3-ink);
+  color: var(--rm3-paper);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.site-header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: min(100% - 4rem, 76rem);
+  min-height: 6rem;
+  margin-inline: auto;
+}
+
+.site-wordmark {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--rm3-ink);
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  text-decoration: none;
+}
+
+.site-desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.site-desktop-nav a,
+.site-mobile-menu a,
+.site-footer a {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--rm3-muted);
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+.site-desktop-nav a:hover,
+.site-mobile-menu a:hover,
+.site-footer a:hover {
+  color: var(--rm3-accent);
+}
+.site-mobile-menu {
+  display: none;
+  position: relative;
+}
+.site-mobile-menu summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-width: 72px;
+  min-height: 44px;
+  cursor: pointer;
+  list-style: none;
+  color: var(--rm3-ink);
+}
+.site-mobile-menu summary::-webkit-details-marker {
+  display: none;
+}
+.site-mobile-menu summary span {
+  font-size: 1.3rem;
+}
+.site-mobile-menu[open] summary span {
+  transform: rotate(45deg);
+}
+.site-mobile-menu nav {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  z-index: 20;
+  display: grid;
+  width: min(17rem, calc(100vw - 3rem));
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--rm3-line);
+  border-radius: var(--rm3-radius-md);
+  background: var(--rm3-paper);
+  box-shadow: 0 12px 30px var(--rm3-shadow);
+}
+.site-mobile-menu nav a + a {
+  border-top: 1px solid var(--rm3-line);
+}
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1.5rem;
+  width: min(100% - 4rem, 76rem);
+  min-height: 6rem;
+  margin-inline: auto;
+  border-top: 1px solid var(--rm3-line);
+  color: var(--rm3-muted);
+  font-size: 0.8125rem;
+}
+.site-footer p {
+  margin: 0;
+}
+
+@media (max-width: 60rem) {
+  .site-desktop-nav {
+    display: none;
+  }
+  .site-mobile-menu {
+    display: block;
+  }
+}
+
+@media (max-width: 40rem) {
+  .page-shell {
+    width: calc(100% - 1.25rem);
+    margin: 0.625rem auto;
+    border-radius: 18px;
+  }
+  .site-header,
+  .site-footer {
+    width: calc(100% - 2.5rem);
+  }
+  .site-header {
+    min-height: 5rem;
+  }
+  .site-footer {
+    padding-block: 1.25rem;
+  }
+}
+
+@media print {
+  .page-shell {
+    width: 100%;
+    margin: 0;
+    border: 0;
+  }
+  .site-desktop-nav,
+  .site-mobile-menu {
+    display: none;
+  }
+}

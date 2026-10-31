@@ -1,7 +1,6 @@
-import { RotateCcw, X } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 
 interface Props {
-  panelId: string;
   assistant: string;
   initials: string;
   status: string;
@@ -9,7 +8,6 @@ interface Props {
 }
 
 export default function ChatHeader({
-  panelId,
   assistant,
   initials,
   status,
@@ -47,15 +45,6 @@ export default function ChatHeader({
             <RotateCcw size={18} />
           </button>
         )}
-        <button
-          type="button"
-          popoverTarget={panelId}
-          popoverTargetAction="hide"
-          aria-label="Tutup chat"
-          className="hit-target text-paper focus-visible:outline-paper"
-        >
-          <X size={20} />
-        </button>
       </div>
     </div>
   );

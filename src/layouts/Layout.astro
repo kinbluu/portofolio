@@ -2,7 +2,8 @@
 import { Font } from "astro:assets";
 import { profile } from "../data/profile";
 import "../styles/global.css";
-import "../styles/studio.css";
+import "../styles/portfolio.css";
+import "../styles/portfolio-sections.css";
 
 interface Props {
   title: string;
@@ -12,7 +13,7 @@ interface Props {
 const { title, description } = Astro.props;
 // Absolute URLs need `site` in astro.config.mjs; tags below are skipped until it is set.
 const canonical = Astro.site && new URL(Astro.url.pathname, Astro.site).href;
-const ogImage = Astro.site && new URL("/og.png", Astro.site).href;
+
 const person = {
   "@context": "https://schema.org",
   "@type": "Person",
@@ -31,7 +32,7 @@ const person = {
 ---
 
 <!doctype html>
-<html lang="en" data-overlayscrollbars-initialize>
+<html lang="id">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -41,66 +42,37 @@ const person = {
     <meta
       name="theme-color"
       media="(prefers-color-scheme: light)"
-      content="#f1ede5"
+      content="#e9e9eb"
     />
     <meta
       name="theme-color"
       media="(prefers-color-scheme: dark)"
-      content="#211e1a"
+      content="#111214"
     />
     <meta name="generator" content={Astro.generator} />
     {canonical && <link rel="canonical" href={canonical} />}
     <meta property="og:type" content="profile" />
     <meta property="og:site_name" content={profile.name} />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content="id_ID" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {canonical && <meta property="og:url" content={canonical} />}
-    {ogImage && <meta property="og:image" content={ogImage} />}
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={title} />
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
     <script type="application/ld+json" set:html={JSON.stringify(person)} />
     {Astro.site && <link rel="sitemap" href="/sitemap.xml" />}
-    <script is:inline>
-      (() => {
-        let theme;
 
-        try {
-          theme = localStorage.getItem("theme");
-        } catch {
-          // Fall back to the system theme when storage is blocked.
-        }
-
-        document.documentElement.dataset.theme =
-          theme === "light" || theme === "dark"
-            ? theme
-            : matchMedia("(prefers-color-scheme: dark)").matches
-              ? "dark"
-              : "light";
-      })();
-    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <Font cssVariable="--font-manrope" preload={[{ weight: 600 }]} />
     <Font cssVariable="--font-dm-sans" preload={[{ weight: 400 }]} />
-    <Font cssVariable="--font-dm-serif" preload={[{ weight: 400 }]} />
+
     <title>{title}</title>
   </head>
-  <body
-    class="bg-canvas font-body text-ink antialiased"
-    data-overlayscrollbars-initialize
-  >
+  <body class="bg-canvas font-body text-ink antialiased">
     <slot />
-    <script>
-      import "../scripts/theme";
-      import "../scripts/scrollbars";
-      import "../scripts/reveal";
-    </script>
   </body>
 </html>

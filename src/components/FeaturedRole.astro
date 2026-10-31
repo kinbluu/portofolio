@@ -1,66 +1,35 @@
 ---
-import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
 import { featuredRole } from "../data/profile";
 import { studioChapter } from "../data/studio-chapters";
 const chapter = studioChapter("work");
 ---
 
-<section
-  id={chapter.id}
-  aria-labelledby="work-title"
-  class="studio-chapter"
-  data-studio-chapter
-  data-studio-side="right"
-  data-studio-label="The workbench"
->
-  <div class="studio-copy">
-    <p class="studio-section-label">
-      <span>
-        {chapter.number} / {chapter.label}
-      </span>
-      <span>LEAP</span>
-    </p>
+<section id={chapter.id} aria-labelledby="work-title" class="editorial-section">
+  <div class="editorial-inner editorial-measure">
     <h2 id="work-title">
       {featuredRole.titleLines[0]} <em>{featuredRole.titleLines[1]}</em>
     </h2>
-    <p class="studio-meta">
-      {featuredRole.employer}
+    <p class="editorial-meta">
+      {featuredRole.badge} · {featuredRole.employer}
       <br />
       {featuredRole.dates}
     </p>
-    <p class="studio-description">{featuredRole.description}</p>
-    <dl class="studio-figures">
-      {featuredRole.figures.map((figure) => (
-        <div>
-          <dt>{figure.caption}</dt>
-          <dd>
-            {figure.prefix}
-            {new Intl.NumberFormat("en-US").format(figure.value)}
-          </dd>
-        </div>
-      ))}
-    </dl>
-    <ul class="studio-stack" aria-label="Tech stack">
-      {featuredRole.stack.map((item) => (
-        <li>{item}</li>
-      ))}
-    </ul>
-    <details class="studio-details">
-      <summary>
-        Inside the platform <ArrowUpRight size={18} />
-      </summary>
-      <ul class="studio-modules">
-        {featuredRole.modules.map(({ icon: Icon, name, detail }) => (
-          <li>
-            <Icon size={18} />
-            <div>
-              <h3>{name}</h3>
-              <p>{detail}</p>
-            </div>
-          </li>
+    <p class="editorial-copy">{featuredRole.description}</p>
+    <dl class="editorial-facts">
+      {featuredRole.figures
+        .filter((figure) => figure.prefix === "~")
+        .map((figure) => (
+          <div>
+            <dt>{figure.shortCaption} · perkiraan</dt>
+            <dd>
+              {figure.prefix}
+              {new Intl.NumberFormat("id-ID").format(figure.value)}
+            </dd>
+          </div>
         ))}
-      </ul>
-      <p class="studio-reliability">{featuredRole.practices.join(" · ")}</p>
-    </details>
+    </dl>
+    <p class="editorial-tags" aria-label="Teknologi">
+      {featuredRole.stack.join(" · ")}
+    </p>
   </div>
 </section>

@@ -8,28 +8,29 @@ import GitHubActivity from "../components/GitHubActivity.astro";
 import Intro from "../components/Intro.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import SiteHeader from "../components/SiteHeader.astro";
-import StudioScene from "../components/StudioScene.astro";
+
 import { profile } from "../data/profile";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout
   title={`${profile.name} · ${profile.role}`}
-  description={`${profile.role} in ${profile.location}. ${profile.headlineLines.join(" ")}`}
+  description={`${profile.role} di ${profile.location}. ${profile.headlineLines.join(" ")}`}
 >
-  <a class="studio-skip" href="#work">
-    Skip to work
+  <a class="skip-link" href="#main-content">
+    Lewati ke konten utama
   </a>
-  <SiteHeader />
-  <StudioScene />
-  <main id="main-content" class="studio-story">
-    <Intro />
-    <FeaturedRole />
-    <Experience />
-    <About />
-    <GitHubActivity />
-    <Contact />
-  </main>
-  <SiteFooter />
-  <ChatWidget />
+  <div class="page-shell">
+    <SiteHeader />
+    <main id="main-content">
+      <Intro />
+      <FeaturedRole />
+      <Experience />
+      <GitHubActivity />
+      <About />
+      <ChatWidget />
+      <Contact />
+    </main>
+    <SiteFooter />
+  </div>
 </Layout>

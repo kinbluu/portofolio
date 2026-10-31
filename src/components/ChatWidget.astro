@@ -1,104 +1,43 @@
 ---
-import MessageCircle from "@lucide/astro/icons/message-circle";
 import { chat, profile } from "../data/profile";
 import ChatPanel from "./ChatPanel";
 
 const panelId = "chat-panel";
 ---
 
-<button
-  type="button"
-  popovertarget={panelId}
-  aria-label="Buka chat dengan asisten Rahmat"
+<section
+  id="assistant"
+  aria-labelledby="assistant-title"
   lang="id"
-  data-chat-launcher
-  class="fixed right-4 bottom-6 z-40 grid size-14 place-items-center rounded-pill bg-accent text-paper shadow-launcher hover:-translate-y-0.5 hover:bg-accent-hover motion-safe:transition-[background-color,translate,opacity] lg:right-18 lg:bottom-16 lg:size-15"
+  class="chat-section"
 >
-  <MessageCircle size={26} />
-  <span
-    class="absolute top-[3px] right-1 size-[13px] rounded-full border-2 border-accent bg-online lg:top-1 lg:size-3.5"
-    aria-hidden="true"
-  ></span>
-</button>
+  <div class="chat-section-heading">
+    <h2 id="assistant-title">Asisten AI</h2>
+    <p>Tanyakan tentang pengalaman dan pekerjaan Rahmat.</p>
+  </div>
+  <div id={panelId} class="chat-panel">
+    <noscript>
+      <style is:inline>
+        .chat-panel astro-island {
+          display: none !important;
+        }
+      </style>
+      <p class="chat-no-script">
+        Asisten ini memerlukan JavaScript. Kamu tetap bisa menghubungi Rahmat
+        melalui <a href={`mailto:${profile.email}`}>{profile.email}</a>.
+      </p>
+    </noscript>
+    <ChatPanel
+      client:visible
 
-<div
-  id={panelId}
-  popover
-  role="dialog"
-  aria-label={`Chat dengan ${chat.assistant}`}
-  lang="id"
-  class="fixed inset-x-4 top-auto bottom-24 m-0 h-[500px] max-h-[calc(100dvh-8rem)] w-auto translate-y-2 flex-col overflow-hidden rounded-[16px] border border-line bg-paper p-0 text-ink opacity-0 shadow-float open:flex open:translate-y-0 open:opacity-100 starting:open:translate-y-2 starting:open:opacity-0 motion-safe:transition-[opacity,translate,display,overlay] motion-safe:transition-discrete motion-safe:duration-200 lg:right-18 lg:bottom-36 lg:left-auto lg:h-[520px] lg:max-h-[calc(100dvh-11rem)] lg:w-94 lg:rounded-md"
->
-  <ChatPanel
-    client:visible
-    panelId={panelId}
-    assistant={chat.assistant}
-    initials={chat.initials}
-    status={chat.status}
-    greeting={chat.greeting}
-    suggestions={chat.suggestions}
-    email={profile.email}
-    github={profile.github}
-    linkedin={profile.linkedin}
-  />
-</div>
-
-<script>
-  import { launcherHidden } from "../scripts/chat-launcher";
-
-  // Focus keeps a hidden launcher reachable from the keyboard.
-  const launcher = document.querySelector<HTMLElement>("[data-chat-launcher]");
-  const panel = document.querySelector<HTMLElement>("#chat-panel");
-  const protectedContent = [
-    ...document.querySelectorAll<HTMLElement>(
-      ".studio-copy :is(h1, h2, h3, p, dt, dd, li, a, summary), .studio-figures > div, .studio-calendar",
-    ),
-  ];
-  const compact = matchMedia("(width < 1024px)");
-  let lastY = scrollY;
-  let scrollingDown = false;
-  let frame = 0;
-
-  const updateVisibility = () => {
-    frame = 0;
-    if (!launcher) return;
-    const panelOpen = !!panel?.matches(":popover-open");
-    const direction = launcherHidden(lastY, scrollY, panelOpen);
-    if (direction !== undefined) {
-      lastY = scrollY;
-      scrollingDown = direction;
-    }
-    if (panelOpen) scrollingDown = false;
-    const { left, top, right, bottom } = launcher.getBoundingClientRect();
-    const overlaps = protectedContent.some((element) => {
-      const bounds = element.getBoundingClientRect();
-      return (
-        bounds.width > 0 &&
-        bounds.height > 0 &&
-        bounds.left < right + 8 &&
-        bounds.right > left - 8 &&
-        bounds.top < bottom + 8 &&
-        bounds.bottom > top - 8
-      );
-    });
-    launcher.toggleAttribute(
-      "data-hidden",
-      !panelOpen && (overlaps || (compact.matches && scrollingDown)),
-    );
-  };
-  const scheduleVisibility = () => {
-    if (!frame) frame = requestAnimationFrame(updateVisibility);
-  };
-  addEventListener("scroll", scheduleVisibility, { passive: true });
-  addEventListener("resize", scheduleVisibility, { passive: true });
-  panel?.addEventListener("toggle", scheduleVisibility);
-  launcher?.addEventListener("focus", () =>
-    launcher.setAttribute("data-focused", ""),
-  );
-  launcher?.addEventListener("blur", () =>
-    launcher.removeAttribute("data-focused"),
-  );
-  const story = document.querySelector<HTMLElement>(".studio-story");
-  if (story) new ResizeObserver(scheduleVisibility).observe(story);
-  scheduleVisibility();
-</script>
+      assistant={chat.assistant}
+      initials={chat.initials}
+      status={chat.status}
+      greeting={chat.greeting}
+      suggestions={chat.suggestions}
+      email={profile.email}
+      github={profile.github}
+      linkedin={profile.linkedin}
+    />
+  </div>
+</section>

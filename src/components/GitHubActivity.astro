@@ -8,22 +8,11 @@ const chapter = studioChapter("github");
 <section
   id={chapter.id}
   aria-labelledby="github-title"
-  class="studio-chapter"
-  data-studio-chapter
-  data-studio-side="left"
-  data-studio-label="The small, steady steps"
+  class="editorial-section"
 >
-  <div class="studio-copy studio-copy-wide">
-    <p class="studio-section-label">
-      <span>
-        {chapter.number} / {chapter.label}
-      </span>
-      <span>Contribution history</span>
-    </p>
-    <h2 id="github-title">
-      Work in <em>the open.</em>
-    </h2>
-    <div class="studio-calendar">
+  <div class="editorial-inner editorial-wide">
+    <h2 id="github-title">Kontribusi GitHub</h2>
+    <div class="editorial-calendar">
       <GitHubCalendar server:defer>
         <GitHubCalendarSkeleton slot="fallback" />
       </GitHubCalendar>

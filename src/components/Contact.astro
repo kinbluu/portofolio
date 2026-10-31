@@ -1,5 +1,4 @@
 ---
-import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
 import { contact, profile } from "../data/profile";
 import { studioChapter } from "../data/studio-chapters";
 const chapter = studioChapter("contact");
@@ -8,37 +7,23 @@ const chapter = studioChapter("contact");
 <section
   id={chapter.id}
   aria-labelledby="contact-title"
-  class="studio-chapter studio-contact"
-  data-studio-chapter
-  data-studio-side="left"
-  data-studio-label="An open invitation"
+  class="editorial-section editorial-contact"
 >
-  <div class="studio-copy">
-    <p class="studio-section-label">
-      <span>
-        {chapter.number} / {chapter.label}
-      </span>
-      <span>Get in touch</span>
-    </p>
-    <h2 id="contact-title">{contact.title}</h2>
-    <p class="studio-description">{contact.description}</p>
-    <a class="studio-contact-email" href={"mailto:" + profile.email}>
+  <div class="editorial-inner editorial-measure">
+    <h2 id="contact-title">Kontak</h2>
+    <p class="editorial-copy">{contact.description}</p>
+    <a class="editorial-email" href={"mailto:" + profile.email}>
       {profile.email}
-      <ArrowUpRight size={20} />
     </a>
-    <div class="studio-contact-links">
+    <nav class="editorial-contact-links" aria-label="Pilihan kontak">
       <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">
-        LinkedIn <ArrowUpRight size={14} />
+        LinkedIn
       </a>
       <a href={profile.github} target="_blank" rel="noopener noreferrer">
-        GitHub <ArrowUpRight size={14} />
+        GitHub
       </a>
-      <a href={"tel:" + profile.phone}>
-        Phone <ArrowUpRight size={14} />
-      </a>
-    </div>
-    <a class="studio-back" href="#top">
-      Back to the room ↑
-    </a>
+      <a href={"tel:" + profile.phone}>Telepon</a>
+      <a href="#top">Kembali ke atas</a>
+    </nav>
   </div>
 </section>

@@ -2,11 +2,11 @@
 
 ## Status dan sumber acuan
 
-- Status: arah redesign yang disepakati, belum diterapkan pada website. Detail yang belum diputuskan tercatat di bagian akhir dokumen.
+- Status: implementasi awal redesign tersedia di workspace dan masih menunggu tinjauan visual pengguna. Detail yang belum diputuskan tercatat di bagian akhir dokumen.
 - Referensi visual: [refrensi.jpeg](./refrensi.jpeg). Gunakan sebagai inspirasi, bukan sebagai desain untuk disalin seluruhnya.
 - Catatan diskusi: [DESIGN-DRAFT.md](./DESIGN-DRAFT.md). Struktur dokumen ini mengikuti contoh [example-design.md](./example-design.md), bukan palet atau isi portofolio dalam contoh tersebut.
 - Sumber fakta profil dan pengalaman: [src/data/profile.ts](./src/data/profile.ts). Jangan menambahkan pengalaman, proyek, hasil, logo, atau klaim yang belum terverifikasi.
-- [PRODUCT.md](./PRODUCT.md) selaras dengan arah redesign ini. Implementasi saat ini masih menggunakan studio 3D dan konten utama berbahasa Inggris hingga redesign selesai.
+- [PRODUCT.md](./PRODUCT.md) selaras dengan arah redesign ini. Halaman utama sekarang menggunakan konten bahasa Indonesia tanpa merender studio 3D.
 
 ## Tujuan dan karakter
 
@@ -19,37 +19,40 @@
 
 ## Arsitektur informasi
 
-| Bagian                       | Arah yang disepakati                                                                       | Status                                                |
-| ---------------------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------- |
-| Perkenalan                   | Nama, peran, dan pengantar singkat; judul utama besar dan terpusat.                        | Isi dan susunan rinci perlu dirancang.                |
-| Pengalaman                   | Ringkas seperti CV, rata tengah: peran, tempat, periode, dan poin kontribusi yang relevan. | Pengalaman menjadi fokus utama.                       |
-| Kontribusi GitHub            | Bagian tersendiri setelah pengalaman.                                                      | Bentuk tampilan dan detailnya belum diputuskan.       |
-| Asisten AI                   | Bagian tersendiri dalam alur halaman, bukan sekadar diasumsikan sebagai tombol mengambang. | Posisi relatif terhadap bagian lain belum diputuskan. |
-| Proyek, keahlian, dan kontak | Gunakan informasi dan tujuan kontak yang benar bila ditampilkan.                           | Susunan dan penyajiannya belum diputuskan.            |
+| Bagian                       | Arah yang disepakati                                                                  | Status                                                                                      |
+| ---------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Perkenalan                   | Nama, peran, dan pengantar singkat; judul utama besar dan terpusat.                   | Ada di awal halaman.                                                                        |
+| Pengalaman                   | Ringkas seperti CV, rata tengah: peran, tempat, periode, dan kontribusi yang relevan. | Pengalaman menjadi fokus utama.                                                             |
+| Kontribusi GitHub            | Bagian tersendiri setelah pengalaman.                                                 | Kalender tetap menggunakan server island dan fallback.                                      |
+| Asisten AI                   | Bagian tersendiri dalam alur halaman, bukan tombol mengambang.                        | Penempatan awal setelah keahlian dan sebelum kontak; belum diputuskan sebagai posisi final. |
+| Proyek, keahlian, dan kontak | Informasi dan tujuan kontak yang nyata.                                               | Pekerjaan saat ini, keahlian, dan kontak tersedia di halaman.                               |
 
 Jangan menghapus tautan kontak atau anchor yang dipakai saat ini hanya karena belum tercantum dalam urutan akhir. Perhatikan anchor `#work`, `#experience`, `#about`, `#github`, dan `#contact` yang juga digunakan asisten AI; pertahankan atau selaraskan seluruh pemakainya saat implementasi.
 
 ## Warna dan tema
 
-| Peran                 | Arah                                                                                        |
-| --------------------- | ------------------------------------------------------------------------------------------- |
-| Dasar                 | Monokrom: hitam, putih, dan abu-abu.                                                        |
-| Warna pendukung       | Sedikit biru sebagai aksen, digunakan seperlunya dan bukan sebagai warna dominan.           |
-| Tema terang dan gelap | Keduanya mengikuti preferensi perangkat. Sesuaikan nilai dan kontras di masing-masing tema. |
+| Token          | Terang    | Gelap     | Penggunaan           |
+| -------------- | --------- | --------- | -------------------- |
+| `--rm3-canvas` | `#e9e9eb` | `#111214` | Latar halaman        |
+| `--rm3-paper`  | `#fafafa` | `#1b1c20` | Permukaan konten     |
+| `--rm3-ink`    | `#1c1d20` | `#f3f3f4` | Teks utama           |
+| `--rm3-muted`  | `#555b63` | `#b9bdc5` | Teks sekunder        |
+| `--rm3-line`   | `#d6d8dc` | `#43464d` | Garis pemisah        |
+| `--rm3-accent` | `#2854a4` | `#a9c5ff` | Aksen biru dan fokus |
 
-Nuansa biru, nilai warna, dan penempatan aksen belum dipilih. Tombol untuk mengubah tema secara manual juga belum diputuskan. Jangan mengadopsi aksen olive atau nilai warna dari dokumen contoh sebagai keputusan baru.
+Nilai implementasi awal berada di `src/styles/portfolio.css` dan masih dapat disesuaikan setelah ditinjau pengguna. Tema mengikuti perangkat tanpa tombol manual pada iterasi ini; penambahan override manual masih terbuka. Aksen olive dan nilai warna dokumen contoh tidak digunakan.
 
 ## Tipografi
 
 - Jadikan tipografi pembawa utama karakter visual, bukan dekorasi atau objek 3D.
 - Judul utama berukuran besar dan rata tengah. Sesuaikan ukurannya dengan lebar layar agar tetap terbaca.
 - Susun teks pengalaman secara terpusat dan ringkas, dengan pembedaan jelas antara peran, organisasi, periode, dan kontribusi.
-- Jaga panjang baris, jarak, dan ukuran teks agar nyaman dibaca. Nama font, bobot, skala, dan angka ukuran belum ditentukan.
+- Implementasi awal memakai Manrope untuk judul dan DM Sans untuk isi. Judul utama memakai `clamp(2rem, 5.5vw, 5.5rem)`; ukuran dan pilihan font dapat ditinjau kembali.
 
 ## Ruang, bentuk, dan komponen
 
 - Gunakan ruang kosong untuk membedakan bagian dan memberi fokus pada isi, tanpa membuat halaman mobile memanjang secara berlebihan.
-- Panel membulat dan bentuk tombol terlihat pada referensi, tetapi belum dipilih sebagai aturan desain. Ukuran radius, batas, dan bayangan masih terbuka.
+- Implementasi awal menggunakan satu permukaan halaman dengan sudut 28 px di desktop dan 18 px di mobile, serta panel asisten 14 px di desktop dan 12 px di mobile. Hindari menambahkan panel berulang tanpa fungsi.
 - Komponen yang diperlukan mencakup perkenalan, entri pengalaman, kontribusi GitHub, dan asisten AI. Kebutuhan navigasi, penempatan kontak, serta komponen tambahan disesuaikan setelah susunan konten disepakati.
 - Aksen dan elemen interaktif harus punya fungsi yang jelas; jangan menambahkan kartu atau ornamen hanya untuk mengisi ruang.
 
@@ -59,15 +62,15 @@ Nuansa biru, nilai warna, dan penempatan aksen belum dipilih. Tombol untuk mengu
 - Pertahankan isi utama dan urutan bacanya; teks tetap terbaca dan tidak terpotong atau menyebabkan gulir horizontal.
 - Pada layar kecil, gunakan ruang kosong secara proporsional dan pastikan asisten tidak menghalangi konten.
 - Kontribusi GitHub harus tetap terbaca tanpa memaksa kisi desktop yang terlalu lebar. Tampilan saat ini menggunakan rentang yang lebih pendek di mobile; bentuk akhirnya perlu ditinjau.
-- Breakpoint dan ukuran spesifik belum dipilih; tentukan dan uji saat desain responsif dibuat.
+- Navigasi beralih ke menu ringkas pada lebar maksimal 60rem; penyesuaian mobile tambahan ada pada 40rem dan 600px. Uji pada lebar yang lebih beragam saat pengembangan.
 
 ## Interaksi dan aksesibilitas
 
-- Ikuti preferensi warna perangkat dan respons terhadap perubahannya. Perilaku override manual masih menunggu keputusan.
+- Tema mengikuti preferensi warna perangkat dan berubah tanpa reload. Override manual belum tersedia dan masih menunggu keputusan.
 - Pastikan konten portofolio tetap dapat dibaca tanpa JavaScript atau GPU; asisten AI boleh memerlukan JavaScript untuk berinteraksi.
 - Semua navigasi dan kontrol harus dapat digunakan dengan keyboard, mempunyai nama yang jelas, dan menampilkan fokus yang terlihat.
 - Targetkan area interaksi sedikitnya 44 × 44 px. Jangan mengandalkan warna saja untuk membedakan status atau tautan.
-- Penuhi kontras minimal WCAG AA: 4,5:1 untuk teks normal dan 3:1 untuk teks besar. Rasio warna aktual belum diukur.
+- Targetkan kontras WCAG AA: 4,5:1 untuk teks normal dan 3:1 untuk teks besar. Pasangan teks utama terhadap permukaan terukur 16,15:1 terang dan 15,35:1 gelap; teks sekunder 6,57:1 dan 9,04:1. Pasangan lain tetap perlu diperiksa sesuai penggunaannya.
 - Hormati `prefers-reduced-motion` dan hindari animasi atau scroll yang menghalangi pembacaan.
 - Pertahankan informasi status, keadaan gagal, dan pemulihan untuk kontribusi GitHub serta asisten AI.
 
@@ -80,18 +83,23 @@ Nuansa biru, nilai warna, dan penempatan aksen belum dipilih. Tombol untuk mengu
 
 ## Catatan implementasi dan verifikasi
 
-Dokumen ini belum mengubah website. Selama implementasi redesign:
+Implementasi awal sudah dibuat; tinjauan pengguna dan verifikasi lanjutan tetap diperlukan:
 
 - Jaga konsistensi bahasa dan keputusan desain pada data profil, navigasi, `PRODUCT.md`, serta semua konsumen yang terkait.
 - Pertahankan perilaku data kontribusi GitHub, kondisi loading dan gagal, tautan pemulihan, dan batasan keamanan asisten AI.
 - Uji mode terang dan gelap mengikuti perangkat, keyboard, ukuran target, kontras, serta preferensi reduced motion. Pastikan pengalaman tetap dapat dibaca tanpa JavaScript.
 - Periksa tampilan desktop dan mobile, termasuk keadaan asisten dan kontribusi GitHub. Jalankan pemeriksaan `bun check`, `bun lint`, `bun fmt --check`, dan `bun run build`; gunakan Obscura untuk pengujian browser.
-- Tinjau dan sesuaikan pengujian yang khusus untuk studio 3D dengan arah baru tanpa menghilangkan cakupan perilaku yang masih relevan.
+- Pengujian perilaku umum yang masih relevan dicakup ulang di `tests/portfolio-redesign.e2e.ts`; tes studio 3D lama tetap tersimpan sebagai referensi dan tidak dipakai untuk verifikasi desain ini.
+
+## Verifikasi implementasi awal
+
+- Pengujian Obscura mencakup lebar 320, 390, 768, dan 1440 px, anchor, perubahan tema, HTML server, chat dengan respons tiruan, serta pemulihan GitHub untuk HTTP 503 dan koneksi putus.
+- Obscura tidak memverifikasi JavaScript yang benar-benar dimatikan atau aktivasi keyboard bawaan. Pemeriksaan browser desktop terpisah memastikan konten utama dan fallback tersedia tanpa JavaScript, serta Tab, Enter, Space, dan Escape bekerja pada navigasi yang diuji.
+- Chat diuji dengan respons lokal tiruan; panggilan ke penyedia AI sebenarnya tidak dilakukan. Aturan CSS cetak diperiksa, tetapi hasil cetak sesungguhnya belum diuji. Tinjauan visual akhir tetap menunggu pengguna.
 
 ## Hal yang belum diputuskan
 
-- Font, skala tipografi, jarak, radius, dan nilai warna termasuk nuansa biru.
-- Urutan asisten AI serta susunan dan penyajian proyek, keahlian, dan kontak.
-- Bentuk kontribusi GitHub dan antarmuka asisten AI pada desktop dan mobile.
+- Persetujuan pengguna atas implementasi awal, termasuk font, jarak, radius, dan nuansa biru.
+- Posisi final asisten AI dan penyajian proyek, keahlian, serta kontak.
 - Ada atau tidaknya pilihan tema manual selain mengikuti perangkat.
-- Elemen lain dari referensi yang ingin digunakan, serta rincian desain untuk tablet dan mobile.
+- Gambar pratinjau sosial baru: gambar lama dinonaktifkan atas pilihan pengguna karena masih menampilkan studio 3D.

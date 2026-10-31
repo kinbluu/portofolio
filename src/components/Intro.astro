@@ -1,5 +1,4 @@
 ---
-import ArrowDownRight from "@lucide/astro/icons/arrow-down-right";
 import { profile } from "../data/profile";
 import { studioChapter } from "../data/studio-chapters";
 const chapter = studioChapter("top");
@@ -8,43 +7,35 @@ const chapter = studioChapter("top");
 <section
   id={chapter.id}
   aria-labelledby="intro-title"
-  class="studio-chapter studio-intro"
-  data-studio-chapter
-  data-studio-side="left"
-  data-studio-label="The room"
+  class="editorial-section editorial-intro"
 >
-  <div class="studio-copy">
-    <p class="studio-kicker">
-      <span>
-        {chapter.number} / {chapter.label}
-      </span>
-      <span>Surabaya, ID</span>
-    </p>
-    <p class="studio-person">{profile.name}</p>
+  <div class="editorial-inner editorial-intro-inner">
+    <p class="editorial-person">{profile.name}</p>
     <h1 id="intro-title">
-      {profile.headlineLines[0]} <em>{profile.headlineLines[1]}</em>
+      {profile.headlineLines[0]}{" "}
+      <em>{profile.headlineLines[1].replaceAll("-", "\u2011")}</em>
     </h1>
-    <p class="studio-intro-role">
-      {profile.role}
-      <span aria-hidden="true"> / </span>
-      {profile.location}
+    <p class="editorial-lede">
+      {profile.role} · {profile.location}
     </p>
-    <div class="studio-intro-links">
-      <a class="studio-link" href={"mailto:" + profile.email}>
-        Let’s talk <ArrowDownRight size={17} />
+    <nav class="editorial-actions" aria-label="Kontak dan navigasi utama">
+      <a
+        class="editorial-link editorial-link-primary"
+        href={"mailto:" + profile.email}
+      >
+        Hubungi saya
       </a>
       <a
-        class="studio-quiet-link"
+        class="editorial-link"
         href={profile.linkedin}
         target="_blank"
         rel="noopener noreferrer"
       >
         LinkedIn
       </a>
-    </div>
-    <a href="#work" class="studio-enter">
-      <span class="studio-enter-line" aria-hidden="true"></span>Read about LEAP{" "}
-      <ArrowDownRight size={16} />
-    </a>
+      <a class="editorial-link" href="#work">
+        Lihat pekerjaan
+      </a>
+    </nav>
   </div>
 </section>

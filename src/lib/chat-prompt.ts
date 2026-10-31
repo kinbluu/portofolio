@@ -7,7 +7,7 @@ import {
   skills,
 } from "../data/profile";
 
-const count = new Intl.NumberFormat("en-US");
+const count = new Intl.NumberFormat("id-ID");
 
 const list = (items: string[]) => items.map((item) => `- ${item}`).join("\n");
 
@@ -25,8 +25,14 @@ ${list([
 Current work (${featuredRole.dates}): ${featuredRole.employer}
 ${list([
   `${featuredRole.titleLines.join(" ")} ${featuredRole.description}`,
-  `Scale: ${featuredRole.figures.map(({ prefix, value, caption }) => `${prefix}${count.format(value)} ${caption}`).join(", ")}`,
-  `Modules: ${featuredRole.modules.map(({ name, detail }) => `${name} (${detail})`).join("; ")}`,
+  `Scale: ${featuredRole.figures
+    .filter(({ prefix }) => prefix === "~")
+    .map(
+      ({ prefix, value, caption }) =>
+        `${prefix}${count.format(value)} ${caption}`,
+    )
+    .join(", ")}`,
+  `Modules listed in the profile (count and details need confirmation; do not present them as verified): ${featuredRole.modules.map(({ name, detail }) => `${name} (${detail})`).join("; ")}`,
   `Stack: ${featuredRole.stack.join(", ")}`,
   `Practices: ${featuredRole.practices.join(", ")}`,
 ])}

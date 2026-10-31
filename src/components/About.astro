@@ -7,34 +7,18 @@ const chapter = studioChapter("about");
 <section
   id={chapter.id}
   aria-labelledby="about-title"
-  class="studio-chapter"
-  data-studio-chapter
-  data-studio-side="right"
-  data-studio-label="The everyday tools"
+  class="editorial-section"
 >
-  <div class="studio-copy">
-    <p class="studio-section-label">
-      <span>
-        {chapter.number} / {chapter.label}
-      </span>
-      <span>Tools &amp; approach</span>
-    </p>
-    <h2 id="about-title">
-      {about.titleLines[0]}
-      <br />
-      <em>{about.titleLines[1]}</em>
-    </h2>
-    <p class="studio-description">{about.description}</p>
-    <ul class="studio-practices">
-      {about.practices.map(({ icon: Icon, label }) => (
-        <li>
-          <Icon size={16} />
-          {label}
-        </li>
+  <div class="editorial-inner editorial-measure">
+    <h2 id="about-title">Tentang saya</h2>
+    <p class="editorial-copy">{about.description}</p>
+    <ul class="editorial-practices">
+      {about.practices.map(({ label }) => (
+        <li>{label}</li>
       ))}
     </ul>
-    <h3 class="studio-toolkit-title">My everyday toolkit.</h3>
-    <dl class="studio-toolkit">
+    <h3 class="editorial-subtitle">Keahlian dan perangkat</h3>
+    <dl class="editorial-skills">
       {skills.map(({ label, value }) => (
         <div>
           <dt>{label}</dt>

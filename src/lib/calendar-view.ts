@@ -31,7 +31,7 @@ export const contributionLevelClasses = [
 const day = 86_400_000;
 const toTime = (date: string) => Date.parse(`${date}T00:00:00Z`);
 const toDate = (time: number) => new Date(time).toISOString().slice(0, 10);
-const monthName = new Intl.DateTimeFormat("en-US", {
+const monthName = new Intl.DateTimeFormat("id-ID", {
   month: "short",
   timeZone: "UTC",
 });

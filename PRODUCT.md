@@ -1,6 +1,6 @@
 # Rahmat’s portfolio
 
-A personal portfolio for Mochammad Rahmat Muttaqin, a full-stack developer in Surabaya. It presents real work, experience, skills, GitHub activity, and ways to make contact. This document describes the agreed redesign; the current website may still reflect the previous design until implementation is complete.
+A personal portfolio for Mochammad Rahmat Muttaqin, a full-stack developer in Surabaya. It presents real work, experience, skills, GitHub activity, and ways to make contact. This document records the agreed redesign and its product constraints; the initial implementation remains subject to the owner's visual review.
 
 ## People and outcome
 
@@ -9,7 +9,7 @@ Recruiters, prospective clients, and developers all belong here. The first viewp
 ## Content authority
 
 - `src/data/profile.ts` owns biographical facts, work, experience, skills, contacts, and chat copy.
-- LEAP: approximately 50 staff, approximately 1,000 students, four modules. Preserve approximation markers and the distinction between work impact and personal awards.
+- LEAP: approximately 50 staff and approximately 1,000 students. Preserve approximation markers and the distinction between work impact and personal awards. The profile lists four modules and their details, but those still require confirmation before being presented as verified facts.
 - The GitHub server island owns the live calendar and its cached fallback. Present contributions in their own section after experience.
 - No invented awards, certifications, projects, screenshots, testimonials, or personal interests.
 - Main portfolio copy is in Indonesian; preserve the assistant's existing Indonesian behavior.

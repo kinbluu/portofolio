@@ -15,12 +15,12 @@ import Wrench from "@lucide/astro/icons/wrench";
 export const profile = {
   name: "Mochammad Rahmat Muttaqin",
   wordmark: "Rahmat.",
-  role: "Full Stack Developer",
+  role: "Pengembang Full Stack",
   location: "Surabaya, Indonesia",
   locationShort: "Surabaya, ID",
   headlineLines: [
-    "I build web applications that make",
-    "everyday work easier.",
+    "Saya membangun aplikasi web yang memudahkan",
+    "pekerjaan sehari-hari.",
   ],
   email: "mrahmatmuttaqin@gmail.com",
   linkedin: "https://www.linkedin.com/in/mochammad-rahmat-muttaqin",
@@ -29,104 +29,105 @@ export const profile = {
 };
 
 export const navigation = [
-  { label: "Work", href: "#work" },
-  { label: "Experience", href: "#experience" },
-  { label: "About", href: "#about" },
+  { label: "Karya", href: "#work" },
+  { label: "Pengalaman", href: "#experience" },
   { label: "GitHub", href: "#github" },
-  { label: "Contact", href: "#contact" },
+  { label: "Tentang", href: "#about" },
+  { label: "Asisten AI", href: "#assistant" },
+  { label: "Kontak", href: "#contact" },
 ];
 
 export const featuredRole = {
-  badge: "Current work",
-  dates: "Jan 2026 to Present",
-  titleLines: ["Software behind", "the classroom."],
-  employer: "Full Stack Developer · LEAP English & Digital Class",
+  badge: "Pekerjaan saat ini",
+  dates: "Jan 2026 hingga sekarang",
+  titleLines: ["Teknologi untuk", "ruang kelas."],
+  employer: "Pengembang Full Stack · LEAP English & Digital Class",
   description:
-    "Registration, class schedules, attendance and report-card approvals, brought together in one internal platform.",
+    "Pendaftaran, jadwal kelas, kehadiran, dan persetujuan rapor dalam satu platform internal.",
   figures: [
     {
       value: 50,
       prefix: "~",
-      caption: "staff supported",
-      shortCaption: "staff",
+      caption: "staf yang didukung",
+      shortCaption: "staf",
     },
     {
       value: 1_000,
       prefix: "~",
-      caption: "students managed",
-      shortCaption: "students",
+      caption: "siswa yang dikelola",
+      shortCaption: "siswa",
     },
     {
       value: 4,
       prefix: "",
-      caption: "modules in one app",
-      shortCaption: "modules",
+      caption: "modul dalam satu aplikasi",
+      shortCaption: "modul",
     },
   ],
   stack: ["Laravel", "Livewire", "MariaDB"],
   modules: [
     {
       icon: UserPlus,
-      name: "Registration",
-      detail: "Online enrolment and student records",
+      name: "Pendaftaran",
+      detail: "Pendaftaran daring dan data siswa",
     },
     {
       icon: CalendarDays,
-      name: "Scheduling",
-      detail: "Class timetables and teacher allocation",
+      name: "Penjadwalan",
+      detail: "Jadwal kelas dan penugasan pengajar",
     },
     {
       icon: ClipboardCheck,
-      name: "Attendance",
-      detail: "Daily check-in per class and session",
+      name: "Kehadiran",
+      detail: "Pencatatan kehadiran harian per kelas dan sesi",
     },
     {
       icon: FileCheck,
-      name: "Report cards",
-      detail: "Multi-step approval before release",
+      name: "Rapor",
+      detail: "Persetujuan bertahap sebelum diterbitkan",
     },
   ],
   practices: [
-    "Role-based access",
-    "Queued jobs",
-    "Audit logs",
-    "Feature tests",
+    "Akses berbasis peran",
+    "Tugas dalam antrean",
+    "Log audit",
+    "Pengujian fitur",
   ],
 };
 
 export const experience = [
   {
-    dates: "Feb to Apr 2026",
+    dates: "Feb hingga Apr 2026",
     icon: Workflow,
-    title: "Backend Developer",
+    title: "Pengembang Backend",
     studioTitle: "Backend",
     studioOrganization: "Inimedia",
-    organization: "PT Inimedia Kreatif Indonesia · Freelance",
+    organization: "PT Inimedia Kreatif Indonesia · Lepas",
     description:
-      "Payment APIs, authentication, webhook retries and reconciliation in a Node.js microservices backend.",
-    stack: "Node.js · Microservices · JWT · API keys · RBAC",
+      "API pembayaran, autentikasi, percobaan ulang webhook, dan rekonsiliasi pada backend microservices Node.js.",
+    stack: "Node.js · Microservices · JWT · Kunci API · RBAC",
   },
   {
-    dates: "Dec 2025 to Jan 2026",
+    dates: "Des 2025 hingga Jan 2026",
     icon: Wrench,
-    title: "Full Stack Web Developer",
+    title: "Pengembang Web Full Stack",
     studioTitle: "Full Stack",
     studioOrganization: "LEAP",
-    organization: "LEAP English & Digital Class · Internship",
+    organization: "LEAP English & Digital Class · Magang",
     description:
-      "Reviewed legacy question-bank workflows and fixed existing features.",
-    stack: "Legacy workflows · Application maintenance",
+      "Meninjau alur kerja bank soal lama dan memperbaiki fitur yang sudah ada.",
+    stack: "Alur kerja lama · Pemeliharaan aplikasi",
   },
 ];
 
 export const about = {
-  titleLines: ["Practical.", "Detail-minded."],
+  titleLines: ["Praktis.", "Cermat."],
   description:
-    "I build web apps and APIs, with AI-assisted coding and agentic workflows as part of my process.",
+    "Saya membangun aplikasi web dan API, dengan bantuan AI serta alur kerja berbasis agen.",
   practices: [
-    { icon: ShieldCheck, label: "Role-based access" },
-    { icon: Database, label: "Validated data" },
-    { icon: CheckCheck, label: "Tested workflows" },
+    { icon: ShieldCheck, label: "Akses berbasis peran" },
+    { icon: Database, label: "Data tervalidasi" },
+    { icon: CheckCheck, label: "Alur kerja teruji" },
   ],
 };
 
@@ -139,24 +140,25 @@ export const skills = [
   },
   {
     icon: CodeXml,
-    label: "Languages",
+    label: "Bahasa pemrograman",
     value: "PHP, JavaScript, TypeScript, Solidity, Python",
   },
   {
     icon: Database,
-    label: "Data & tools",
+    label: "Data dan alat",
     value: "MariaDB, MySQL, Git, Postman, VS Code",
   },
   {
     icon: Sprout,
-    label: "Currently learning",
-    value: "Mobile development with Expo",
+    label: "Sedang dipelajari",
+    value: "Pengembangan aplikasi mobile dengan Expo",
   },
 ];
 
 export const contact = {
-  title: "Let’s build something useful.",
-  description: "Web apps, APIs or a better workflow. Let’s talk.",
+  title: "Mari buat sesuatu yang bermanfaat.",
+  description:
+    "Aplikasi web, API, atau alur kerja yang lebih baik. Mari berbincang.",
 };
 
 export const chat = {
