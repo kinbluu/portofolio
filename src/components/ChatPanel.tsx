@@ -30,6 +30,7 @@ import {
   showSectionTool,
   type PageSection,
 } from "../lib/chat";
+import { scrollToSection } from "../scripts/smooth-scroll";
 import ChatHeader from "./ChatHeader";
 import "../styles/chat.css";
 
@@ -60,7 +61,7 @@ const chatOptions = createChatClientOptions({
   tools: clientTools(
     showSectionTool.client(({ section }) => {
       const target = document.getElementById(section);
-      target?.scrollIntoView({ block: "start" });
+      if (target) scrollToSection(target);
       return { shown: target !== null };
     }),
     showContactTool.client(() => ({ shown: true })),
@@ -305,7 +306,7 @@ function ChatView({
         status={status}
         onReset={messages.length > 0 ? chat?.reset : undefined}
       />
-      <div ref={hostRef} className="min-h-0 flex-1 bg-soft">
+      <div ref={hostRef} data-lenis-prevent className="min-h-0 flex-1 bg-soft">
         <div
           ref={scrollRef}
           className="h-full overflow-y-auto overscroll-contain"

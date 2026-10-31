@@ -2,6 +2,7 @@
 import { Font } from "astro:assets";
 import { profile } from "../data/profile";
 import "../styles/global.css";
+import "lenis/dist/lenis.css";
 import "../styles/portfolio.css";
 import "../styles/portfolio-sections.css";
 
@@ -74,5 +75,8 @@ const person = {
   </head>
   <body class="bg-canvas font-body text-ink antialiased">
     <slot />
+    <script>
+      import "../scripts/smooth-scroll";
+    </script>
   </body>
 </html>

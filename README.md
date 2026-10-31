@@ -22,7 +22,15 @@ obscura serve --port 9222 --allow-private-network
 bun tests/portfolio-redesign.e2e.ts
 ```
 
-Portofolio dirancang agar konten utama tetap dapat dibaca tanpa JavaScript atau GPU; asisten AI memerlukan JavaScript untuk interaksi. Obscura memiliki keterbatasan untuk mematikan JavaScript dan menguji aktivasi keyboard bawaan; periksa keduanya juga di browser desktop. Tes lama `tests/studio.e2e.ts` dan `tests/studio-polish.e2e.ts` khusus studio 3D dan bukan acuan untuk desain saat ini.
+Portofolio dirancang agar konten utama tetap dapat dibaca tanpa JavaScript atau GPU; asisten AI memerlukan JavaScript untuk interaksi. Obscura memiliki keterbatasan untuk mematikan JavaScript dan menguji aktivasi keyboard bawaan; tes navigasi Lenis di bawah menggunakan Chromium untuk memeriksa skip link dan anchor tanpa JavaScript. Tes lama `tests/studio.e2e.ts` dan `tests/studio-polish.e2e.ts` khusus studio 3D dan bukan acuan untuk desain saat ini.
+
+## Smooth scrolling
+
+Lenis menghaluskan scroll roda tetikus; scroll sentuh dan area chat tetap menggunakan perilaku aslinya. Pengaturan `prefers-reduced-motion` mematikan Lenis, termasuk saat preferensi berubah. Tanpa JavaScript, navigasi dan scroll tetap menggunakan perilaku browser.
+
+- Uji lifecycle: `bun tests/smooth-scroll.test.ts`.
+- Uji preferensi di Obscura: `bun tests/lenis-scroll.e2e.ts`.
+- Uji navigasi, keyboard, chat, sentuhan, dan fallback tanpa JavaScript: `bun tests/lenis-navigation.e2e.ts`. Tes ini memerlukan Chromium di `/usr/bin/chromium`; gunakan `CHROMIUM_PATH` jika lokasinya berbeda.
 
 ## Loading states
 
