@@ -1,33 +1,45 @@
 {
-  "$schema": "./node_modules/wrangler/config-schema.json",
-  "compatibility_date": "2026-10-12",
-  "compatibility_flags": ["global_fetch_strictly_public"],
-  "name": "portofolio",
-  "main": "@astrojs/cloudflare/entrypoints/server",
-  "assets": {
-    "directory": "./dist",
-    "binding": "ASSETS",
-  },
-  "d1_databases": [{ "binding": "VISITOR_DB" }],
-  "ratelimits": [
-    {
-      "name": "VISITOR_RATE_LIMITER",
-      "namespace_id": "4322",
-      "simple": {
-        "limit": 60,
-        "period": 60,
-      },
-    },
-    {
-      "name": "CHAT_RATE_LIMITER",
-      "namespace_id": "4321",
-      "simple": {
-        "limit": 10,
-        "period": 60,
-      },
-    },
-  ],
-  "observability": {
-    "enabled": true,
-  },
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"compatibility_date": "2026-10-12",
+	"compatibility_flags": [
+		"global_fetch_strictly_public"
+	],
+	"name": "portofolio",
+	"main": "@astrojs/cloudflare/entrypoints/server",
+	"assets": {
+		"directory": "./dist",
+		"binding": "ASSETS",
+	},
+	"d1_databases": [
+		{
+			"binding": "VISITOR_DB"
+		},
+		{
+			"binding": "portofolio_visitors",
+			"database_name": "portofolio-visitors",
+			"database_id": "5dd42aac-b546-46fc-b6ca-8bd5234737ac",
+			"remote": true
+		}
+	],
+	"ratelimits": [
+		{
+			"name": "VISITOR_RATE_LIMITER",
+			"namespace_id": "4322",
+			"simple": {
+				"limit": 60,
+				"period": 60,
+			},
+		},
+		{
+			"name": "CHAT_RATE_LIMITER",
+			"namespace_id": "4321",
+			"simple": {
+				"limit": 10,
+				"period": 60,
+			},
+		},
+	],
+	"observability": {
+		"enabled": true,
+	},
 }
