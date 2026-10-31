@@ -35,7 +35,7 @@
           count < 0
         )
           return;
-        output.textContent = `${new Intl.NumberFormat("en-US").format(count)} unique ${count === 1 ? "visitor" : "visitors"}`;
+        output.textContent = `${new Intl.NumberFormat("en-US").format(count)} ${count === 1 ? "visitor" : "visitors"}`;
         output.hidden = false;
       })
       .catch(() => {});

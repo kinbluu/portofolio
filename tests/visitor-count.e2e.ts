@@ -7,6 +7,10 @@ if (!["localhost", "127.0.0.1", "[::1]"].includes(baseUrl.hostname)) {
 }
 const apiUrl = new URL("/api/visitors", baseUrl);
 
+function countLabel(count: number): string {
+  return `${new Intl.NumberFormat("en-US").format(count)} ${count === 1 ? "visitor" : "visitors"}`;
+}
+
 async function readCount(): Promise<number> {
   const response = await fetch(apiUrl);
   assert.equal(response.status, 200);
@@ -53,6 +57,10 @@ try {
   await first.goto(baseUrl.href, { waitUntil: "domcontentloaded" });
   await first.waitForSelector("[data-visitor-count]:not([hidden])");
   assert.equal(await readCount(), initialCount + 1);
+  assert.equal(
+    await first.$eval("[data-visitor-count]", (node) => node.textContent),
+    countLabel(initialCount + 1),
+  );
   const savedId = await first.evaluate(() =>
     localStorage.getItem("portfolio-visitor-id"),
   );
@@ -77,6 +85,10 @@ try {
   await second.goto(baseUrl.href, { waitUntil: "domcontentloaded" });
   await second.waitForSelector("[data-visitor-count]:not([hidden])");
   assert.equal(await readCount(), initialCount + 2);
+  assert.equal(
+    await second.$eval("[data-visitor-count]", (node) => node.textContent),
+    countLabel(initialCount + 2),
+  );
   await secondContext.close();
 
   for (const width of [320, 390, 1440]) {
@@ -97,7 +109,7 @@ try {
       state.width,
       `horizontal overflow at ${width}px`,
     );
-    assert.match(state.counter ?? "", /unique visitors?$/);
+    assert.match(state.counter ?? "", /^\d[\d,]* visitors?$/);
     assert.equal(state.inFooter, true);
   }
 
