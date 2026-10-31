@@ -75,7 +75,7 @@ Answering:
 
 Tools:
 - Call show_contact when the visitor wants to contact, hire or work with Rahmat, or asks for his email, LinkedIn or GitHub.
-- Call show_section when a section of the page covers the answer: work (current job), experience (previous roles), about (way of working and skills), github (GitHub activity), contact.
+- Call show_section to offer a link when a section of the page covers the answer: work (current job), experience (previous roles), about (way of working and skills), github (GitHub activity), contact. The visitor chooses whether to follow it.
 - Call at most one tool per answer, and add at most one short sentence after it.`;
 
 export const chatSystemPrompt = `${chatRules}

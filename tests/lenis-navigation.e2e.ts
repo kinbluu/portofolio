@@ -114,6 +114,7 @@ try {
 
   await verifyAssistantNavigation(browser, false);
   await verifyAssistantNavigation(browser, true);
+  await verifyAssistantNavigation(browser, false, true);
   await verifyNestedScroll(browser);
   await verifyMobileScroll(browser);
   await verifyNoJavaScript(browser);
@@ -127,12 +128,17 @@ try {
 async function verifyAssistantNavigation(
   browser: Browser,
   reducedMotion: boolean,
+  mobile = false,
 ) {
   const page = await browser.newPage();
   let requests = 0;
   let wheelPrevented: boolean | undefined;
   try {
-    await page.setViewport({ width: 1024, height: 800 });
+    await page.setViewport(
+      mobile
+        ? { width: 390, height: 844, isMobile: true, hasTouch: true }
+        : { width: 1024, height: 800 },
+    );
     await page.emulateMediaFeatures([
       {
         name: "prefers-reduced-motion",
@@ -151,6 +157,10 @@ async function verifyAssistantNavigation(
         ),
       { timeout: 10_000 },
     );
+    const before = await page.evaluate(() => ({
+      scrollY: window.scrollY,
+      hash: window.location.hash,
+    }));
 
     await page.setRequestInterception(true);
     page.on("request", async (request: HTTPRequest) => {
@@ -163,17 +173,6 @@ async function verifyAssistantNavigation(
         (await request.fetchPostData()) || "{}",
       );
       const timestamp = Date.now();
-      if (requests === 1) {
-        wheelPrevented = await page.evaluate(() => {
-          const wheel = new WheelEvent("wheel", {
-            bubbles: true,
-            cancelable: true,
-            deltaY: -700,
-          });
-          document.body.dispatchEvent(wheel);
-          return wheel.defaultPrevented;
-        });
-      }
       const events =
         requests === 1
           ? [
@@ -229,6 +228,42 @@ async function verifyAssistantNavigation(
           ?.textContent?.includes("Here is his experience."),
       { timeout: 10_000 },
     );
+    await page.waitForSelector('#assistant a[href="#experience"]');
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const after = await page.evaluate(() => ({
+      scrollY: window.scrollY,
+      hash: window.location.hash,
+    }));
+    assert.ok(
+      Math.abs(after.scrollY - before.scrollY) < 5,
+      `the assistant must not move the page before the link is clicked (${before.scrollY} -> ${after.scrollY})`,
+    );
+    assert.equal(
+      after.hash,
+      before.hash,
+      "the assistant must not change the URL",
+    );
+    assert.equal(
+      requests,
+      2,
+      "the mocked client tool and follow-up must complete",
+    );
+
+    wheelPrevented = await page.evaluate(() => {
+      const wheel = new WheelEvent("wheel", {
+        bubbles: true,
+        cancelable: true,
+        deltaY: -700,
+      });
+      document.body.dispatchEvent(wheel);
+      const link = document.querySelector<HTMLAnchorElement>(
+        '#assistant a[href="#experience"]',
+      );
+      if (!link) throw new Error("assistant section link missing");
+      link.click();
+      return wheel.defaultPrevented;
+    });
+    await page.waitForFunction(() => window.location.hash === "#experience");
     await page.waitForFunction(
       () =>
         Math.abs(
@@ -238,14 +273,22 @@ async function verifyAssistantNavigation(
       { timeout: 5_000 },
     );
     assert.equal(
-      requests,
-      2,
-      "the mocked client tool and follow-up must complete",
-    );
-    assert.equal(
       wheelPrevented,
       !reducedMotion,
       "wheel handling must respect reduced motion",
+    );
+    if (mobile) {
+      await page.click(".site-mobile-menu summary");
+      await page.click('.site-mobile-menu a[href="#assistant"]');
+    } else {
+      await page.click('.site-desktop-nav a[href="#assistant"]');
+    }
+    await page.waitForFunction(() => window.location.hash === "#assistant");
+    assert.ok(
+      await page.$eval("#assistant", (element) =>
+        element.textContent?.includes("Here is his experience."),
+      ),
+      "the answer must remain available after returning to the assistant",
     );
   } finally {
     await page.close();

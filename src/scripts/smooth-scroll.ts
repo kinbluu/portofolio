@@ -1,7 +1,5 @@
 import Lenis from "lenis";
 
-let activeLenis: Lenis | undefined;
-
 interface MotionPreference {
   readonly matches: boolean;
   addEventListener(type: "change", listener: () => void): void;
@@ -51,16 +49,8 @@ if (typeof window !== "undefined") {
   window.addEventListener("pagehide", unmount);
   window.addEventListener("pageshow", mount);
 }
-export function scrollToSection(target: HTMLElement): void {
-  if (activeLenis) {
-    activeLenis.scrollTo(target);
-  } else {
-    target.scrollIntoView({ block: "start" });
-  }
-}
 function createSmoothScroll(): ScrollInstance {
   const lenis = new Lenis({ autoRaf: true, allowNestedScroll: true });
-  activeLenis = lenis;
 
   const onAnchorClick = (event: MouseEvent) => {
     if (
@@ -96,7 +86,6 @@ function createSmoothScroll(): ScrollInstance {
   return {
     destroy() {
       window.removeEventListener("click", onAnchorClick);
-      if (activeLenis === lenis) activeLenis = undefined;
       lenis.destroy();
     },
   };

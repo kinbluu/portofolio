@@ -30,7 +30,6 @@ import {
   showSectionTool,
   type PageSection,
 } from "../lib/chat";
-import { scrollToSection } from "../scripts/smooth-scroll";
 import ChatHeader from "./ChatHeader";
 import "../styles/chat.css";
 
@@ -59,11 +58,9 @@ const chatOptions = createChatClientOptions({
   connection: fetchServerSentEvents("/api/chat"),
   persistence: sessionStoragePersistence(),
   tools: clientTools(
-    showSectionTool.client(({ section }) => {
-      const target = document.getElementById(section);
-      if (target) scrollToSection(target);
-      return { shown: target !== null };
-    }),
+    showSectionTool.client(({ section }) => ({
+      shown: document.getElementById(section) !== null,
+    })),
     showContactTool.client(() => ({ shown: true })),
   ),
 });

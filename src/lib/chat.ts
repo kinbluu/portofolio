@@ -117,7 +117,7 @@ export const pageSectionLabels: Record<PageSection, string> = {
 export const showSectionTool = toolDefinition({
   name: "show_section",
   description:
-    "Scroll the portfolio page to one of its sections and give the visitor a link to it. Use it when the answer is covered by that section.",
+    "Show the visitor a link to a relevant portfolio section. The visitor can choose whether to open it.",
   inputSchema: z.object({
     section: z
       .enum(pageSections)
