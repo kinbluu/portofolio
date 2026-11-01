@@ -84,6 +84,21 @@ body {
   margin-inline: auto;
 }
 
+.site-progress {
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background: var(--rm3-line);
+}
+
+.site-progress > span {
+  display: block;
+  height: 100%;
+  background: var(--rm3-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
 .site-wordmark {
   display: inline-flex;
   align-items: center;
@@ -208,7 +223,8 @@ body {
     border: 0;
   }
   .site-desktop-nav,
-  .site-mobile-menu {
+  .site-mobile-menu,
+  .site-progress {
     display: none;
   }
 }
