@@ -8,6 +8,7 @@ import {
 } from "@tanstack/ai-react";
 import { TextPart } from "@tanstack/ai-react/ui";
 import { ArrowUpRight, Mail, Send, Square } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useOverlayScrollbars } from "overlayscrollbars-react";
 import {
   useEffect,
@@ -212,6 +213,7 @@ function ChatView({
 }: Props & { chat?: ChatState }) {
   const [input, setInput] = useState("");
   const [clipped, setClipped] = useState(false);
+  const reduced = useReducedMotion();
   const contacts = useMemo(
     () => ({ email, github, linkedin }),
     [email, github, linkedin],
@@ -331,13 +333,19 @@ function ChatView({
                 ))}
               </div>
             )}
-            {messages.map((message) => (
-              <MessageView
-                key={message.id}
-                message={message}
-                contacts={contacts}
-              />
-            ))}
+            <AnimatePresence initial={false}>
+              {messages.map((message) => (
+                <motion.div
+                  key={message.id}
+                  initial={reduced ? false : { opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex flex-col gap-3"
+                >
+                  <MessageView message={message} contacts={contacts} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
             {typing && (
               <div
                 className={`${assistantBubble} flex items-center gap-1 py-3.5`}
