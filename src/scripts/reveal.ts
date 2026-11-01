@@ -16,12 +16,28 @@ function tokens() {
   return {
     duration: seconds("--rm3-duration-enter"),
     step: seconds("--rm3-stagger"),
-    rise: `0 ${token("--rm3-rise")}`,
+    rise: parseFloat(token("--rm3-rise")),
     ease: token("--rm3-ease-out")
       .match(/-?[\d.]+/g)
       ?.map(Number) as [number, number, number, number],
   };
 }
+
+// Each variant names the edge a section arrives from, so neighbouring sections
+// do not read as the same block sliding in twice.
+const variants: Record<
+  string,
+  (rise: number) => { translate: string; scale?: number }
+> = {
+  up: (rise) => ({ translate: `0 ${rise}px` }),
+  left: (rise) => ({ translate: `${-rise * 2}px 0` }),
+  right: (rise) => ({ translate: `${rise * 2}px 0` }),
+  fade: () => ({ translate: "0 0" }),
+  scale: () => ({ translate: "0 0", scale: 0.96 }),
+};
+
+const variantFor = (element: HTMLElement) =>
+  variants[element.dataset.reveal ?? ""] ?? variants.up;
 
 const belowFold = (selector: string) =>
   [...document.querySelectorAll<HTMLElement>(selector)].filter((element) => {
@@ -59,8 +75,14 @@ export function revealCells(grid: HTMLElement) {
 function revealOnScroll() {
   const { duration, step, rise, ease } = tokens();
   const items = belowFold("[data-reveal]");
-  for (const item of items)
-    Object.assign(item.style, { opacity: "0", translate: rise });
+  for (const item of items) {
+    const { translate, scale } = variantFor(item)(rise);
+    Object.assign(item.style, {
+      opacity: "0",
+      translate,
+      ...(scale !== undefined && { scale: String(scale) }),
+    });
+  }
 
   let batch: HTMLElement[] = [];
   const revealBatch = () => {
@@ -68,15 +90,27 @@ function revealOnScroll() {
       (a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top,
     );
     batch = [];
-    animate(
-      targets,
-      { opacity: [0, 1], translate: [rise, "0 0"] },
-      {
-        duration,
-        ease,
-        delay: (index) => Math.min(index, maxStaggerSteps) * step,
-      },
-    );
+    const groups = new Map<string, HTMLElement[]>();
+    for (const target of targets) {
+      const key = target.dataset.reveal ?? "";
+      groups.set(key, [...(groups.get(key) ?? []), target]);
+    }
+    for (const [key, group] of groups) {
+      const { translate, scale } = (variants[key] ?? variants.up)(rise);
+      animate(
+        group,
+        {
+          opacity: [0, 1],
+          translate: [translate, "0 0"],
+          ...(scale !== undefined && { scale: [scale, 1] }),
+        },
+        {
+          duration,
+          ease,
+          delay: (index) => Math.min(index, maxStaggerSteps) * step,
+        },
+      );
+    }
   };
 
   inView(

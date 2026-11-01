@@ -10,20 +10,47 @@ const chapter = studioChapter("contact");
   class="editorial-section editorial-contact"
 >
   <div class="editorial-inner editorial-measure">
-    <h2 id="contact-title">Contact</h2>
-    <p class="editorial-copy">{contact.description}</p>
-    <a class="editorial-email" href={"mailto:" + profile.email}>
+    <h2 id="contact-title" data-reveal="scale">
+      Contact
+    </h2>
+    <p class="editorial-copy" data-reveal="scale">
+      {contact.description}
+    </p>
+    <a
+      class="editorial-email"
+      data-reveal="scale"
+      data-spring
+      href={"mailto:" + profile.email}
+    >
       {profile.email}
     </a>
-    <nav class="editorial-contact-links" aria-label="Contact options">
-      <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">
+    <nav
+      class="editorial-contact-links"
+      data-reveal="scale"
+      aria-label="Contact options"
+    >
+      <a
+        href={profile.linkedin}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-spring
+      >
         LinkedIn
       </a>
-      <a href={profile.github} target="_blank" rel="noopener noreferrer">
+      <a
+        href={profile.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-spring
+      >
         GitHub
       </a>
-      <a href={"tel:" + profile.phone}>Phone</a>
-      <a href="#top">Back to top</a>
+      <a href={"tel:" + profile.phone} data-spring>
+        Phone
+      </a>
+      <a href="#top" data-spring>
+        Back to top
+      </a>
     </nav>
   </div>
 </section>
