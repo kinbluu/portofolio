@@ -75,6 +75,7 @@ export function revealCells(grid: HTMLElement) {
 function revealOnScroll() {
   const { duration, step, rise, ease } = tokens();
   const items = belowFold("[data-reveal]");
+  const hidden = new Set(items);
   for (const item of items) {
     const { translate, scale } = variantFor(item)(rise);
     Object.assign(item.style, {
@@ -84,14 +85,13 @@ function revealOnScroll() {
     });
   }
 
-  let batch: HTMLElement[] = [];
-  const revealBatch = () => {
-    const targets = batch.sort(
+  const reveal = (targets: HTMLElement[]) => {
+    const sorted = targets.sort(
       (a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top,
     );
-    batch = [];
     const groups = new Map<string, HTMLElement[]>();
-    for (const target of targets) {
+    for (const target of sorted) {
+      hidden.delete(target);
       const key = target.dataset.reveal ?? "";
       groups.set(key, [...(groups.get(key) ?? []), target]);
     }
@@ -113,6 +113,13 @@ function revealOnScroll() {
     }
   };
 
+  let batch: HTMLElement[] = [];
+  const revealBatch = () => {
+    const targets = batch;
+    batch = [];
+    if (targets.length) reveal(targets);
+  };
+
   inView(
     items,
     (item) => {
@@ -121,6 +128,26 @@ function revealOnScroll() {
     },
     { margin },
   );
+
+  // An anchor jump or a fast scroll can carry an element past the viewport
+  // between two frames, so the observer never sees it intersect. Sweep anything
+  // already at or above the fold and stop listening once nothing is left.
+  let ticking = false;
+  const sweep = () => {
+    ticking = false;
+    const missed = [...hidden].filter(
+      (item) =>
+        !item.isConnected || item.getBoundingClientRect().top < innerHeight,
+    );
+    if (missed.length) reveal(missed);
+    if (!hidden.size) removeEventListener("scroll", onScroll);
+  };
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(sweep);
+  };
+  addEventListener("scroll", onScroll, { passive: true });
 }
 
 if (motionAllowed()) revealOnScroll();
