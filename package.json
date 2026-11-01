@@ -31,7 +31,6 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "tailwindcss": "^4.3.3",
-    "three": "^0.186.1",
     "use-stick-to-bottom": "^1.1.6",
     "wrangler": "^4.152.0",
     "zod": "^4.6.7"
@@ -40,7 +39,6 @@
     "@astrojs/check": "^0.9.12",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "@types/three": "^0.186.0",
     "miniflare": "5.20261019.2-beta",
     "prettier-plugin-astro": "^1.1.2",
     "puppeteer-core": "^25.16.0",
