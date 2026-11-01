@@ -6,6 +6,8 @@ const finePointer = () =>
   matchMedia("(hover: hover) and (pointer: fine)").matches;
 
 // The page is one long scroll, so the header carries the reader's position.
+// It tracks scroll 1:1 rather than animating over time, so it stays on under
+// reduced motion: it is a position readout, not decoration.
 function scrollProgress() {
   const bar = document.querySelector<HTMLElement>("[data-scroll-progress]");
   if (!bar) return;
@@ -39,8 +41,9 @@ function springLinks() {
   }
 }
 
+scrollProgress();
+
 if (motionAllowed()) {
-  scrollProgress();
   heroRecede();
   springLinks();
 }
