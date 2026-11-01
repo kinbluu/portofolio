@@ -2,11 +2,8 @@ import { spawn } from "node:child_process";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
-import {
-  connectDesktopBrowser,
-  desktopCommand,
-  DesktopCommandError,
-} from "./desktop-browser";
+import { desktopCommand, DesktopCommandError } from "./desktop-browser";
+import { AgentBrowser } from "./agent-browser";
 
 const browserTests = [
   "tests/desktop-navigation.e2e.ts",
@@ -85,10 +82,12 @@ async function runTest(test: string): Promise<void> {
     );
   }
 
-  let browser: Awaited<ReturnType<typeof connectDesktopBrowser>> | undefined;
+  const browser = new AgentBrowser();
+  let connected = false;
   let cleanupError: Error | undefined;
   try {
-    browser = await connectDesktopBrowser(launch.cdp.http_endpoint);
+    await browser.connect(launch.cdp.http_endpoint);
+    connected = true;
     console.log(`\nRunning ${test}`);
     const child = spawn(process.execPath, [test], {
       stdio: "inherit",
@@ -109,7 +108,10 @@ async function runTest(test: string): Promise<void> {
       throw new Error(`${test} failed (${result.signal ?? result.code})`);
     }
   } finally {
-    if (browser?.connected) await browser.close().catch(() => {});
+    if (connected && processExists(launch.pid)) {
+      await browser.closeOwnedBrowser().catch(() => {});
+    }
+    if (connected) await browser.disconnect().catch(() => {});
     try {
       if (await waitForExit(launch.pid)) {
         await rm(profile, { recursive: true, force: true });

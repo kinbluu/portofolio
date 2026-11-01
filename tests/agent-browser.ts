@@ -56,7 +56,19 @@ export class AgentBrowser {
   }
 
   async connect(endpoint = desktopEndpoint()): Promise<void> {
-    await this.command("connect", desktopEndpoint(endpoint));
+    const expected = new URL(desktopEndpoint(endpoint));
+    await this.command("connect", expected.href);
+    const { cdpUrl } = await this.command<{ cdpUrl: string }>("get", "cdp-url");
+    const actual = new URL(cdpUrl);
+    if (
+      !["ws:", "wss:"].includes(actual.protocol) ||
+      actual.hostname !== expected.hostname ||
+      actual.port !== expected.port
+    ) {
+      throw new Error(
+        "agent-browser connected to a different browser endpoint.",
+      );
+    }
   }
 
   async newPage(): Promise<AgentPage> {
@@ -92,6 +104,23 @@ export class AgentBrowser {
 
   async disconnect(): Promise<void> {
     await this.command("close");
+  }
+
+  async closeOwnedBrowser(): Promise<void> {
+    const { tabs } = await this.command<{ tabs: { tabId: string }[] }>(
+      "tab",
+      "list",
+    );
+    const { tabId: finalTab } = await this.command<{ tabId: string }>(
+      "tab",
+      "new",
+      "about:blank",
+    );
+    for (const tab of tabs) {
+      if (tab.tabId !== finalTab) await this.command("tab", "close", tab.tabId);
+    }
+    const expression = Buffer.from("window.close()").toString("base64");
+    await this.command("eval", "-b", expression);
   }
 }
 

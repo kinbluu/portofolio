@@ -21,8 +21,13 @@ try {
     process.exitCode = 1;
   } else if (values[0] === 'invalid') {
     process.stdout.write('not-json');
+  } else if (values[0] === 'get' && values[1] === 'cdp-url') {
+    process.stdout.write(JSON.stringify({success: true, data: {cdpUrl: 'ws://127.0.0.1:9222/devtools/browser/test'}}));
+  } else if (values[0] === 'tab' && values[1] === 'list') {
+    process.stdout.write(JSON.stringify({success: true, data: {tabs: [{tabId: 't1'}]}}));
   } else if (values[0] === 'eval') {
-    const result = await eval(Buffer.from(values[2], 'base64').toString());
+    const expression = Buffer.from(values[2], 'base64').toString();
+    const result = expression === 'window.close()' ? null : await eval(expression);
     process.stdout.write(JSON.stringify({success: true, data: {result}}));
   } else if (values[0] === 'tab' && values[1] === 'new') {
     process.stdout.write(JSON.stringify({success: true, data: {tabId: 't2'}}));
@@ -44,6 +49,12 @@ try {
   );
   await assert.rejects(() => browser.command("fail"), /refused/);
   await assert.rejects(() => browser.command("invalid"), /invalid JSON/);
+  await assert.rejects(
+    () => browser.connect("http://127.0.0.1:9223"),
+    /different browser endpoint/,
+  );
+  await browser.connect("http://127.0.0.1:9222");
+  await browser.closeOwnedBrowser();
   const page = await browser.newPage();
   assert.equal(await page.evaluate((a, b) => a + b, 2, 3), 5);
   await page.waitForFunction(
