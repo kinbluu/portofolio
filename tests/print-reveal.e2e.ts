@@ -1,12 +1,12 @@
 // Run with the dev server running: bun tests/run-desktop.ts print-reveal.e2e.ts
 // Checks print rules without claiming print rendering.
 import assert from "node:assert/strict";
-import { connectDesktopBrowser } from "./desktop-browser";
+import { connectAgentBrowser } from "./agent-browser";
 
 await verifyPrintRules();
 
 async function verifyPrintRules() {
-  const browser = await connectDesktopBrowser();
+  const browser = await connectAgentBrowser();
   const page = await browser.newPage();
   try {
     await page.goto(process.env.PORTFOLIO_URL ?? "http://localhost:4321/", {
@@ -40,6 +40,6 @@ async function verifyPrintRules() {
     console.log("UNVERIFIED: actual print media rendering");
   } finally {
     await page.close();
-    browser.disconnect();
+    await browser.disconnect();
   }
 }

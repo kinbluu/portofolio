@@ -1,9 +1,9 @@
 // Run with the dev server running: bun tests/run-desktop.ts menu-align.e2e.ts
 // URL selects the app endpoint.
 import assert from "node:assert/strict";
-import { connectDesktopBrowser } from "./desktop-browser";
+import { connectAgentBrowser } from "./agent-browser";
 
-const browser = await connectDesktopBrowser();
+const browser = await connectAgentBrowser();
 const page = await browser.newPage();
 
 const menuSelector = "details[data-navigation-menu]";
@@ -95,7 +95,7 @@ for (const width of [320, 390, 768]) {
 }
 
 await page.close();
-browser.disconnect();
+await browser.disconnect();
 console.log(
   "PASS menu geometry, targets, destinations, property-open and dispatched Escape. UNVERIFIED: native Tab/Enter and toggle-click interaction.",
 );

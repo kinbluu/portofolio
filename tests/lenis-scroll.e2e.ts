@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
-import { connectDesktopBrowser } from "./desktop-browser";
+import { connectAgentBrowser } from "./agent-browser";
 
-const browser = await connectDesktopBrowser();
+const browser = await connectAgentBrowser();
 const page = await browser.newPage();
 
 try {
@@ -71,5 +71,5 @@ try {
   console.log("PASS Lenis initialization, reduced motion and page lifecycle");
 } finally {
   await page.close();
-  browser.disconnect();
+  await browser.disconnect();
 }

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { connectDesktopBrowser, desktopCommand } from "./desktop-browser";
+import { desktopCommand } from "./desktop-browser";
+import { connectAgentBrowser } from "./agent-browser";
 
 type AccessibleNode = {
   role?: string;
@@ -39,12 +40,9 @@ async function snapshot(): Promise<Snapshot> {
   );
 }
 
-const browser = await connectDesktopBrowser();
+const browser = await connectAgentBrowser();
 try {
-  const page = (await browser.pages()).find(
-    (candidate) => candidate.url() === "about:blank",
-  );
-  assert.ok(page, "agent-desktop must launch a blank browser page");
+  const page = browser.currentPage();
   await page.setViewport({ width: 1024, height: 800 });
   await page.goto(process.env.PORTFOLIO_URL ?? "http://localhost:4321/", {
     waitUntil: "domcontentloaded",
@@ -83,5 +81,5 @@ try {
     "PASS agent-desktop snapshot, semantic click, and navigation verification",
   );
 } finally {
-  browser.disconnect();
+  await browser.disconnect();
 }
