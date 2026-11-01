@@ -167,6 +167,17 @@ export class AgentPage {
   async close(): Promise<void> {
     if (this.tabId) await this.browser.command("tab", "close", this.tabId);
   }
+
+  async $(selector: string): Promise<boolean> {
+    return this.evaluate(
+      (value) => Boolean(document.querySelector(value)),
+      selector,
+    );
+  }
+
+  async focus(selector: string): Promise<void> {
+    await this.browser.command("focus", selector);
+  }
 }
 
 export async function connectAgentBrowser(): Promise<AgentBrowser> {

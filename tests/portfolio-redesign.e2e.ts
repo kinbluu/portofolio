@@ -1,17 +1,28 @@
 import assert from "node:assert/strict";
-import { connectDesktopBrowser } from "./desktop-browser";
+import { connectAgentBrowser } from "./agent-browser";
+import type { AgentPage } from "./agent-browser";
+import { startPortfolioMockServer } from "./portfolio-mocks";
+import type { PortfolioMockState } from "./portfolio-mocks";
 
 const baseUrl = process.env.PORTFOLIO_URL ?? "http://localhost:4321/";
-const browser = await connectDesktopBrowser();
-const page = await browser.newPage();
-await verifyPortfolio(page, baseUrl, browser);
+const mock = await startPortfolioMockServer(baseUrl);
+try {
+  const browser = await connectAgentBrowser();
+  try {
+    const page = await browser.newPage();
+    await verifyPortfolio(page, mock.url, mock.state);
+  } finally {
+    await browser.disconnect();
+  }
+} finally {
+  await mock.close();
+}
 
 async function verifyPortfolio(
-  page: import("puppeteer-core").Page,
+  page: AgentPage,
   baseUrl: string,
-  browser: import("puppeteer-core").Browser,
+  state: PortfolioMockState,
 ) {
-  page.setDefaultNavigationTimeout(30_000);
   try {
     await page.emulateMediaFeatures([
       { name: "prefers-reduced-motion", value: "reduce" },
@@ -220,8 +231,8 @@ async function verifyPortfolio(
       ),
       false,
     );
-    await verifyMockChat(page);
-    await verifyGitHubFailure(page, baseUrl);
+    await verifyMockChat(page, state);
+    await verifyGitHubFailure(page, baseUrl, state);
     console.log(
       "PASS portfolio: responsive layout, anchors, themes, SSR content, focus, mocked chat and GitHub fallback",
     );
@@ -230,95 +241,46 @@ async function verifyPortfolio(
     );
   } finally {
     await page.close();
-    browser.disconnect();
   }
 }
 
-async function verifyMockChat(page: import("puppeteer-core").Page) {
-  let intercepted = 0;
-  const onRequest = async (request: import("puppeteer-core").HTTPRequest) => {
-    if (new URL(request.url()).pathname !== "/api/chat") {
-      await request.continue();
-      return;
-    }
-    intercepted++;
-    const { threadId = "test", runId = "test" } = JSON.parse(
-      (await request.fetchPostData()) || "{}",
-    );
-    const timestamp = Date.now();
-    const events = [
-      { type: "RUN_STARTED", threadId, runId, timestamp },
-      {
-        type: "TEXT_MESSAGE_START",
-        messageId: "test",
-        role: "assistant",
-        timestamp,
-      },
-      {
-        type: "TEXT_MESSAGE_CONTENT",
-        messageId: "test",
-        delta: "This is a test response.",
-        timestamp,
-      },
-      { type: "TEXT_MESSAGE_END", messageId: "test", timestamp },
-      { type: "RUN_FINISHED", threadId, runId, timestamp },
-    ];
-    await request.respond({
-      status: 200,
-      contentType: "text/event-stream",
-      body: events
-        .map((event) => `data: ${JSON.stringify(event)}\n\n`)
-        .join(""),
-    });
-  };
-  await page.setRequestInterception(true);
-  page.on("request", onRequest);
-  try {
-    await page.$eval("#assistant", (element) => element.scrollIntoView());
-    await page.waitForFunction(
-      () =>
-        !(
-          document.querySelector<HTMLInputElement>("#chat-message")?.disabled ??
-          true
-        ),
-      { timeout: 10_000 },
-    );
-    await page.$eval("#assistant button", (button) =>
-      (button as HTMLButtonElement).click(),
-    );
-    await page.waitForFunction(
-      () =>
-        document
-          .querySelector("#assistant")
-          ?.textContent?.includes("This is a test response."),
-      { timeout: 10_000 },
-    );
-    assert.equal(intercepted, 1, "chat request must be intercepted locally");
-  } finally {
-    page.off("request", onRequest);
-    await page.setRequestInterception(false);
-  }
+async function verifyMockChat(page: AgentPage, state: PortfolioMockState) {
+  state.chatScenario = "text";
+  state.chatRequests = 0;
+  await page.$eval("#assistant", (element) => element.scrollIntoView());
+  await page.waitForFunction(
+    () =>
+      !(
+        document.querySelector<HTMLInputElement>("#chat-message")?.disabled ??
+        true
+      ),
+    { timeout: 10_000 },
+  );
+  await page.$eval("#assistant button", (button) =>
+    (button as HTMLButtonElement).click(),
+  );
+  await page.waitForFunction(
+    () =>
+      document
+        .querySelector("#assistant")
+        ?.textContent?.includes("This is a test response."),
+    { timeout: 10_000 },
+  );
+  assert.equal(
+    state.chatRequests,
+    1,
+    "chat request must be intercepted locally",
+  );
 }
 async function verifyGitHubFailure(
-  page: import("puppeteer-core").Page,
+  page: AgentPage,
   baseUrl: string,
+  state: PortfolioMockState,
 ) {
-  let failure: "http" | "network" = "http";
-  let blocked = 0;
-  const onRequest = async (request: import("puppeteer-core").HTTPRequest) => {
-    if (!new URL(request.url()).pathname.startsWith("/_server-islands/")) {
-      await request.continue();
-      return;
-    }
-    blocked++;
-    if (failure === "network") await request.abort("failed");
-    else await request.respond({ status: 503, body: "" });
-  };
-  await page.setRequestInterception(true);
-  page.on("request", onRequest);
   try {
-    for (failure of ["http", "network"] as const) {
-      blocked = 0;
+    for (const failure of ["http", "network"] as const) {
+      state.islandFailure = failure;
+      state.islandRequests = 0;
       await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
       await page.waitForFunction(
         () =>
@@ -334,7 +296,7 @@ async function verifyGitHubFailure(
         { timeout: 16_000 },
       );
       assert.ok(
-        blocked > 0,
+        state.islandRequests > 0,
         `${failure}: server island request must be intercepted`,
       );
       const href = await page.$eval("[data-github-error] a", (link) =>
@@ -347,7 +309,6 @@ async function verifyGitHubFailure(
       );
     }
   } finally {
-    page.off("request", onRequest);
-    await page.setRequestInterception(false);
+    state.islandFailure = null;
   }
 }
