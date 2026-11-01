@@ -1,11 +1,8 @@
 import assert from "node:assert/strict";
-import puppeteer from "puppeteer-core";
 import type { Browser, HTTPRequest } from "puppeteer-core";
+import { connectDesktopBrowser } from "./desktop-browser";
 
-const browser = await puppeteer.launch({
-  executablePath: process.env.CHROMIUM_PATH ?? "/usr/bin/chromium",
-  headless: true,
-});
+const browser = await connectDesktopBrowser();
 const page = await browser.newPage();
 const baseUrl = process.env.PORTFOLIO_URL ?? "http://localhost:4321/";
 

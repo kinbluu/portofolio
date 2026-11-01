@@ -1,11 +1,9 @@
-// Run (dev server up): bun tests/menu-align.test.ts
-// Env: URL and OBSCURA_CDP_URL select the app and browser endpoints.
+// Run with the dev server running: bun tests/run-desktop.ts menu-align.e2e.ts
+// URL selects the app endpoint.
 import assert from "node:assert/strict";
-import puppeteer from "puppeteer-core";
+import { connectDesktopBrowser } from "./desktop-browser";
 
-const browser = await puppeteer.connect({
-  browserURL: process.env.OBSCURA_CDP_URL ?? "http://127.0.0.1:9222",
-});
+const browser = await connectDesktopBrowser();
 const page = await browser.newPage();
 
 const menuSelector = "details[data-navigation-menu]";
@@ -99,5 +97,5 @@ for (const width of [320, 390, 768]) {
 await page.close();
 browser.disconnect();
 console.log(
-  "PASS menu geometry, targets, destinations, property-open and dispatched Escape. UNVERIFIED: native Tab/Enter and toggle-click interaction (Obscura limitation).",
+  "PASS menu geometry, targets, destinations, property-open and dispatched Escape. UNVERIFIED: native Tab/Enter and toggle-click interaction.",
 );

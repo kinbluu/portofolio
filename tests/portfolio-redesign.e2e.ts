@@ -1,11 +1,8 @@
 import assert from "node:assert/strict";
-import puppeteer from "puppeteer-core";
+import { connectDesktopBrowser } from "./desktop-browser";
 
 const baseUrl = process.env.PORTFOLIO_URL ?? "http://localhost:4321/";
-const browser = await puppeteer.connect({
-  browserURL: process.env.OBSCURA_CDP_URL ?? "http://127.0.0.1:9222",
-  protocolTimeout: 60_000,
-});
+const browser = await connectDesktopBrowser();
 const page = await browser.newPage();
 await verifyPortfolio(page, baseUrl, browser);
 
@@ -229,7 +226,7 @@ async function verifyPortfolio(
       "PASS portfolio: responsive layout, anchors, themes, SSR content, focus, mocked chat and GitHub fallback",
     );
     console.log(
-      "UNVERIFIED: no-JavaScript browser behavior and native Tab/Enter activation are unavailable in Obscura",
+      "See lenis-navigation.e2e.ts for native keyboard and no-JavaScript checks",
     );
   } finally {
     await page.close();

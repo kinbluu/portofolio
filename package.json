@@ -10,6 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "test:e2e": "bun tests/run-desktop.ts",
     "astro": "astro",
     "generate-types": "wrangler types"
   },

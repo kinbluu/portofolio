@@ -1,14 +1,12 @@
-// Run with the dev server running: bun tests/print-reveal.test.ts
-// Requires an Obscura CDP server; checks print rules without claiming print rendering.
+// Run with the dev server running: bun tests/run-desktop.ts print-reveal.e2e.ts
+// Checks print rules without claiming print rendering.
 import assert from "node:assert/strict";
-import puppeteer from "puppeteer-core";
+import { connectDesktopBrowser } from "./desktop-browser";
 
 await verifyPrintRules();
 
 async function verifyPrintRules() {
-  const browser = await puppeteer.connect({
-    browserURL: process.env.OBSCURA_CDP_URL ?? "http://127.0.0.1:9222",
-  });
+  const browser = await connectDesktopBrowser();
   const page = await browser.newPage();
   try {
     await page.goto(process.env.PORTFOLIO_URL ?? "http://localhost:4321/", {
@@ -39,7 +37,7 @@ async function verifyPrintRules() {
     console.log(
       "PASS print CSS rules cover reveal elements and calendar cells",
     );
-    console.log("UNVERIFIED: Obscura cannot emulate actual print media");
+    console.log("UNVERIFIED: actual print media rendering");
   } finally {
     await page.close();
     browser.disconnect();

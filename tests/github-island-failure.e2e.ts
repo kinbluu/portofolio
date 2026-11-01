@@ -1,14 +1,12 @@
-// Run with the dev server running: bun tests/github-island-failure.test.ts
-// Requires an Obscura CDP server; checks recovery after an island request fails.
+// Run with the dev server running: bun tests/run-desktop.ts github-island-failure.e2e.ts
+// Checks recovery after an island request fails.
 import assert from "node:assert/strict";
-import puppeteer from "puppeteer-core";
+import { connectDesktopBrowser } from "./desktop-browser";
 
 await verifyGitHubIsland();
 
 async function verifyGitHubIsland() {
-  const browser = await puppeteer.connect({
-    browserURL: process.env.OBSCURA_CDP_URL ?? "http://127.0.0.1:9222",
-  });
+  const browser = await connectDesktopBrowser();
   const page = await browser.newPage();
   const baseUrl = process.env.PORTFOLIO_URL ?? "http://localhost:4321/";
   let failure: "http" | "network" = "http";

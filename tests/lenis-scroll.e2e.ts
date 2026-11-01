@@ -1,10 +1,7 @@
 import assert from "node:assert/strict";
-import puppeteer from "puppeteer-core";
+import { connectDesktopBrowser } from "./desktop-browser";
 
-const browser = await puppeteer.connect({
-  browserURL: process.env.OBSCURA_CDP_URL ?? "http://127.0.0.1:9222",
-  protocolTimeout: 30_000,
-});
+const browser = await connectDesktopBrowser();
 const page = await browser.newPage();
 
 try {

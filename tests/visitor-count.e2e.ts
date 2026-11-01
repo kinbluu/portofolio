@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import puppeteer from "puppeteer-core";
+import { connectDesktopBrowser } from "./desktop-browser";
 
 const baseUrl = new URL(process.env.PORTFOLIO_URL ?? "http://localhost:4321/");
 if (!["localhost", "127.0.0.1", "[::1]"].includes(baseUrl.hostname)) {
@@ -33,10 +33,7 @@ const crossOrigin = await fetch(apiUrl, {
 assert.equal(crossOrigin.status, 403);
 assert.equal(await readCount(), initialCount);
 
-const browser = await puppeteer.launch({
-  executablePath: process.env.CHROMIUM_PATH ?? "/usr/bin/chromium",
-  headless: true,
-});
+const browser = await connectDesktopBrowser();
 
 try {
   const noJsContext = await browser.createBrowserContext();
