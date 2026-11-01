@@ -53,6 +53,10 @@
 .editorial-section h2 em {
   font-style: normal;
 }
+.editorial-section h1 > span,
+.editorial-section h1 > em {
+  display: inline-block;
+}
 .editorial-lede {
   color: var(--rm3-muted);
   font-size: clamp(1rem, 2vw, 1.25rem);
