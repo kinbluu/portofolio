@@ -2,11 +2,8 @@ import assert from "node:assert/strict";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import {
-  connectDesktopBrowser,
-  desktopCommand,
-  DesktopCommandError,
-} from "./desktop-browser";
+import { desktopCommand, DesktopCommandError } from "./desktop-browser";
+import { desktopEndpoint } from "./desktop-endpoint";
 
 for (const endpoint of [
   "",
@@ -16,7 +13,7 @@ for (const endpoint of [
   "http://user:password@127.0.0.1:9222",
   "http://127.0.0.1:9222/?query=1",
 ]) {
-  await assert.rejects(() => connectDesktopBrowser(endpoint));
+  assert.throws(() => desktopEndpoint(endpoint));
 }
 
 const directory = await mkdtemp(

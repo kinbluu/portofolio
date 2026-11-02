@@ -15,12 +15,14 @@ Portofolio editorial Mochammad Rahmat Muttaqin, full-stack developer di Surabaya
 
 ## Verifikasi portofolio
 
-Jalankan dev server terlebih dahulu. Pengujian browser memerlukan `agent-desktop`, `agent-browser` (terpasang melalui `bun install`), Chromium, dan sesi desktop dengan aksesibilitas aktif; di Linux, sesi tersebut juga memerlukan display dan bus AT-SPI.
+Jalankan dev server terlebih dahulu. Pengujian browser memerlukan `agent-desktop`, `agent-browser` (terpasang melalui `bun install`, membutuhkan Node.js 24+), Chromium, dan sesi desktop dengan aksesibilitas aktif; di Linux, sesi tersebut juga memerlukan display dan bus AT-SPI.
 
 ```sh
 agent-desktop status
 agent-desktop skills get desktop
 agent-desktop skills get platform
+agent-browser skills list
+agent-browser skills get core
 bun run test:e2e
 ```
 
@@ -28,7 +30,7 @@ Suite ini mencakup tes visitor counter, yang memerlukan migrasi D1 lokal dan men
 
 Untuk menjalankan satu tes, gunakan `bun tests/run-desktop.ts portfolio-redesign.e2e.ts`. Runner meminta `agent-desktop` membuka browser baru dengan profil sementara dan endpoint CDP loopback, lalu menutup browser tersebut setelah tes. Runner tidak menutup browser yang sudah berjalan; gunakan sesi desktop terpisah jika `agent-desktop` menolak meluncurkan instance baru. Default browser adalah `/usr/bin/chromium`; atur `CHROMIUM_PATH` jika lokasinya berbeda. Untuk server tanpa display, sediakan sesi desktop virtual dan bus AT-SPI terisolasi sebelum menjalankan tes.
 
-Tes navigasi desktop menggunakan snapshot dan klik aksesibilitas `agent-desktop`. CLI `agent-browser` menjalankan tes portofolio, fallback GitHub, lifecycle Lenis, geometri menu, dan aturan cetak; proxy lokal menyediakan respons chat serta kegagalan jaringan. Tes navigasi Lenis dan visitor counter masih menggunakan Puppeteer melalui CDP untuk konteks browser terisolasi, sentuhan, dan pengujian tanpa JavaScript. Portofolio dirancang agar konten utama tetap dapat dibaca tanpa JavaScript atau GPU; asisten AI memerlukan JavaScript untuk interaksi. Tes lama `tests/studio.e2e.ts` dan `tests/studio-polish.e2e.ts` khusus studio 3D dan bukan acuan untuk desain saat ini.
+Tes navigasi desktop menggunakan snapshot dan klik aksesibilitas `agent-desktop`; seluruh tes browser lainnya menggunakan CLI `agent-browser`. Proxy lokal menyediakan respons chat dan kegagalan jaringan, sementara profil terisolasi digunakan untuk visitor counter dan pengujian tanpa JavaScript. Tes sentuhan mengirim input tepercaya melalui stream loopback `agent-browser`. Portofolio dirancang agar konten utama tetap dapat dibaca tanpa JavaScript atau GPU; asisten AI memerlukan JavaScript untuk interaksi. Tes lama `tests/studio.e2e.ts` dan `tests/studio-polish.e2e.ts` khusus studio 3D dan bukan acuan untuk desain saat ini.
 
 ## Smooth scrolling
 

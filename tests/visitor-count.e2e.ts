@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { connectDesktopBrowser } from "./desktop-browser";
+import { connectAgentBrowser } from "./agent-browser";
+import { startBrowserProxy } from "./browser-proxy";
 
 const baseUrl = new URL(process.env.PORTFOLIO_URL ?? "http://localhost:4321/");
 if (!["localhost", "127.0.0.1", "[::1]"].includes(baseUrl.hostname)) {
@@ -33,13 +34,19 @@ const crossOrigin = await fetch(apiUrl, {
 assert.equal(crossOrigin.status, 403);
 assert.equal(await readCount(), initialCount);
 
-const browser = await connectDesktopBrowser();
+const browser = await connectAgentBrowser();
 
 try {
-  const noJsContext = await browser.createBrowserContext();
+  const noJsContext = await browser.createBrowserContext({
+    javascriptEnabled: false,
+  });
   const noJs = await noJsContext.newPage();
-  await noJs.setJavaScriptEnabled(false);
   await noJs.goto(baseUrl.href, { waitUntil: "domcontentloaded" });
+  assert.equal(
+    await noJs.javascriptIsDisabled(),
+    true,
+    "browser JavaScript must be disabled",
+  );
   assert.equal(
     await noJs.$eval("[data-visitor-count]", (node) =>
       node.hasAttribute("hidden"),
@@ -52,6 +59,11 @@ try {
   const firstContext = await browser.createBrowserContext();
   const first = await firstContext.newPage();
   await first.goto(baseUrl.href, { waitUntil: "domcontentloaded" });
+  assert.equal(
+    await first.javascriptIsDisabled(),
+    false,
+    "browser JavaScript must be enabled",
+  );
   await first.waitForSelector("[data-visitor-count]:not([hidden])");
   assert.equal(await readCount(), initialCount + 1);
   assert.equal(
@@ -116,15 +128,11 @@ try {
   assert.equal(await readCount(), initialCount + 3);
   await firstContext.close();
 
-  const blockedContext = await browser.createBrowserContext();
-  const blocked = await blockedContext.newPage();
-  await blocked.evaluateOnNewDocument(() => {
-    Object.defineProperty(window, "localStorage", {
-      get() {
-        throw new Error("Storage blocked");
-      },
-    });
+  const blockedContext = await browser.createBrowserContext({
+    initScript:
+      'Object.defineProperty(window, "localStorage", { get() { throw new Error("Storage blocked"); } });',
   });
+  const blocked = await blockedContext.newPage();
   await blocked.goto(baseUrl.href, { waitUntil: "domcontentloaded" });
   await blocked.waitForSelector("[data-visitor-count]:not([hidden])");
   assert.equal(await readCount(), initialCount + 3);
@@ -132,26 +140,31 @@ try {
 
   const failedContext = await browser.createBrowserContext();
   const failed = await failedContext.newPage();
-  await failed.setRequestInterception(true);
-  failed.on("request", (request) => {
-    if (new URL(request.url()).pathname === "/api/visitors") {
-      void request.respond({ status: 503, body: "" });
-    } else {
-      void request.continue();
-    }
-  });
-  const failure = failed.waitForResponse(
-    (response) => new URL(response.url()).pathname === "/api/visitors",
+  let failedRequests = 0;
+  const failedProxy = await startBrowserProxy(
+    baseUrl.href,
+    (request, response) => {
+      if (new URL(request.url ?? "/", baseUrl).pathname !== "/api/visitors")
+        return false;
+      failedRequests++;
+      response.writeHead(503).end();
+      return true;
+    },
   );
-  await failed.goto(baseUrl.href, { waitUntil: "domcontentloaded" });
-  assert.equal((await failure).status(), 503);
-  assert.equal(
-    await failed.$eval("[data-visitor-count]", (node) =>
-      node.hasAttribute("hidden"),
-    ),
-    true,
-  );
-  assert.equal(await readCount(), initialCount + 3);
+  try {
+    await failed.goto(failedProxy.url, { waitUntil: "domcontentloaded" });
+    await failed.waitForResponse("/api/visitors", 503);
+    assert.ok(failedRequests > 0);
+    assert.equal(
+      await failed.$eval("[data-visitor-count]", (node) =>
+        node.hasAttribute("hidden"),
+      ),
+      true,
+    );
+    assert.equal(await readCount(), initialCount + 3);
+  } finally {
+    await failedProxy.close();
+  }
   await failedContext.close();
 
   const concurrentId = crypto.randomUUID();

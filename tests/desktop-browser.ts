@@ -1,6 +1,4 @@
 import { execFile } from "node:child_process";
-import puppeteer from "puppeteer-core";
-import { desktopEndpoint } from "./desktop-endpoint";
 
 export class DesktopCommandError extends Error {
   constructor(
@@ -60,13 +58,4 @@ export async function desktopCommand<T>(...args: string[]): Promise<T> {
     throw new DesktopCommandError(`${command} ${args[0]}: ${error.message}`);
   }
   return response.data;
-}
-
-export async function connectDesktopBrowser(
-  endpoint = process.env.AGENT_DESKTOP_CDP_URL,
-) {
-  return puppeteer.connect({
-    browserURL: desktopEndpoint(endpoint),
-    protocolTimeout: 60_000,
-  });
 }

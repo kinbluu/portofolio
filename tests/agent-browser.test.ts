@@ -8,6 +8,7 @@ const directory = await mkdtemp(
   join(process.env.EMPRYO_TMP ?? tmpdir(), "agent-browser-test-"),
 );
 const originalCommand = process.env.AGENT_BROWSER_BIN;
+const originalCdpUrl = process.env.AGENT_BROWSER_TEST_CDP_URL;
 try {
   const command = join(directory, "agent-browser");
   await writeFile(
@@ -22,9 +23,9 @@ try {
   } else if (values[0] === 'invalid') {
     process.stdout.write('not-json');
   } else if (values[0] === 'get' && values[1] === 'cdp-url') {
-    process.stdout.write(JSON.stringify({success: true, data: {cdpUrl: 'ws://127.0.0.1:9222/devtools/browser/test'}}));
+    process.stdout.write(JSON.stringify({success: true, data: {cdpUrl: process.env.AGENT_BROWSER_TEST_CDP_URL ?? 'ws://127.0.0.1:9222/devtools/browser/test'}}));
   } else if (values[0] === 'tab' && values[1] === 'list') {
-    process.stdout.write(JSON.stringify({success: true, data: {tabs: [{tabId: 't1'}]}}));
+    process.stdout.write(JSON.stringify({success: true, data: {tabs: [{tabId: 't1', active: true}]}}));
   } else if (values[0] === 'eval') {
     const expression = Buffer.from(values[2], 'base64').toString();
     const result = expression === 'window.close()' ? null : await eval(expression);
@@ -39,7 +40,9 @@ try {
     { mode: 0o700 },
   );
   process.env.AGENT_BROWSER_BIN = command;
+  delete process.env.AGENT_BROWSER_TEST_CDP_URL;
   const browser = new AgentBrowser();
+  await assert.rejects(() => browser.closeOwnedBrowser(), /not verified/);
   assert.deepEqual(await browser.command("echo", "a; literal"), {
     args: ["echo", "a; literal"],
   });
@@ -54,7 +57,15 @@ try {
     /different browser endpoint/,
   );
   await browser.connect("http://127.0.0.1:9222");
+  process.env.AGENT_BROWSER_TEST_CDP_URL =
+    "ws://127.0.0.1:9222/devtools/browser/other";
+  await assert.rejects(
+    () => browser.closeOwnedBrowser(),
+    /different browser endpoint/,
+  );
+  delete process.env.AGENT_BROWSER_TEST_CDP_URL;
   await browser.closeOwnedBrowser();
+  const initial = await browser.currentPage();
   const page = await browser.newPage();
   assert.equal(await page.evaluate((a, b) => a + b, 2, 3), 5);
   await page.waitForFunction(
@@ -63,6 +74,7 @@ try {
     "ready",
   );
   await page.close();
+  assert.equal(await initial.evaluate((value) => value, 7), 7);
   await browser.disconnect();
   console.log(
     "PASS agent-browser command handling, evaluation and endpoint validation",
@@ -70,5 +82,8 @@ try {
 } finally {
   if (originalCommand === undefined) delete process.env.AGENT_BROWSER_BIN;
   else process.env.AGENT_BROWSER_BIN = originalCommand;
+  if (originalCdpUrl === undefined)
+    delete process.env.AGENT_BROWSER_TEST_CDP_URL;
+  else process.env.AGENT_BROWSER_TEST_CDP_URL = originalCdpUrl;
   await rm(directory, { recursive: true, force: true });
 }

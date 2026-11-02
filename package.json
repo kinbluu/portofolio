@@ -43,7 +43,6 @@
     "agent-browser": "0.41.1",
     "miniflare": "5.20261019.2-beta",
     "prettier-plugin-astro": "^1.1.2",
-    "puppeteer-core": "^25.16.0",
     "typescript": "^6.0.3"
   }
 }

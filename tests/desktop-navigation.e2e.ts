@@ -42,7 +42,7 @@ async function snapshot(): Promise<Snapshot> {
 
 const browser = await connectAgentBrowser();
 try {
-  const page = browser.currentPage();
+  const page = await browser.currentPage();
   await page.setViewport({ width: 1024, height: 800 });
   await page.goto(process.env.PORTFOLIO_URL ?? "http://localhost:4321/", {
     waitUntil: "domcontentloaded",
