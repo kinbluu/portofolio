@@ -1,13 +1,24 @@
 import assert from "node:assert/strict";
-import puppeteer from "puppeteer-core";
-import type { Browser, HTTPRequest } from "puppeteer-core";
+import {
+  connectAgentBrowser,
+  launchIsolatedAgentBrowser,
+} from "./agent-browser";
+import type { AgentBrowser } from "./agent-browser";
+import { startPortfolioMockServer } from "./portfolio-mocks";
 
-const browser = await puppeteer.launch({
-  executablePath: process.env.CHROMIUM_PATH ?? "/usr/bin/chromium",
-  headless: true,
+const mock = await startPortfolioMockServer(
+  process.env.PORTFOLIO_URL ?? "http://localhost:4321/",
+);
+const baseUrl = mock.url;
+const browser = await connectAgentBrowser().catch(async (error) => {
+  await mock.close();
+  throw error;
 });
-const page = await browser.newPage();
-const baseUrl = process.env.PORTFOLIO_URL ?? "http://localhost:4321/";
+const page = await browser.newPage().catch(async (error) => {
+  await browser.disconnect();
+  await mock.close();
+  throw error;
+});
 
 try {
   await page.setViewport({ width: 1024, height: 800 });
@@ -103,9 +114,9 @@ try {
   );
   await page.goto(baseUrl, { waitUntil: "networkidle0" });
   await page.focus(".skip-link");
-  await page.keyboard.press("Enter");
+  await page.press("Enter");
   await page.waitForFunction(() => window.location.hash === "#main-content");
-  await page.keyboard.press("Tab");
+  await page.press("Tab");
   assert.equal(
     await page.evaluate(() => Boolean(document.activeElement?.closest("main"))),
     true,
@@ -117,28 +128,31 @@ try {
   await verifyAssistantNavigation(browser, false, true);
   await verifyNestedScroll(browser);
   await verifyMobileScroll(browser);
-  await verifyNoJavaScript(browser);
+  await verifyNoJavaScript();
   console.log(
     "PASS Lenis navigation, keyboard access, chat, mobile and no-JavaScript fallback",
   );
 } finally {
-  await page.close();
-  await browser.close();
+  try {
+    await page.close();
+  } finally {
+    try {
+      await browser.disconnect();
+    } finally {
+      await mock.close();
+    }
+  }
 }
 async function verifyAssistantNavigation(
-  browser: Browser,
+  browser: AgentBrowser,
   reducedMotion: boolean,
   mobile = false,
 ) {
   const page = await browser.newPage();
-  let requests = 0;
   let wheelPrevented: boolean | undefined;
   try {
-    await page.setViewport(
-      mobile
-        ? { width: 390, height: 844, isMobile: true, hasTouch: true }
-        : { width: 1024, height: 800 },
-    );
+    if (mobile) await page.setMobileViewport();
+    else await page.setViewport({ width: 1024, height: 800 });
     await page.emulateMediaFeatures([
       {
         name: "prefers-reduced-motion",
@@ -162,61 +176,8 @@ async function verifyAssistantNavigation(
       hash: window.location.hash,
     }));
 
-    await page.setRequestInterception(true);
-    page.on("request", async (request: HTTPRequest) => {
-      if (new URL(request.url()).pathname !== "/api/chat") {
-        await request.continue();
-        return;
-      }
-      requests++;
-      const { threadId = "test", runId = "test" } = JSON.parse(
-        (await request.fetchPostData()) || "{}",
-      );
-      const timestamp = Date.now();
-      const events =
-        requests === 1
-          ? [
-              { type: "RUN_STARTED", threadId, runId, timestamp },
-              {
-                type: "TOOL_CALL_START",
-                toolCallId: "call_1",
-                toolCallName: "show_section",
-                timestamp,
-              },
-              {
-                type: "TOOL_CALL_ARGS",
-                toolCallId: "call_1",
-                delta: JSON.stringify({ section: "experience" }),
-                timestamp,
-              },
-              { type: "TOOL_CALL_END", toolCallId: "call_1", timestamp },
-              { type: "RUN_FINISHED", threadId, runId, timestamp },
-            ]
-          : [
-              { type: "RUN_STARTED", threadId, runId, timestamp },
-              {
-                type: "TEXT_MESSAGE_START",
-                messageId: "test",
-                role: "assistant",
-                timestamp,
-              },
-              {
-                type: "TEXT_MESSAGE_CONTENT",
-                messageId: "test",
-                delta: "Here is his experience.",
-                timestamp,
-              },
-              { type: "TEXT_MESSAGE_END", messageId: "test", timestamp },
-              { type: "RUN_FINISHED", threadId, runId, timestamp },
-            ];
-      await request.respond({
-        status: 200,
-        contentType: "text/event-stream",
-        body: events
-          .map((event) => `data: ${JSON.stringify(event)}\n\n`)
-          .join(""),
-      });
-    });
+    mock.state.chatScenario = "show-section";
+    mock.state.chatRequests = 0;
 
     await page.$eval("#assistant button", (button) =>
       (button as HTMLButtonElement).click(),
@@ -244,7 +205,7 @@ async function verifyAssistantNavigation(
       "the assistant must not change the URL",
     );
     assert.equal(
-      requests,
+      mock.state.chatRequests,
       2,
       "the mocked client tool and follow-up must complete",
     );
@@ -294,7 +255,7 @@ async function verifyAssistantNavigation(
     await page.close();
   }
 }
-async function verifyNestedScroll(browser: Browser) {
+async function verifyNestedScroll(browser: AgentBrowser) {
   const page = await browser.newPage();
   try {
     await page.setViewport({ width: 1024, height: 800 });
@@ -334,8 +295,8 @@ async function verifyNestedScroll(browser: Browser) {
         pageY: window.scrollY,
       };
     });
-    await page.mouse.move(before.x, before.y);
-    await page.mouse.wheel({ deltaY: 350 });
+    await page.mouseMove(before.x, before.y);
+    await page.mouseWheel(350, before.x, before.y);
     await page.waitForFunction(
       () =>
         (document.querySelector<HTMLElement>(
@@ -352,20 +313,16 @@ async function verifyNestedScroll(browser: Browser) {
     await page.close();
   }
 }
-async function verifyMobileScroll(browser: Browser) {
+async function verifyMobileScroll(browser: AgentBrowser) {
   const page = await browser.newPage();
   try {
-    await page.setViewport({
-      width: 390,
-      height: 844,
-      isMobile: true,
-      hasTouch: true,
-    });
+    await page.setMobileViewport();
     await page.goto(baseUrl, { waitUntil: "networkidle0" });
-    await page.touchscreen.touchStart(200, 650);
-    await page.touchscreen.touchMove(200, 500);
-    await page.touchscreen.touchMove(200, 300);
-    await page.touchscreen.touchEnd();
+    await page.touchSwipe([
+      { x: 200, y: 650 },
+      { x: 200, y: 500 },
+      { x: 200, y: 300 },
+    ]);
     await page.waitForFunction(() => window.scrollY > 100, { timeout: 5_000 });
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
     await page.click(".site-mobile-menu summary");
@@ -390,12 +347,19 @@ async function verifyMobileScroll(browser: Browser) {
     await page.close();
   }
 }
-async function verifyNoJavaScript(browser: Browser) {
-  const page = await browser.newPage();
+async function verifyNoJavaScript() {
+  const browser = await launchIsolatedAgentBrowser({
+    javascriptEnabled: false,
+  });
   try {
+    const page = await browser.currentPage();
     await page.setViewport({ width: 1024, height: 800 });
-    await page.setJavaScriptEnabled(false);
     await page.goto(baseUrl, { waitUntil: "load" });
+    assert.equal(
+      await page.javascriptIsDisabled(),
+      true,
+      "browser JavaScript must be disabled",
+    );
     assert.equal(
       await page.evaluate(() =>
         document.documentElement.classList.contains("lenis"),
@@ -411,6 +375,6 @@ async function verifyNoJavaScript(browser: Browser) {
     assert.equal(result.hash, "#experience");
     assert.ok(result.top !== undefined && Math.abs(result.top - 160) < 10);
   } finally {
-    await page.close();
+    await browser.disconnect();
   }
 }

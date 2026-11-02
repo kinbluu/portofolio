@@ -10,15 +10,21 @@ const chapter = studioChapter("about");
   class="editorial-section"
 >
   <div class="editorial-inner editorial-measure">
-    <h2 id="about-title">About me</h2>
-    <p class="editorial-copy">{about.description}</p>
-    <ul class="editorial-practices">
+    <h2 id="about-title" data-reveal="fade">
+      About me
+    </h2>
+    <p class="editorial-copy" data-reveal="fade">
+      {about.description}
+    </p>
+    <ul class="editorial-practices" data-reveal="fade">
       {about.practices.map(({ label }) => (
         <li>{label}</li>
       ))}
     </ul>
-    <h3 class="editorial-subtitle">Skills and tools</h3>
-    <dl class="editorial-skills">
+    <h3 class="editorial-subtitle" data-reveal="fade">
+      Skills and tools
+    </h3>
+    <dl class="editorial-skills" data-reveal="fade">
       {skills.map(({ label, value }) => (
         <div>
           <dt>{label}</dt>

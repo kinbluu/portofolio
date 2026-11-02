@@ -226,6 +226,9 @@
 @utility enter-* {
   animation: rise var(--rm3-duration-enter) var(--rm3-ease-out) backwards;
   animation-delay: calc(--value(integer) * var(--rm3-stagger));
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
 @layer base {

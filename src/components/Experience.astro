@@ -10,12 +10,12 @@ const chapter = studioChapter("experience");
   class="editorial-section"
 >
   <div class="editorial-inner editorial-measure">
-    <h2 id="experience-title">
+    <h2 id="experience-title" data-reveal="left">
       Work <em>experience.</em>
     </h2>
     <ol class="editorial-experience">
       {experience.map((role) => (
-        <li>
+        <li data-reveal="left">
           <p class="editorial-meta">{role.dates}</p>
           <h3>{role.title}</h3>
           <p class="editorial-organization">{role.organization}</p>

@@ -8,20 +8,27 @@ const chapter = studioChapter("top");
   id={chapter.id}
   aria-labelledby="intro-title"
   class="editorial-section editorial-intro"
+  data-hero
 >
   <div class="editorial-inner editorial-intro-inner">
-    <p class="editorial-person">{profile.name}</p>
+    <p class="editorial-person enter-0">{profile.name}</p>
     <h1 id="intro-title">
-      {profile.headlineLines[0]}{" "}
-      <em>{profile.headlineLines[1].replaceAll("-", "\u2011")}</em>
+      <span class="enter-1">{profile.headlineLines[0]}</span>{" "}
+      <em class="enter-2">
+        {profile.headlineLines[1].replaceAll("-", "\u2011")}
+      </em>
     </h1>
-    <p class="editorial-lede">
+    <p class="editorial-lede enter-3">
       {profile.role} · {profile.location}
     </p>
-    <nav class="editorial-actions" aria-label="Contact and main navigation">
+    <nav
+      class="editorial-actions enter-4"
+      aria-label="Contact and main navigation"
+    >
       <a
         class="editorial-link editorial-link-primary"
         href={"mailto:" + profile.email}
+        data-spring
       >
         Contact me
       </a>
@@ -30,10 +37,11 @@ const chapter = studioChapter("top");
         href={profile.linkedin}
         target="_blank"
         rel="noopener noreferrer"
+        data-spring
       >
         LinkedIn
       </a>
-      <a class="editorial-link" href="#work">
+      <a class="editorial-link" href="#work" data-spring>
         View my work
       </a>
     </nav>

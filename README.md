@@ -15,22 +15,30 @@ Portofolio editorial Mochammad Rahmat Muttaqin, full-stack developer di Surabaya
 
 ## Verifikasi portofolio
 
-Jalankan dev server terlebih dahulu, lalu gunakan Obscura untuk pengujian browser:
+Jalankan dev server terlebih dahulu. Pengujian browser memerlukan `agent-desktop`, `agent-browser` (terpasang melalui `bun install`, membutuhkan Node.js 24+), Chromium, dan sesi desktop dengan aksesibilitas aktif; di Linux, sesi tersebut juga memerlukan display dan bus AT-SPI.
 
 ```sh
-obscura serve --port 9222 --allow-private-network
-bun tests/portfolio-redesign.e2e.ts
+agent-desktop status
+agent-desktop skills get desktop
+agent-desktop skills get platform
+agent-browser skills list
+agent-browser skills get core
+bun run test:e2e
 ```
 
-Portofolio dirancang agar konten utama tetap dapat dibaca tanpa JavaScript atau GPU; asisten AI memerlukan JavaScript untuk interaksi. Obscura memiliki keterbatasan untuk mematikan JavaScript dan menguji aktivasi keyboard bawaan; tes navigasi Lenis di bawah menggunakan Chromium untuk memeriksa skip link dan anchor tanpa JavaScript. Tes lama `tests/studio.e2e.ts` dan `tests/studio-polish.e2e.ts` khusus studio 3D dan bukan acuan untuk desain saat ini.
+Suite ini mencakup tes visitor counter, yang memerlukan migrasi D1 lokal dan menambahkan kunjungan ke database lokal (lihat bagian Visitor counter). Tes `chat-injection.e2e.ts` dijalankan terpisah karena menggunakan model AI sungguhan.
+
+Untuk menjalankan satu tes, gunakan `bun tests/run-desktop.ts portfolio-redesign.e2e.ts`. Runner meminta `agent-desktop` membuka browser baru dengan profil sementara dan endpoint CDP loopback, lalu menutup browser tersebut setelah tes. Runner tidak menutup browser yang sudah berjalan; gunakan sesi desktop terpisah jika `agent-desktop` menolak meluncurkan instance baru. Default browser adalah `/usr/bin/chromium`; atur `CHROMIUM_PATH` jika lokasinya berbeda. Untuk server tanpa display, sediakan sesi desktop virtual dan bus AT-SPI terisolasi sebelum menjalankan tes.
+
+Tes navigasi desktop menggunakan snapshot dan klik aksesibilitas `agent-desktop`; seluruh tes browser lainnya menggunakan CLI `agent-browser`. Proxy lokal menyediakan respons chat dan kegagalan jaringan, sementara profil terisolasi digunakan untuk visitor counter dan pengujian tanpa JavaScript. Tes sentuhan mengirim input tepercaya melalui stream loopback `agent-browser`. Portofolio dirancang agar konten utama tetap dapat dibaca tanpa JavaScript atau GPU; asisten AI memerlukan JavaScript untuk interaksi. Tes lama `tests/studio.e2e.ts` dan `tests/studio-polish.e2e.ts` khusus studio 3D dan bukan acuan untuk desain saat ini.
 
 ## Smooth scrolling
 
 Lenis menghaluskan scroll roda tetikus; scroll sentuh dan area chat tetap menggunakan perilaku aslinya. Pengaturan `prefers-reduced-motion` mematikan Lenis, termasuk saat preferensi berubah. Tanpa JavaScript, navigasi dan scroll tetap menggunakan perilaku browser.
 
 - Uji lifecycle: `bun tests/smooth-scroll.test.ts`.
-- Uji preferensi di Obscura: `bun tests/lenis-scroll.e2e.ts`.
-- Uji navigasi, keyboard, chat, sentuhan, dan fallback tanpa JavaScript: `bun tests/lenis-navigation.e2e.ts`. Tes ini memerlukan Chromium di `/usr/bin/chromium`; gunakan `CHROMIUM_PATH` jika lokasinya berbeda.
+- Uji preferensi dan lifecycle browser: `bun tests/run-desktop.ts lenis-scroll.e2e.ts`.
+- Uji navigasi, keyboard, chat, sentuhan, dan fallback tanpa JavaScript: `bun tests/run-desktop.ts lenis-navigation.e2e.ts`.
 
 ## Loading states
 
@@ -38,7 +46,7 @@ Kontribusi GitHub dimuat melalui server island dan memiliki fallback cache. Saat
 
 `src/components/ui/Skeleton.astro` mengadaptasi pola [shadcn/ui Skeleton](https://ui.shadcn.com/docs/components/skeleton) tanpa JavaScript tambahan. Skeleton menghormati `prefers-reduced-motion` dan langsung diganti saat island merespons. Tanpa JavaScript, pesan gagal dan tautan GitHub tersedia sebagai cadangan.
 
-Tes portofolio di atas memeriksa kegagalan HTTP 503 dan koneksi terputus melalui Obscura, serta menguji chat dengan respons lokal yang disimulasikan tanpa memanggil penyedia AI.
+Tes portofolio di atas memeriksa kegagalan HTTP 503 dan koneksi terputus, serta menguji chat dengan respons lokal yang disimulasikan tanpa memanggil penyedia AI.
 
 ## Visitor counter
 
@@ -49,7 +57,7 @@ The database stores the random ID indefinitely, not names or email addresses. Cl
 - Local setup: `bunx wrangler d1 migrations apply VISITOR_DB --local` before starting the dev server. Local data is separate from production.
 - Production setup: create a D1 database with `bunx wrangler d1 create portofolio-visitors`, add the returned `database_name` and `database_id` to the existing `VISITOR_DB` binding in `wrangler.jsonc`, then run `bunx wrangler d1 migrations apply VISITOR_DB --remote` before deploying. If a database has already been created for this binding, use its existing name and ID instead of creating another.
 - An ID-less binding may cause Wrangler to provision a database automatically during deployment; migrations still need to be applied separately. D1 usage is subject to Cloudflare's quotas and pricing.
-- Tests: `bun tests/visitor-count.test.ts` uses an isolated local D1 database; `bun tests/visitor-count.e2e.ts` uses the running local server and adds test visits to its database.
+- Tests: `bun tests/visitor-count.test.ts` uses an isolated local D1 database; `bun tests/run-desktop.ts visitor-count.e2e.ts` uses the running local server and adds test visits to its database.
 
 ## 💬 Chat assistant
 

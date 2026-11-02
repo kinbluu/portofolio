@@ -1,10 +1,7 @@
 import assert from "node:assert/strict";
-import puppeteer from "puppeteer-core";
+import { connectAgentBrowser } from "./agent-browser";
 
-const browser = await puppeteer.connect({
-  browserURL: process.env.OBSCURA_CDP_URL ?? "http://127.0.0.1:9222",
-  protocolTimeout: 30_000,
-});
+const browser = await connectAgentBrowser();
 const page = await browser.newPage();
 
 try {
@@ -74,5 +71,5 @@ try {
   console.log("PASS Lenis initialization, reduced motion and page lifecycle");
 } finally {
   await page.close();
-  browser.disconnect();
+  await browser.disconnect();
 }

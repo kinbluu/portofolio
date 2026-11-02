@@ -6,16 +6,18 @@ const chapter = studioChapter("work");
 
 <section id={chapter.id} aria-labelledby="work-title" class="editorial-section">
   <div class="editorial-inner editorial-measure">
-    <h2 id="work-title">
+    <h2 id="work-title" data-reveal>
       {featuredRole.titleLines[0]} <em>{featuredRole.titleLines[1]}</em>
     </h2>
-    <p class="editorial-meta">
+    <p class="editorial-meta" data-reveal>
       {featuredRole.badge} · {featuredRole.employer}
       <br />
       {featuredRole.dates}
     </p>
-    <p class="editorial-copy">{featuredRole.description}</p>
-    <dl class="editorial-facts">
+    <p class="editorial-copy" data-reveal>
+      {featuredRole.description}
+    </p>
+    <dl class="editorial-facts" data-reveal>
       {featuredRole.figures
         .filter((figure) => figure.prefix === "~")
         .map((figure) => (
@@ -28,7 +30,7 @@ const chapter = studioChapter("work");
           </div>
         ))}
     </dl>
-    <p class="editorial-tags" aria-label="Technologies">
+    <p class="editorial-tags" data-reveal aria-label="Technologies">
       {featuredRole.stack.join(" · ")}
     </p>
   </div>
