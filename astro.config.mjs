@@ -4,9 +4,7 @@ import cloudflare from "@astrojs/cloudflare";
 import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 
-// Isi domain production di sini (mis. "https://rahmat.dev"). Selama kosong, canonical, og:url,
-// og:image absolut, sitemap, dan link sitemap di robots.txt tidak di-generate.
-const site = undefined;
+const site = "https://kinbluu.biz.id/";
 
 export default defineConfig({
   site,
@@ -47,7 +45,7 @@ export default defineConfig({
       GITHUB_USERNAME: envField.string({
         context: "server",
         access: "public",
-        default: "kinkenkan298",
+        default: "kinbluu",
       }),
       GEMINI_API_KEY: envField.string({
         context: "server",

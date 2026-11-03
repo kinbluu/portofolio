@@ -25,7 +25,7 @@ export const profile = {
   email: "mrahmatmuttaqin@gmail.com",
   linkedin: "https://www.linkedin.com/in/mochammad-rahmat-muttaqin",
   phone: "+6285182120736",
-  github: "https://github.com/kinkenkan298",
+  github: "https://github.com/kinbluu",
 };
 
 export const navigation = [

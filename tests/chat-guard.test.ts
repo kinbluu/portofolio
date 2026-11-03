@@ -104,10 +104,10 @@ const replies = [
   "Rahmat uses Laravel, Livewire, MariaDB, Node.js, and React.",
   "Hello! I'm Rahmat's AI assistant. Ask me about his experience, skills, or how to contact him.",
   "Ya, Rahmat memiliki keahlian sebagai Full Stack Developer dengan pengalaman mengembangkan **REST API** menggunakan **Laravel** dan **Node.js** yang mengembalikan JSON dengan aman dan konsisten.",
-  "Anda bisa menghubungi Rahmat lewat email <mrahmatmuttaqin@gmail.com> atau [GitHub](https://github.com/kinkenkan298/portfolio-website).<br>Ia biasanya membalas dalam satu hari.",
+  "Anda bisa menghubungi Rahmat lewat email <mrahmatmuttaqin@gmail.com> atau [GitHub](https://github.com/kinbluu/portfolio-website).<br>Ia biasanya membalas dalam satu hari.",
   "Halo! Saya asisten AI Rahmat. Silakan tanyakan pengalaman, keahlian, atau cara menghubunginya.",
   'Rahmat biasa membuat endpoint Laravel yang mengembalikan data seperti `{ "status": "ok" }` lewat `response()->json()`.',
-  "[GitHub](https://github.com/kinkenkan298) berisi proyek Rahmat.",
+  "[GitHub](https://github.com/kinbluu) berisi proyek Rahmat.",
   "Contoh endpoint-nya bisa dilihat di <GitHub> Rahmat.",
   chatRefusal,
 ];
