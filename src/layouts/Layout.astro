@@ -14,6 +14,8 @@ interface Props {
 const { title, description } = Astro.props;
 // Absolute URLs need `site` in astro.config.mjs; tags below are skipped until it is set.
 const canonical = Astro.site && new URL(Astro.url.pathname, Astro.site).href;
+const socialImage = Astro.site && new URL("/og.png", Astro.site).href;
+const socialImageAlt = `${profile.name}, ${profile.role}, with a desk illustration.`;
 
 const person = {
   "@context": "https://schema.org",
@@ -58,9 +60,27 @@ const person = {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {canonical && <meta property="og:url" content={canonical} />}
-    <meta name="twitter:card" content="summary" />
+    {socialImage && (
+      <>
+        <meta property="og:image" content={socialImage} />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={socialImageAlt} />
+      </>
+    )}
+    <meta
+      name="twitter:card"
+      content={socialImage ? "summary_large_image" : "summary"}
+    />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    {socialImage && (
+      <>
+        <meta name="twitter:image" content={socialImage} />
+        <meta name="twitter:image:alt" content={socialImageAlt} />
+      </>
+    )}
 
     <script type="application/ld+json" set:html={JSON.stringify(person)} />
     {Astro.site && <link rel="sitemap" href="/sitemap.xml" />}

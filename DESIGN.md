@@ -102,4 +102,11 @@ Implementasi awal sudah dibuat; tinjauan pengguna dan verifikasi lanjutan tetap 
 - Persetujuan pengguna atas implementasi awal, termasuk font, jarak, radius, dan nuansa biru.
 - Posisi final asisten AI dan penyajian proyek, keahlian, serta kontak.
 - Ada atau tidaknya pilihan tema manual selain mengikuti perangkat.
-- Gambar pratinjau sosial baru: gambar lama dinonaktifkan atas pilihan pengguna karena masih menampilkan studio 3D.
+
+## Gambar pratinjau sosial
+
+- Banner 1200 × 630 memakai nama lengkap, profesi, dan `kinbluu.biz.id` dengan latar krem serta aksen terracotta. Nama menjadi fokus agar tetap terbaca pada preview tautan berukuran kecil.
+- Ilustrasi meja dari aset lama dipertahankan khusus untuk gambar sosial sesuai persetujuan pengguna. Halaman website tetap tidak menampilkan studio 3D. Tombol dan headline panjang tidak disertakan dalam banner.
+- Sumber: `src/assets/social/og.svg` dan `src/assets/social/desk.png`. Render dengan `rsvg-convert src/assets/social/og.svg -o public/og.png`.
+- `src/layouts/Layout.astro` memasang URL absolut gambar, ukuran, jenis, dan teks alternatif untuk Open Graph serta Twitter large-image card.
+- Dengan dev server aktif, jalankan `bun tests/social-image.e2e.ts` untuk memeriksa metadata dan PNG yang benar-benar disajikan lewat HTTP.
