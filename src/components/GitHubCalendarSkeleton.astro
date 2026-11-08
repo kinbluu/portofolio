@@ -53,16 +53,15 @@ const views = [
           <div
             class="grid grid-flow-col grid-rows-7 gap-[3px] lg:gap-1"
             style={columns}
-          >
-            {view.weeks
+            data-skeleton-days={view.weeks
               .flat()
-              .map((day) =>
-                day ? (
-                  <Skeleton class="aspect-square rounded-xs" />
-                ) : (
-                  <span class="aspect-square" />
-                ),
-              )}
+              .map((day) => (day ? "1" : "0"))
+              .join("")}
+          >
+            <template>
+              <Skeleton class="aspect-square rounded-xs" />
+              <span class="aspect-square" />
+            </template>
           </div>
         </div>
       );
@@ -94,6 +93,19 @@ const views = [
     private timeout?: number;
 
     connectedCallback() {
+      for (const grid of this.querySelectorAll<HTMLElement>(
+        "[data-skeleton-days]",
+      )) {
+        const template = grid.querySelector("template");
+        if (!template) continue;
+        const [cell, empty] = template.content.children;
+        if (!cell || !empty) continue;
+        const days = grid.dataset.skeletonDays ?? "";
+        for (const day of days) {
+          grid.appendChild((day === "1" ? cell : empty).cloneNode(true));
+        }
+        template.remove();
+      }
       this.querySelector("[data-github-loading]")?.removeAttribute("hidden");
       this.querySelector("[data-github-error]")?.setAttribute("hidden", "");
       // Astro leaves fallback content mounted on failed island requests. Bound that wait.
