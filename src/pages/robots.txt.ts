@@ -8,4 +8,5 @@ export const GET: APIRoute = ({ site }) =>
       "Disallow: /api/",
       ...(site ? [`Sitemap: ${new URL("/sitemap.xml", site)}`] : []),
     ].join("\n") + "\n",
+    { headers: { "Content-Type": "text/plain; charset=utf-8" } },
   );

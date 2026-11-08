@@ -9,11 +9,12 @@ import "../styles/portfolio-sections.css";
 interface Props {
   title: string;
   description: string;
+  noindex?: boolean;
 }
 
-const { title, description } = Astro.props;
-// Absolute URLs need `site` in astro.config.mjs; tags below are skipped until it is set.
-const canonical = Astro.site && new URL(Astro.url.pathname, Astro.site).href;
+const { title, description, noindex = false } = Astro.props;
+const canonical =
+  !noindex && Astro.site && new URL(Astro.url.pathname, Astro.site).href;
 const socialImage = Astro.site && new URL("/og.png", Astro.site).href;
 const socialImageAlt = `${profile.name}, ${profile.role}, with a desk illustration.`;
 
@@ -22,6 +23,7 @@ const person = {
   "@type": "Person",
   name: profile.name,
   jobTitle: profile.role,
+  description: `${profile.role} in ${profile.location}. ${profile.headlineLines.join(" ")}`,
   email: `mailto:${profile.email}`,
   telephone: profile.phone,
   address: {
@@ -30,7 +32,7 @@ const person = {
     addressCountry: "ID",
   },
   sameAs: [profile.github, profile.linkedin],
-  ...(canonical && { url: canonical }),
+  url: Astro.site?.href,
 };
 ---
 
@@ -41,7 +43,12 @@ const person = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="author" content={profile.name} />
-    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta
+      name="robots"
+      content={
+        noindex ? "noindex, follow" : "index, follow, max-image-preview:large"
+      }
+    />
     <meta
       name="theme-color"
       media="(prefers-color-scheme: light)"
@@ -84,6 +91,18 @@ const person = {
 
     <script type="application/ld+json" set:html={JSON.stringify(person)} />
     {Astro.site && <link rel="sitemap" href="/sitemap.xml" />}
+    <link rel="describedby" href="/llms.txt" type="text/plain" />
+    {!noindex && (
+      <link
+        rel="alternate"
+        type="text/markdown"
+        href={
+          Astro.url.pathname === "/"
+            ? "/index.md"
+            : `${Astro.url.pathname.replace(/\/$/, "")}.md`
+        }
+      />
+    )}
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />

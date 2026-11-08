@@ -1,0 +1,46 @@
+---
+import { trustPages } from "../data/site-content";
+import Layout from "../layouts/Layout.astro";
+export const prerender = false;
+const page = trustPages.find(({ slug }) => slug === Astro.params.page);
+if (!page) return Astro.rewrite("/404");
+---
+
+<Layout title={page.title} description={page.description}>
+  <a class="skip-link" href="#main-content">
+    Skip to main content
+  </a>
+  <div class="page-shell">
+    <main id="main-content" class="editorial-section">
+      <article class="editorial-inner editorial-measure">
+        <a class="editorial-link" href="/">
+          Rahmat. · Portfolio
+        </a>
+        <h1>{page.title}</h1>
+        {page.sections.map(({ title, paragraphs }) => (
+          <section>
+            <h2>{title}</h2>
+            {paragraphs.map((paragraph) => (
+              <p class="editorial-copy">{paragraph}</p>
+            ))}
+          </section>
+        ))}
+        <nav class="editorial-contact-links" aria-label="Related links">
+          {page.links.map(({ label, href }) => (
+            <a href={href}>{label}</a>
+          ))}
+        </nav>
+        <nav class="editorial-contact-links" aria-label="Site information">
+          {trustPages.map(({ slug, title }) => (
+            <a
+              href={`/${slug}`}
+              aria-current={slug === page.slug ? "page" : undefined}
+            >
+              {title}
+            </a>
+          ))}
+        </nav>
+      </article>
+    </main>
+  </div>
+</Layout>

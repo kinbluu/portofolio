@@ -1,0 +1,26 @@
+---
+import Layout from "../layouts/Layout.astro";
+export const prerender = false;
+Astro.response.status = 404;
+---
+
+<Layout
+  title="404: Page not found"
+  description="The requested page does not exist on Rahmat's portfolio."
+  noindex
+>
+  <main class="page-shell editorial-section">
+    <div class="editorial-inner editorial-measure">
+      <h1>Page not found</h1>
+      <p class="editorial-copy">
+        The requested page does not exist. Check the address or return to the
+        portfolio.
+      </p>
+      <nav class="editorial-contact-links" aria-label="Find a page">
+        <a href="/">Portfolio</a>
+        <a href="/llms.txt">Agent guidance</a>
+        <a href="/sitemap.xml">Sitemap</a>
+      </nav>
+    </div>
+  </main>
+</Layout>

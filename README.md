@@ -32,6 +32,17 @@ Untuk menjalankan satu tes, gunakan `bun tests/run-desktop.ts portfolio-redesign
 
 Tes navigasi desktop menggunakan snapshot dan klik aksesibilitas `agent-desktop`; seluruh tes browser lainnya menggunakan CLI `agent-browser`. Proxy lokal menyediakan respons chat dan kegagalan jaringan, sementara profil terisolasi digunakan untuk visitor counter dan pengujian tanpa JavaScript. Tes sentuhan mengirim input tepercaya melalui stream loopback `agent-browser`. Portofolio dirancang agar konten utama tetap dapat dibaca tanpa JavaScript atau GPU; asisten AI memerlukan JavaScript untuk interaksi. Tes lama `tests/studio.e2e.ts` dan `tests/studio-polish.e2e.ts` khusus studio 3D dan bukan acuan untuk desain saat ini.
 
+## Agent readiness
+
+Homepage dan halaman `/about`, `/contact`, `/privacy` tersedia sebagai HTML tanpa JavaScript dan Markdown melalui `Accept: text/markdown`, dengan `Vary: Accept`. Varian langsung: `/index.md`, `/about.md`, `/contact.md`, `/privacy.md`. URL tidak dikenal tetap berstatus 404, termasuk saat mengembalikan Markdown.
+
+- Panduan agen: `/llms.txt`. Indeks halaman: `/sitemap.xml`, ditemukan dari `/robots.txt` dan metadata HTML.
+- Sumber halaman dan Markdown: `src/data/site-content.ts`. Perbarui `contentLastModified` ketika konten publik berubah; gunakan tanggal perubahan nyata, bukan tanggal tiap request atau build.
+- Uji produksi lokal: `bun run build`, lalu `bun run preview --host 127.0.0.1 --port 4322`. Di terminal lain: `TEST_BASE_URL=http://127.0.0.1:4322 CHECK_CONTENT_RATIO=1 bun run test:agents`.
+- Uji browser terisolasi: `TEST_BASE_URL=http://127.0.0.1:4322 bun run test:agents:browser`. Memerlukan Chromium dan `agent-browser`; menguji konten tanpa JavaScript, ukuran layar, serta loading/fallback kalender. Tidak memanggil penyedia AI.
+- Sesudah deployment yang disetujui, jalankan `TEST_BASE_URL=https://kinbluu.biz.id CHECK_CONTENT_RATIO=1 bun run test:agents` untuk memeriksa respons publik, bukan hanya build lokal.
+- Pemberitahuan privasi mengikuti perilaku kode. Pemilik masih perlu menetapkan kebijakan retensi identifier/log, meninjau pengaturan penyedia AI, dan menentukan kebutuhan persetujuan penyimpanan sesuai audiens.
+
 ## Smooth scrolling
 
 Lenis menghaluskan scroll roda tetikus; scroll sentuh dan area chat tetap menggunakan perilaku aslinya. Pengaturan `prefers-reduced-motion` mematikan Lenis, termasuk saat preferensi berubah. Tanpa JavaScript, navigasi dan scroll tetap menggunakan perilaku browser.
