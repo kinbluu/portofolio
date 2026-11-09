@@ -73,6 +73,8 @@ const assistantBubble = `${bubble} rounded-[16px_16px_16px_4px] bg-paper ring-1 
 const userBubble = `${bubble} ml-auto rounded-[16px_16px_4px_16px] bg-accent text-paper`;
 const chip =
   "hit-target min-h-11 w-fit rounded-pill bg-paper px-3 py-[7px] text-left text-caption/[1.5] font-medium text-accent ring-1 ring-accent ring-inset hover:bg-tint motion-safe:transition-colors";
+const promptChip =
+  "hit-target flex min-h-11 w-full items-center justify-center rounded-pill bg-paper px-3 py-[7px] text-center text-caption/[1.5] font-medium text-accent ring-1 ring-accent ring-inset hover:bg-tint motion-safe:transition-colors";
 const roundButton =
   "grid size-11 shrink-0 place-items-center rounded-pill bg-accent text-paper hover:bg-accent-hover disabled:pointer-events-none disabled:opacity-50 motion-safe:transition-colors";
 
@@ -172,22 +174,36 @@ function MessageView({
     return <p className={userBubble}>{text}</p>;
   }
 
-  return message.parts.map((part, index) => {
-    if (part.type === "text") {
-      if (!part.content.trim()) return null;
-      return (
-        <div key={index} className={assistantBubble}>
-          <ChatMarkdown content={part.content} contacts={contacts} />
+  const text = message.parts
+    .filter((part) => part.type === "text")
+    .map((part) => part.content.trim())
+    .filter(Boolean)
+    .join("\n\n");
+
+  return (
+    <>
+      {text && (
+        <div className={assistantBubble}>
+          <ChatMarkdown content={text} contacts={contacts} />
         </div>
-      );
-    }
-    if (part.type !== "tool-call" || part.input === undefined) return null;
-    if (part.name === "show_section")
-      return <SectionLink key={part.id} section={part.input.section} />;
-    if (part.name === "show_contact")
-      return <ContactCard key={part.id} contacts={contacts} />;
-    return null;
-  });
+      )}
+      {message.parts.map((part, index) => {
+        if (part.type !== "tool-call" || part.input === undefined) return null;
+        if (part.name === "show_section")
+          return (
+            <SectionLink
+              key={`${part.id}-${index}`}
+              section={part.input.section}
+            />
+          );
+        if (part.name === "show_contact")
+          return (
+            <ContactCard key={`${part.id}-${index}`} contacts={contacts} />
+          );
+        return null;
+      })}
+    </>
+  );
 }
 
 interface ChatState {
@@ -315,37 +331,48 @@ function ChatView({
             role="log"
             aria-live="polite"
             aria-busy={isLoading}
-            className="flex flex-col gap-3 p-4 lg:p-5"
+            className="flex min-h-full flex-col gap-3 p-4 lg:p-5"
           >
-            <p className={assistantBubble}>{greeting}</p>
-            {messages.length === 0 && (
-              <div className="flex flex-col gap-2">
-                {suggestions.map((suggestion) => (
-                  <button
-                    key={suggestion}
-                    type="button"
-                    disabled={!chat}
-                    className={chip}
-                    onClick={() => send(suggestion)}
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>
-            )}
-            <AnimatePresence initial={false}>
-              {messages.map((message) => (
-                <motion.div
-                  key={message.id}
-                  initial={reduced ? false : { opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex flex-col gap-3"
+            {messages.length === 0 ? (
+              <div className="flex flex-1 flex-col items-center justify-center gap-3 py-1 text-center lg:gap-5 lg:py-6">
+                <span
+                  className="grid size-11 place-items-center rounded-pill bg-tint font-heading text-body font-bold text-accent lg:size-12 lg:text-body-l"
+                  aria-hidden="true"
                 >
-                  <MessageView message={message} contacts={contacts} />
-                </motion.div>
-              ))}
-            </AnimatePresence>
+                  {initials}
+                </span>
+                <p className="max-w-[30rem] text-label/[1.6] text-ink lg:text-body-l">
+                  {greeting}
+                </p>
+                <div className="flex w-full max-w-[30rem] flex-col gap-2">
+                  {suggestions.map((suggestion) => (
+                    <button
+                      key={suggestion}
+                      type="button"
+                      disabled={!chat}
+                      className={promptChip}
+                      onClick={() => send(suggestion)}
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <AnimatePresence initial={false}>
+                {messages.map((message) => (
+                  <motion.div
+                    key={message.id}
+                    initial={reduced ? false : { opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+                    className="flex flex-col gap-3"
+                  >
+                    <MessageView message={message} contacts={contacts} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            )}
             {typing && (
               <div
                 className={`${assistantBubble} flex items-center gap-1 py-3.5`}

@@ -1,4 +1,6 @@
 ---
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
 import { trustPages } from "../data/site-content";
 import Layout from "../layouts/Layout.astro";
 export const prerender = false;
@@ -10,27 +12,27 @@ if (!page) return Astro.rewrite("/404");
   <a class="skip-link" href="#main-content">
     Skip to main content
   </a>
-  <div class="page-shell">
-    <main id="main-content" class="editorial-section">
-      <article class="editorial-inner editorial-measure">
-        <a class="editorial-link" href="/">
-          Rahmat. · Portfolio
-        </a>
+  <div class="page-shell page-shell--fill">
+    <SiteHeader />
+    <main id="main-content" class="page-main">
+      <article class="page-doc">
+        <p class="page-doc-eyebrow">Site information</p>
         <h1>{page.title}</h1>
+        <p class="page-doc-lede">{page.description}</p>
         {page.sections.map(({ title, paragraphs }) => (
           <section>
             <h2>{title}</h2>
             {paragraphs.map((paragraph) => (
-              <p class="editorial-copy">{paragraph}</p>
+              <p>{paragraph}</p>
             ))}
           </section>
         ))}
-        <nav class="editorial-contact-links" aria-label="Related links">
+        <nav class="page-doc-links" aria-label="Related links">
           {page.links.map(({ label, href }) => (
             <a href={href}>{label}</a>
           ))}
         </nav>
-        <nav class="editorial-contact-links" aria-label="Site information">
+        <nav class="page-doc-links" aria-label="Site information">
           {trustPages.map(({ slug, title }) => (
             <a
               href={`/${slug}`}
@@ -42,5 +44,6 @@ if (!page) return Astro.rewrite("/404");
         </nav>
       </article>
     </main>
+    <SiteFooter />
   </div>
 </Layout>

@@ -14,7 +14,7 @@ export default function ChatHeader({
   onReset,
 }: Props) {
   return (
-    <div className="flex items-center gap-3 bg-ink px-4 py-3.5 lg:px-5 lg:py-[18px]">
+    <div className="flex items-center gap-3 bg-chat-bar px-4 py-3.5 lg:px-5 lg:py-[18px]">
       <span
         className="grid size-10 shrink-0 place-items-center rounded-pill bg-accent font-heading text-body font-bold text-paper"
         aria-hidden="true"
@@ -22,10 +22,10 @@ export default function ChatHeader({
         {initials}
       </span>
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <p className="font-heading text-label/[1.5] font-bold text-paper">
+        <p className="font-heading text-label/[1.5] font-bold text-chat-bar-ink">
           {assistant}
         </p>
-        <p className="flex items-center gap-1.5 text-micro/[1.5] text-on-ink-muted">
+        <p className="flex items-center gap-1.5 text-micro/[1.5] text-chat-bar-muted">
           <span
             className="size-2 rounded-full bg-online"
             aria-hidden="true"
@@ -40,7 +40,7 @@ export default function ChatHeader({
             onClick={onReset}
             aria-label="Start a new conversation"
             title="Start a new conversation"
-            className="hit-target text-paper focus-visible:outline-paper"
+            className="hit-target text-chat-bar-ink focus-visible:outline-chat-bar-ink"
           >
             <RotateCcw size={18} />
           </button>

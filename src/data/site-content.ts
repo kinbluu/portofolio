@@ -47,7 +47,7 @@ export const trustPages = [
       {
         title: "Questions about this portfolio",
         paragraphs: [
-          "Use email for questions about information published on this site or for privacy requests. Include the page URL and the information you want to discuss. The homepage also has an AI assistant for questions about my work and experience; its answers are in Indonesian and may contain mistakes. Contact me directly to confirm details or discuss a project. This site does not provide an automated booking or hiring service.",
+          "Use email for questions about information published on this site or for privacy requests. Include the page URL and the information you want to discuss. The homepage also has an AI assistant for questions about my work and experience; its answers are in English and may contain mistakes. Contact me directly to confirm details or discuss a project. This site does not provide an automated booking or hiring service.",
         ],
       },
     ],

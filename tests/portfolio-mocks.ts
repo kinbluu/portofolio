@@ -37,43 +37,58 @@ export async function startPortfolioMockServer(upstreamUrl: string) {
         state.chatRequests++;
         const { threadId = "test", runId = "test" } = payload;
         const timestamp = Date.now();
+        const messageId = `msg-${timestamp}`;
+        const toolCallId = `call-${timestamp}`;
         const events =
           state.chatScenario === "show-section" && state.chatRequests === 1
             ? [
                 { type: "RUN_STARTED", threadId, runId, timestamp },
                 {
+                  type: "TEXT_MESSAGE_START",
+                  messageId,
+                  role: "assistant",
+                  timestamp,
+                },
+                {
+                  type: "TEXT_MESSAGE_CONTENT",
+                  messageId,
+                  delta: "Here is his experience.",
+                  timestamp,
+                },
+                { type: "TEXT_MESSAGE_END", messageId, timestamp },
+                {
                   type: "TOOL_CALL_START",
-                  toolCallId: "call_1",
+                  toolCallId,
                   toolCallName: "show_section",
                   timestamp,
                 },
                 {
                   type: "TOOL_CALL_ARGS",
-                  toolCallId: "call_1",
+                  toolCallId,
                   delta: JSON.stringify({ section: "experience" }),
                   timestamp,
                 },
-                { type: "TOOL_CALL_END", toolCallId: "call_1", timestamp },
+                { type: "TOOL_CALL_END", toolCallId, timestamp },
                 { type: "RUN_FINISHED", threadId, runId, timestamp },
               ]
             : [
                 { type: "RUN_STARTED", threadId, runId, timestamp },
                 {
                   type: "TEXT_MESSAGE_START",
-                  messageId: "test",
+                  messageId,
                   role: "assistant",
                   timestamp,
                 },
                 {
                   type: "TEXT_MESSAGE_CONTENT",
-                  messageId: "test",
+                  messageId,
                   delta:
                     state.chatScenario === "text"
                       ? "This is a test response."
                       : "Here is his experience.",
                   timestamp,
                 },
-                { type: "TEXT_MESSAGE_END", messageId: "test", timestamp },
+                { type: "TEXT_MESSAGE_END", messageId, timestamp },
                 { type: "RUN_FINISHED", threadId, runId, timestamp },
               ];
         response.writeHead(200, { "content-type": "text/event-stream" });

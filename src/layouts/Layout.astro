@@ -16,7 +16,7 @@ const { title, description, noindex = false } = Astro.props;
 const canonical =
   !noindex && Astro.site && new URL(Astro.url.pathname, Astro.site).href;
 const socialImage = Astro.site && new URL("/og.png", Astro.site).href;
-const socialImageAlt = `${profile.name}, ${profile.role}, with a desk illustration.`;
+const socialImageAlt = `${profile.name}, ${profile.role} in ${profile.location}.`;
 
 const person = {
   "@context": "https://schema.org",
@@ -108,6 +108,7 @@ const person = {
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <Font cssVariable="--font-manrope" preload={[{ weight: 600 }]} />
+    <Font cssVariable="--font-dm-serif" preload={[{ weight: 400 }]} />
     <Font cssVariable="--font-dm-sans" preload={[{ weight: 400 }]} />
 
     <title>{title}</title>

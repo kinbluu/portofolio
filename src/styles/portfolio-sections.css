@@ -39,19 +39,21 @@
 .editorial-section h1,
 .editorial-section h2 {
   margin: 0.65em 0 0.4em;
-  font-family: var(--font-manrope), sans-serif;
+  font-family: var(--font-dm-serif), serif;
   font-size: clamp(2rem, 4.5vw, 3.5rem);
-  line-height: 1.04;
-  letter-spacing: -0.04em;
-  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  font-weight: 400;
   text-wrap: balance;
 }
 .editorial-section h1 {
-  font-size: clamp(2rem, 5.5vw, 5.5rem);
+  font-size: clamp(2.25rem, 5.2vw, 5.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
 }
 .editorial-section h1 em,
 .editorial-section h2 em {
-  font-style: normal;
+  font-style: italic;
 }
 .editorial-section h1 > span,
 .editorial-section h1 > em {
@@ -150,20 +152,23 @@
   margin: 0;
 }
 .editorial-practices {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 1.5rem;
   padding: 0;
   list-style: none;
 }
 .editorial-practices li {
-  padding: 0.6rem 0;
+  padding: 0.7rem 0;
   border-bottom: 1px solid var(--rm3-line);
+  text-align: center;
 }
 .editorial-subtitle {
   margin-top: 2rem;
-  font-size: 1.2rem;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 .editorial-skills {
   margin: 1.5rem 0 0;
@@ -212,6 +217,10 @@
 
   .editorial-facts {
     gap: 1.25rem 2rem;
+  }
+  .editorial-practices {
+    grid-template-columns: 1fr;
+    gap: 0;
   }
   .editorial-skills div {
     grid-template-columns: 1fr;

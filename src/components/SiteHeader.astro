@@ -1,6 +1,10 @@
 ---
 import { navigation, profile } from "../data/profile";
 import PluckedLink from "./PluckedLink.astro";
+
+const isHome = Astro.url.pathname === "/";
+const navHref = (href: string) =>
+  isHome || !href.startsWith("#") ? href : `/${href}`;
 ---
 
 <header class="site-header">
@@ -9,14 +13,14 @@ import PluckedLink from "./PluckedLink.astro";
   </span>
   <PluckedLink
     class="site-wordmark"
-    href={Astro.url.pathname === "/" ? "#top" : "/"}
-    current={Astro.url.pathname === "/"}
+    href={isHome ? "#top" : "/"}
+    current={isHome}
   >
     {profile.wordmark}
   </PluckedLink>
   <nav class="site-desktop-nav" aria-label="Main navigation">
     {navigation.map((link) => (
-      <PluckedLink href={link.href}>{link.label}</PluckedLink>
+      <PluckedLink href={navHref(link.href)}>{link.label}</PluckedLink>
     ))}
   </nav>
   <details class="site-mobile-menu" data-navigation-menu>
@@ -25,7 +29,7 @@ import PluckedLink from "./PluckedLink.astro";
     </summary>
     <nav aria-label="Mobile navigation">
       {navigation.map((link) => (
-        <PluckedLink href={link.href}>{link.label}</PluckedLink>
+        <PluckedLink href={navHref(link.href)}>{link.label}</PluckedLink>
       ))}
     </nav>
   </details>

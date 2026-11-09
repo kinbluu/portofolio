@@ -13,9 +13,11 @@
 
 .chat-section-heading h2 {
   margin: 0.5rem 0;
-  font-size: clamp(1.75rem, 5vw, 2.75rem);
-  line-height: 1.12;
-  letter-spacing: -0.035em;
+  font-family: var(--font-dm-serif), serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 400;
+  line-height: 1.03;
+  letter-spacing: -0.015em;
 }
 
 .chat-section-heading > p:last-child {
@@ -57,7 +59,7 @@
   }
 
   .chat-panel {
-    height: 29rem;
+    height: 31rem;
     border-radius: 0.75rem;
   }
 }

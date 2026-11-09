@@ -94,7 +94,7 @@ async function verifyPortfolio(
       assert.equal(state.locale, "en_US");
       assert.match(state.description ?? "", /Full Stack Developer in Surabaya/);
       assert.deepEqual(state.navigationLabels, [
-        "Work",
+        "Current work",
         "Experience",
         "GitHub",
         "About",
@@ -116,14 +116,16 @@ async function verifyPortfolio(
       assert.equal(state.canvases, 0, "portfolio must not render 3D canvas");
       assert.equal(
         state.socialImage,
-        false,
-        "old social preview must be disabled",
+        true,
+        "social preview metadata must be present",
       );
       for (const link of state.links) {
         if (link.href.startsWith("#"))
           assert.ok(await page.$(link.href), `broken anchor ${link.href}`);
         else if (/^https?:/.test(link.href))
           assert.ok(new URL(link.href).hostname);
+        else if (link.href.startsWith("/"))
+          assert.ok(!link.href.startsWith("//"), `invalid link ${link.href}`);
         else
           assert.match(
             link.href,
@@ -245,9 +247,61 @@ async function verifyPortfolio(
 }
 
 async function verifyMockChat(page: AgentPage, state: PortfolioMockState) {
-  state.chatScenario = "text";
+  state.chatScenario = "show-section";
   state.chatRequests = 0;
   await page.$eval("#assistant", (element) => element.scrollIntoView());
+  await page.waitForFunction(
+    () =>
+      !(
+        document.querySelector<HTMLInputElement>("#chat-message")?.disabled ??
+        true
+      ),
+    { timeout: 10_000 },
+  );
+  await page.$eval("#assistant button", (button) =>
+    (button as HTMLButtonElement).click(),
+  );
+  await page.waitForFunction(
+    () =>
+      document
+        .querySelector("#assistant")
+        ?.textContent?.includes("View Experience"),
+    { timeout: 10_000 },
+  );
+  assert.equal(
+    state.chatRequests,
+    2,
+    "mocked tool call and its follow-up must be intercepted locally",
+  );
+  const order = await page.evaluate(() => {
+    const panel = document.querySelector("#assistant");
+    if (!panel) throw new Error("assistant panel missing");
+    const text = [...panel.querySelectorAll("p")].find((p) =>
+      p.textContent?.includes("Here is his experience."),
+    );
+    const link = [...panel.querySelectorAll("a")].find((a) =>
+      a.textContent?.includes("View Experience"),
+    );
+    if (!text || !link) throw new Error("chat parts missing");
+    return Boolean(
+      text.compareDocumentPosition(link) & Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+  });
+  assert.equal(order, true, "answer text must render above the tool chip");
+
+  state.chatScenario = "text";
+  state.chatRequests = 0;
+  await page.$eval(
+    '#assistant button[aria-label="Start a new conversation"]',
+    (button) => (button as HTMLButtonElement).click(),
+  );
+  await page.waitForFunction(
+    () =>
+      !document
+        .querySelector("#assistant")
+        ?.textContent?.includes("Here is his experience."),
+    { timeout: 10_000 },
+  );
   await page.waitForFunction(
     () =>
       !(

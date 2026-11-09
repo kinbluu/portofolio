@@ -40,21 +40,51 @@ Jangan menghapus tautan kontak atau anchor yang dipakai saat ini hanya karena be
 | `--rm3-line`   | `#d6d8dc` | `#43464d` | Garis pemisah        |
 | `--rm3-accent` | `#2854a4` | `#a9c5ff` | Aksen biru dan fokus |
 
-Nilai implementasi awal berada di `src/styles/portfolio.css` dan masih dapat disesuaikan setelah ditinjau pengguna. Tema mengikuti perangkat tanpa tombol manual pada iterasi ini; penambahan override manual masih terbuka. Aksen olive dan nilai warna dokumen contoh tidak digunakan.
+Semua token `--rm3-*` berada di satu sumber, `src/styles/global.css`, dan dipetakan ke Tailwind melalui `@theme inline`. `src/styles/portfolio.css` hanya mengatur tata letak. Token lain yang dipakai UI:
+
+| Token                  | Terang    | Gelap     | Penggunaan                        |
+| ---------------------- | --------- | --------- | --------------------------------- |
+| `--rm3-soft`           | `#f0f1f2` | `#25272c` | Permukaan sekunder dan isian      |
+| `--rm3-tint`           | `#e9eef9` | `#293449` | Sorotan lembut dan keadaan aktif  |
+| `--rm3-online`         | `#7fb24e` | `#a0c875` | Titik status asisten              |
+| `--rm3-chat-bar`       | `#1c1d20` | `#25272c` | Batang judul panel asisten        |
+| `--rm3-chat-bar-ink`   | `#fafafa` | `#f3f3f4` | Teks pada batang asisten          |
+| `--rm3-chat-bar-muted` | `#c5c9d0` | `#b9bdc5` | Teks sekunder pada batang asisten |
+
+Tema mengikuti perangkat tanpa tombol manual pada iterasi ini; penambahan override manual masih terbuka. Aksen olive dan nilai warna dokumen contoh tidak digunakan.
 
 ## Tipografi
 
 - Jadikan tipografi pembawa utama karakter visual, bukan dekorasi atau objek 3D.
 - Judul utama berukuran besar dan rata tengah. Sesuaikan ukurannya dengan lebar layar agar tetap terbaca.
 - Susun teks pengalaman secara terpusat dan ringkas, dengan pembedaan jelas antara peran, organisasi, periode, dan kontribusi.
-- Implementasi awal memakai Manrope untuk judul dan DM Sans untuk isi. Judul utama memakai `clamp(2rem, 5.5vw, 5.5rem)`; ukuran dan pilihan font dapat ditinjau kembali.
+- DM Serif Display memegang judul bagian, judul halaman kepercayaan, 404, dan wordmark. Manrope dipakai untuk subjudul, label, navigasi, dan antarmuka. DM Sans dipakai untuk isi dan teks panjang. Ketiga font dimuat lewat `astro.config.mjs`; DM Serif Display dan Manrope ikut di-preload di `src/layouts/Layout.astro`.
+- Judul bagian memakai `clamp(2rem, 4.5vw, 3.5rem)`, judul halaman `clamp(2.25rem, 5.2vw, 5.2rem)`, dan huruf miring pada judul memakai italic asli DM Serif Display.
+- Hierarki dibangun dari ukuran, bobot, dan warna, bukan dari banyak variasi font.
 
 ## Ruang, bentuk, dan komponen
 
 - Gunakan ruang kosong untuk membedakan bagian dan memberi fokus pada isi, tanpa membuat halaman mobile memanjang secara berlebihan.
 - Implementasi awal menggunakan satu permukaan halaman dengan sudut 28 px di desktop dan 18 px di mobile, serta panel asisten 14 px di desktop dan 12 px di mobile. Hindari menambahkan panel berulang tanpa fungsi.
+- Skala radius tunggal: 2 px untuk penanda kecil, 8 px untuk kontrol dan baris, 14 px untuk panel, 20 px untuk permukaan sedang, 28 px untuk permukaan halaman, dan 100 px untuk pil. Nilainya ada di `--rm3-radius-xs` sampai `--rm3-radius-pill`; jangan menulis radius mentah di komponen.
 - Komponen yang diperlukan mencakup perkenalan, entri pengalaman, kontribusi GitHub, dan asisten AI. Kebutuhan navigasi, penempatan kontak, serta komponen tambahan disesuaikan setelah susunan konten disepakati.
 - Aksen dan elemen interaktif harus punya fungsi yang jelas; jangan menambahkan kartu atau ornamen hanya untuk mengisi ruang.
+
+## Bukti produk di bagian Work
+
+- `src/components/WorkShot.astro` menampilkan jendela admin LEAP sebagai ilustrasi antarmuka statis: sidebar modul, daftar kehadiran, dan tahap persetujuan rapor. Tujuannya memberi gambaran konkret tentang pekerjaan tanpa mengklaim tangkapan layar.
+- Ilustrasi dibuat dengan HTML dan CSS, bukan React, agar halaman tetap ringan dan bisa dibaca tanpa JavaScript.
+- Judul jendela memakai `LEAP admin / attendance`, isi tabel memakai status nyata (Present, Late, Pending), dan tahap rapor memakai Draft, Review, Publish.
+- Caption di bawah ilustrasi menyatakan bahwa ini ilustrasi antarmuka, bukan tangkapan layar. Jangan hapus atau samarkan caption ini.
+- Breakpoint: sidebar disembunyikan di bawah 820 px, tabel dipangkas menjadi dua baris dan panel rapor dipindah ke bawah di bawah 560 px. Jendela sengaja dipotong di tepi bawah panggung agar terbaca sebagai produk, bukan kartu.
+
+## Halaman kepercayaan dan 404
+
+- `/about`, `/contact`, dan `/privacy` memakai `src/pages/[page].astro` dengan `SiteHeader` dan `SiteFooter` yang sama seperti halaman utama, lalu `page-shell--fill` agar footer tetap di bawah pada layar pendek.
+- `src/pages/404.astro` memakai susunan yang sama, status HTTP 404, `noindex`, dan tautan pemulihan ke beranda, bagian work, dan kontak.
+- Tipografi dokumen: judul halaman memakai DM Serif Display, isi memakai DM Sans dengan lebar baca maksimal 48 rem, dan tautan memakai area sentuh 44 px.
+- Navigasi header dan tautan kembali ke atas menyesuaikan halaman: anchor `#...` diarahkan ke `/#...` saat berada di luar beranda.
+- Halaman ini tidak memuat JavaScript khusus dan tetap terbaca tanpa JavaScript.
 
 ## Responsif
 
@@ -105,8 +135,10 @@ Implementasi awal sudah dibuat; tinjauan pengguna dan verifikasi lanjutan tetap 
 
 ## Gambar pratinjau sosial
 
-- Banner 1200 × 630 memakai nama lengkap, profesi, dan `kinbluu.biz.id` dengan latar krem serta aksen terracotta. Nama menjadi fokus agar tetap terbaca pada preview tautan berukuran kecil.
-- Ilustrasi meja dari aset lama dipertahankan khusus untuk gambar sosial sesuai persetujuan pengguna. Halaman website tetap tidak menampilkan studio 3D. Tombol dan headline panjang tidak disertakan dalam banner.
-- Sumber: `src/assets/social/og.svg` dan `src/assets/social/desk.png`. Render dengan `rsvg-convert src/assets/social/og.svg -o public/og.png`.
+- Banner 1200 × 630 memakai nama lengkap, profesi, dan `kinbluu.biz.id` dengan palet situs: kanvas `#e9e9eb`, permukaan `#fafafa`, tinta `#1c1d20`, aksen `#2854a4`, dan DM Serif Display untuk nama dan wordmark.
+- Nama menjadi fokus agar tetap terbaca pada preview tautan berukuran kecil. Tidak ada ilustrasi meja, tombol, atau headline panjang di banner.
+- Sumber tunggal: `src/assets/social/og.html`, sebuah halaman mandiri dengan font DM Serif Display dan Manrope tersemat sebagai base64. Render pada viewport 1200 × 630 tanpa margin, lalu simpan sebagai `public/og.png`.
+- Contoh render: buka `src/assets/social/og.html` lewat server lokal, ambil tangkapan layar 1200 × 630, dan simpan ke `public/og.png`. Jangan mengubah ukuran hasil tangkapan setelahnya.
+- Ikon situs memakai palet yang sama: `public/favicon.svg` (biru `#2854a4`, tinta `#fafafa`, versi gelap `#a9c5ff`), `public/favicon.ico` 16 dan 32 px, serta `public/apple-touch-icon.png` 180 px.
 - `src/layouts/Layout.astro` memasang URL absolut gambar, ukuran, jenis, dan teks alternatif untuk Open Graph serta Twitter large-image card.
 - Dengan dev server aktif, jalankan `bun tests/social-image.e2e.ts` untuk memeriksa metadata dan PNG yang benar-benar disajikan lewat HTTP.

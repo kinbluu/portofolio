@@ -29,7 +29,7 @@ export const profile = {
 };
 
 export const navigation = [
-  { label: "Work", href: "#work" },
+  { label: "Current work", href: "#work" },
   { label: "Experience", href: "#experience" },
   { label: "GitHub", href: "#github" },
   { label: "About", href: "#about" },
@@ -123,7 +123,7 @@ export const experience = [
 export const about = {
   titleLines: ["Practical.", "Careful."],
   description:
-    "I build web applications and APIs with help from AI and agent-based workflows.",
+    "I design and build web applications and APIs for everyday operations: registration, scheduling, attendance, and the approvals that keep records accurate.",
   practices: [
     { icon: ShieldCheck, label: "Role-based access" },
     { icon: Database, label: "Validated data" },

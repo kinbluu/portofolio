@@ -1,11 +1,12 @@
 ---
 import { featuredRole } from "../data/profile";
 import { studioChapter } from "../data/studio-chapters";
+import WorkShot from "./WorkShot.astro";
 const chapter = studioChapter("work");
 ---
 
 <section id={chapter.id} aria-labelledby="work-title" class="editorial-section">
-  <div class="editorial-inner editorial-measure">
+  <div class="editorial-inner editorial-wide">
     <h2 id="work-title" data-reveal>
       {featuredRole.titleLines[0]} <em>{featuredRole.titleLines[1]}</em>
     </h2>
@@ -17,6 +18,7 @@ const chapter = studioChapter("work");
     <p class="editorial-copy" data-reveal>
       {featuredRole.description}
     </p>
+    <WorkShot />
     <dl class="editorial-facts" data-reveal>
       {featuredRole.figures
         .filter((figure) => figure.prefix === "~")

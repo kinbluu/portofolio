@@ -1,4 +1,6 @@
 ---
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
 import Layout from "../layouts/Layout.astro";
 export const prerender = false;
 Astro.response.status = 404;
@@ -9,18 +11,26 @@ Astro.response.status = 404;
   description="The requested page does not exist on Rahmat's portfolio."
   noindex
 >
-  <main class="page-shell editorial-section">
-    <div class="editorial-inner editorial-measure">
-      <h1>Page not found</h1>
-      <p class="editorial-copy">
-        The requested page does not exist. Check the address or return to the
-        portfolio.
-      </p>
-      <nav class="editorial-contact-links" aria-label="Find a page">
-        <a href="/">Portfolio</a>
-        <a href="/llms.txt">Agent guidance</a>
-        <a href="/sitemap.xml">Sitemap</a>
-      </nav>
-    </div>
-  </main>
+  <a class="skip-link" href="#main-content">
+    Skip to main content
+  </a>
+  <div class="page-shell page-shell--fill">
+    <SiteHeader />
+    <main id="main-content" class="page-main page-main--center">
+      <article class="page-doc page-doc--empty">
+        <p class="page-doc-eyebrow">404</p>
+        <h1>Page not found</h1>
+        <p class="page-doc-lede">
+          The requested page does not exist. Check the address or return to the
+          portfolio.
+        </p>
+        <nav class="page-doc-links" aria-label="Find a page">
+          <a href="/">Portfolio</a>
+          <a href="/#work">Current work</a>
+          <a href="/contact">Contact</a>
+        </nav>
+      </article>
+    </main>
+    <SiteFooter />
+  </div>
 </Layout>
