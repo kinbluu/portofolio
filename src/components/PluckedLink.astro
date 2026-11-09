@@ -1,0 +1,246 @@
+---
+interface Props {
+  href: string;
+  class?: string;
+  current?: boolean;
+}
+
+const { href, class: className, current = false } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={["pluck-link", className]}
+  aria-current={current ? "page" : undefined}
+  data-pluck-link
+>
+  <span class="pluck-label">
+    <slot />
+    <svg
+      viewBox="0 0 100 12"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M0 6 Q50 12 100 6" vector-effect="non-scaling-stroke"></path>
+    </svg>
+  </span>
+</a>
+
+<script>
+  const links =
+    document.querySelectorAll<HTMLAnchorElement>("[data-pluck-link]");
+  const sizes = new ResizeObserver((entries) => {
+    for (const { target, contentRect } of entries) {
+      const link = target.closest<HTMLElement>("[data-pluck-link]")!;
+      link.style.setProperty(
+        "--ring-duration",
+        `${Math.min(1200, Math.max(400, contentRect.width * 13))}ms`,
+      );
+    }
+  });
+
+  for (const link of links) {
+    const svg = link.querySelector("svg")!;
+    const path = svg.querySelector("path")!;
+    let tapClose: ReturnType<typeof setTimeout> | undefined;
+    let pluckId = 0;
+    sizes.observe(svg);
+
+    const clearRing = () => {
+      if (
+        !link.hasAttribute("data-plucked") &&
+        svg.getAnimations().length === 0
+      ) {
+        link.removeAttribute("data-ringing");
+      }
+    };
+    const close = () => {
+      link.removeAttribute("data-plucked");
+      clearRing();
+    };
+    const pluck = (event: PointerEvent) => {
+      clearTimeout(tapClose);
+      const id = ++pluckId;
+      const { left, width } = svg.getBoundingClientRect();
+      const x = Math.min(
+        85,
+        Math.max(15, ((event.clientX - left) / width) * 100),
+      );
+      const depth = Math.min(5, Math.max(2, width / 18));
+      link.removeAttribute("data-plucked");
+      link.removeAttribute("data-ringing");
+      svg.style.transition = "none";
+      path.style.transition = "none";
+      link.style.setProperty("--pluck-x", `${x}%`);
+      path.setAttribute("d", `M0 6 Q${x} ${6 + 2 * depth} 100 6`);
+      getComputedStyle(path).transform;
+      svg.style.removeProperty("transition");
+      path.style.removeProperty("transition");
+      link.setAttribute("data-plucked", "");
+      link.setAttribute("data-ringing", "");
+
+      if (event.pointerType !== "mouse") {
+        Promise.allSettled(
+          path.getAnimations().map((ring) => ring.finished),
+        ).then(() => {
+          if (id === pluckId) tapClose = setTimeout(close, 400);
+        });
+      }
+    };
+
+    link.addEventListener("pointerenter", (event) => {
+      if (event.pointerType === "mouse") pluck(event);
+    });
+    link.addEventListener("pointerdown", (event) => {
+      if (event.pointerType !== "mouse") pluck(event);
+    });
+    link.addEventListener("pointerleave", (event) => {
+      if (event.pointerType === "mouse") close();
+    });
+    link.addEventListener("focus", () => {
+      if (link.matches(":focus-visible")) {
+        ++pluckId;
+        clearTimeout(tapClose);
+        link.removeAttribute("data-plucked");
+        link.removeAttribute("data-ringing");
+      }
+    });
+    svg.addEventListener("transitionend", clearRing);
+  }
+</script>
+
+<style>
+  .pluck-link {
+    --pluck-x: 50%;
+    --ring-duration: 400ms;
+    --pluck-close: 110ms;
+    --pluck-ease: cubic-bezier(0.23, 1, 0.32, 1);
+    --ring-ease: linear(
+      0,
+      0.0316,
+      0.1204,
+      0.2552,
+      0.4232,
+      0.6107,
+      0.8041,
+      0.9908,
+      1.1599,
+      1.3026,
+      1.4125,
+      1.4861,
+      1.5222,
+      1.5224,
+      1.49,
+      1.4303,
+      1.3497,
+      1.2552,
+      1.1541,
+      1.0532,
+      0.9588,
+      0.8762,
+      0.8094,
+      0.7609,
+      0.7321,
+      0.7227,
+      0.7314,
+      0.7561,
+      0.7934,
+      0.84,
+      0.892,
+      0.9457,
+      0.9975,
+      1.0444,
+      1.0839,
+      1.1144,
+      1.1348,
+      1.1448,
+      1.1449,
+      1.1359,
+      1.1193,
+      1.097,
+      1.0708,
+      1.0427,
+      1.0147,
+      0.9886,
+      0.9657,
+      0.9471,
+      0.9337,
+      0.9257,
+      0.9231,
+      0.9255,
+      0.9323,
+      0.9427,
+      0.9556,
+      0.9701,
+      0.9849,
+      0.9993,
+      1.0123,
+      1.0233,
+      1
+    );
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .pluck-label {
+    position: relative;
+    display: inline-block;
+  }
+  svg {
+    position: absolute;
+    left: 0;
+    bottom: -9px;
+    width: 100%;
+    height: 12px;
+    overflow: visible;
+    pointer-events: none;
+    clip-path: inset(0 calc(100% - var(--pluck-x)) 0 var(--pluck-x));
+    transition: clip-path var(--pluck-close) var(--pluck-ease);
+  }
+  path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5px;
+    stroke-linecap: round;
+    transform: scaleY(1);
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    transition: transform 0s var(--pluck-close);
+  }
+  [data-plucked] svg {
+    clip-path: inset(0 -1px);
+    transition-duration: 140ms;
+  }
+  [data-ringing] path {
+    transform: scaleY(0.001);
+    transition: transform var(--ring-duration) var(--ring-ease);
+  }
+  .pluck-link[aria-current="page"] {
+    color: var(--rm3-ink);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.35em;
+  }
+  .pluck-link:focus-visible {
+    outline: 2px solid var(--rm3-accent);
+    outline-offset: 4px;
+  }
+  .pluck-link:focus-visible svg {
+    clip-path: inset(0 -1px);
+    transition: none;
+  }
+  .pluck-link:focus-visible path {
+    transform: scaleY(0.001);
+    transition: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pluck-link svg,
+    .pluck-link path {
+      transition: none;
+    }
+    .pluck-link path {
+      transform: scaleY(0.001);
+    }
+  }
+</style>

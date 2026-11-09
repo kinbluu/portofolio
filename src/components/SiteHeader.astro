@@ -1,17 +1,22 @@
 ---
 import { navigation, profile } from "../data/profile";
+import PluckedLink from "./PluckedLink.astro";
 ---
 
 <header class="site-header">
   <span class="site-progress" aria-hidden="true">
     <span data-scroll-progress></span>
   </span>
-  <a class="site-wordmark" href="#top">
+  <PluckedLink
+    class="site-wordmark"
+    href={Astro.url.pathname === "/" ? "#top" : "/"}
+    current={Astro.url.pathname === "/"}
+  >
     {profile.wordmark}
-  </a>
+  </PluckedLink>
   <nav class="site-desktop-nav" aria-label="Main navigation">
     {navigation.map((link) => (
-      <a href={link.href}>{link.label}</a>
+      <PluckedLink href={link.href}>{link.label}</PluckedLink>
     ))}
   </nav>
   <details class="site-mobile-menu" data-navigation-menu>
@@ -20,7 +25,7 @@ import { navigation, profile } from "../data/profile";
     </summary>
     <nav aria-label="Mobile navigation">
       {navigation.map((link) => (
-        <a href={link.href}>{link.label}</a>
+        <PluckedLink href={link.href}>{link.label}</PluckedLink>
       ))}
     </nav>
   </details>
