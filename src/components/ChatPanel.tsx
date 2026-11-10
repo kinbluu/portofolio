@@ -456,7 +456,7 @@ function ChatView({
               setInput(event.target.value);
               if (event.target.value.length < maxLength) setClipped(false);
             }}
-            className="h-11 min-w-0 flex-1 rounded-pill bg-soft px-4 text-body/[1.5] text-ink placeholder:text-muted disabled:opacity-60"
+            className="h-11 min-w-0 flex-1 rounded-pill bg-soft px-4 text-body-l sm:text-body/[1.5] text-ink placeholder:text-muted disabled:opacity-60"
           />
           {isLoading ? (
             <button
