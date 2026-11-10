@@ -130,8 +130,9 @@
   color: var(--rm3-accent);
 }
 .editorial-link-primary:hover {
-  background: var(--rm3-accent);
-  color: var(--rm3-paper);
+  background: transparent;
+  border: 1px solid var(--rm3-accent);
+  color: var(--rm3-ink);
 }
 .editorial-experience {
   display: grid;
