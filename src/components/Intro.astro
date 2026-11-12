@@ -1,6 +1,8 @@
 ---
 import { profile } from "../data/profile";
 import { studioChapter } from "../data/studio-chapters";
+import Mascot from "./Mascot";
+
 const chapter = studioChapter("top");
 ---
 
@@ -11,6 +13,16 @@ const chapter = studioChapter("top");
   data-hero
 >
   <div class="editorial-inner editorial-intro-inner">
+    <div class="editorial-mascot-wrap enter-0">
+      <Mascot
+        client:load
+        directions="/mascots/cat-directions.webp"
+        reactions="/mascots/cat-reactions.webp"
+        size={110}
+        label="cat mascot"
+        className="editorial-mascot"
+      />
+    </div>
     <p class="editorial-person enter-0">{profile.name}</p>
     <h1 id="intro-title">
       <span class="enter-1">{profile.headlineLines[0]}</span>{" "}

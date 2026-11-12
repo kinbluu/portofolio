@@ -26,6 +26,18 @@
 .editorial-intro-inner {
   max-width: 64rem;
 }
+.editorial-mascot-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+}
+.editorial-mascot {
+  border-radius: 9999px;
+  outline-offset: 4px;
+}
+.editorial-mascot:focus-visible {
+  outline: 2px solid var(--rm3-accent);
+}
 .editorial-meta,
 .editorial-tags {
   color: var(--rm3-muted);
