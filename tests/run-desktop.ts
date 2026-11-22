@@ -12,6 +12,7 @@ const browserTests = [
   "tests/lenis-navigation.e2e.ts",
   "tests/visitor-count.e2e.ts",
   "tests/menu-align.e2e.ts",
+  "tests/theme-toggle.e2e.ts",
   "tests/print-reveal.e2e.ts",
   "tests/github-island-failure.e2e.ts",
 ] as const;
