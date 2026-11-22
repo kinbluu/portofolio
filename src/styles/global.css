@@ -21,10 +21,10 @@
   --rm3-gh-2: light-dark(#9ab0d6, #778cad);
   --rm3-gh-3: light-dark(#6d8ec8, #93acd3);
   --rm3-gh-4: light-dark(#305daf, #b2ceff);
-  --rm3-online: light-dark(#7fb24e, #a0c875);
-  --rm3-chat-bar: light-dark(#1c1d20, #25272c);
-  --rm3-chat-bar-ink: light-dark(#fafafa, #f3f3f4);
-  --rm3-chat-bar-muted: light-dark(#c5c9d0, #b9bdc5);
+  --rm3-online: light-dark(#60912b, #a0c875);
+  --rm3-chat-bar: light-dark(#f0f1f2, #25272c);
+  --rm3-chat-bar-ink: light-dark(#1c1d20, #f3f3f4);
+  --rm3-chat-bar-muted: light-dark(#555b63, #b9bdc5);
   --rm3-shadow: light-dark(#1c1d2020, #00000055);
   --rm3-shadow-strong: light-dark(#1c1d2030, #00000066);
   --rm3-radius-xs: 2px;

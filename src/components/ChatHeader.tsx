@@ -14,7 +14,7 @@ export default function ChatHeader({
   onReset,
 }: Props) {
   return (
-    <div className="flex items-center gap-3 bg-chat-bar px-4 py-3.5 lg:px-5 lg:py-[18px]">
+    <div className="flex items-center gap-3 border-b border-line bg-chat-bar px-4 py-3.5 lg:px-5 lg:py-[18px]">
       <span
         className="grid size-10 shrink-0 place-items-center rounded-pill bg-accent font-heading text-body font-bold text-paper"
         aria-hidden="true"
