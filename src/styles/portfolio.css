@@ -178,8 +178,10 @@ body {
     backdrop-filter var(--rm3-duration-shift) var(--rm3-ease-out);
 }
 
+/* 45rem rather than 42rem: the pill holds the theme control as well as the
+   navigation, and at 42rem the two no longer fit. */
 .site-header[data-floating] {
-  width: min(100% - 2rem, 42rem);
+  width: min(100% - 2rem, 45rem);
   min-height: 3.5rem;
   padding-inline: 1.25rem;
   border-color: var(--rm3-line);
@@ -238,6 +240,11 @@ body {
   text-decoration: none;
 }
 
+.site-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
 .site-desktop-nav {
   display: flex;
   align-items: center;
@@ -317,6 +324,9 @@ body {
 }
 
 @media (max-width: 60rem) {
+  .site-header-actions {
+    gap: 0.5rem;
+  }
   .site-desktop-nav {
     display: none;
   }
@@ -344,6 +354,12 @@ body {
   .site-header-dock[data-sticky],
   .site-header {
     min-height: 5rem;
+  }
+  .site-header {
+    gap: 0.75rem;
+  }
+  .site-header[data-floating] {
+    padding-inline: 0.75rem;
   }
   .site-footer {
     padding-block: 1.25rem;

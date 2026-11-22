@@ -5,23 +5,110 @@ import Sun from "@lucide/astro/icons/sun";
 
 <button
   type="button"
-  class="grid size-11 shrink-0 place-items-center rounded-pill text-ink ring-1 ring-line ring-inset hover:bg-soft enabled:active:scale-[0.96] motion-safe:transition-[background-color,transform]"
-  aria-label="Dark mode"
+  class="grid size-11 shrink-0 place-items-center rounded-pill border border-transparent text-ink ring-1 ring-line ring-inset hover:bg-soft enabled:active:scale-[0.96] motion-safe:transition-[background-color,transform]"
+  aria-label="Dark theme"
   aria-pressed="false"
-  title="Switch to dark mode"
   data-theme-toggle
   hidden
 >
-  <Moon size={20} data-theme-icon="moon" aria-hidden="true" />
-  <Sun size={20} class="hidden" data-theme-icon="sun" aria-hidden="true" />
+  <Moon
+    size={20}
+    class="col-start-1 row-start-1"
+    data-theme-icon="moon"
+    aria-hidden="true"
+  />
+  <Sun
+    size={20}
+    class="col-start-1 row-start-1"
+    data-theme-icon="sun"
+    aria-hidden="true"
+  />
 </button>
 
 <style>
-  :global([data-theme="dark"]) [data-theme-icon="moon"] {
+  /* A utility beats the user agent's [hidden] rule, so the control carries its
+     own. The script drops the attribute once the button can work. */
+  :global([data-theme-toggle][hidden]) {
     display: none;
   }
 
-  :global([data-theme="dark"]) [data-theme-icon="sun"] {
-    display: block;
+  :global([data-theme-toggle] [data-theme-icon]) {
+    transition:
+      opacity var(--rm3-duration-shift) var(--rm3-ease-out),
+      scale var(--rm3-duration-shift) var(--rm3-ease-out),
+      filter var(--rm3-duration-shift) var(--rm3-ease-out);
+  }
+
+  /* The icon names the theme a press switches to, so the other one is the
+     "already here" state. */
+  :global([data-theme-toggle][aria-pressed="false"] [data-theme-icon="sun"]),
+  :global([data-theme-toggle][aria-pressed="true"] [data-theme-icon="moon"]) {
+    opacity: 0;
+    scale: 0.25;
+    filter: blur(4px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global([data-theme-toggle] [data-theme-icon]) {
+      transition: opacity 150ms ease-out;
+    }
+
+    :global([data-theme-toggle][aria-pressed="false"] [data-theme-icon="sun"]),
+    :global([data-theme-toggle][aria-pressed="true"] [data-theme-icon="moon"]) {
+      scale: none;
+      filter: none;
+    }
   }
 </style>
+
+<script>
+  import { isTheme, themeKey } from "../../lib/theme";
+
+  const root = document.documentElement;
+  const toggle = document.querySelector<HTMLButtonElement>(
+    "[data-theme-toggle]",
+  );
+  const deviceDark = matchMedia("(prefers-color-scheme: dark)");
+
+  if (toggle) {
+    const choice = () =>
+      isTheme(root.dataset.theme) ? root.dataset.theme : undefined;
+    const device = () => (deviceDark.matches ? "dark" : "light");
+
+    const render = () => {
+      const dark = (choice() ?? device()) === "dark";
+      toggle.setAttribute("aria-pressed", String(dark));
+      const canvas = getComputedStyle(root).backgroundColor;
+      for (const meta of document.querySelectorAll<HTMLMetaElement>(
+        'meta[name="theme-color"]',
+      )) {
+        meta.content = canvas;
+      }
+    };
+
+    const apply = (theme: "light" | "dark") => {
+      // The swap repaints colours the header animates, so the pill would fade
+      // behind the rest of the page.
+      root.dataset.themeSwitching = "";
+      root.dataset.theme = theme;
+      try {
+        localStorage.setItem(themeKey, theme);
+      } catch {
+        // Storage can be blocked. The theme still applies to this visit.
+      }
+      void root.offsetHeight;
+      requestAnimationFrame(() => delete root.dataset.themeSwitching);
+      render();
+    };
+
+    toggle.addEventListener("click", () => {
+      apply((choice() ?? device()) === "dark" ? "light" : "dark");
+    });
+    deviceDark.addEventListener("change", () => {
+      if (!choice()) render();
+    });
+
+    toggle.removeAttribute("hidden");
+    render();
+  }
+</script>

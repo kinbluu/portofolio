@@ -46,6 +46,12 @@
   color-scheme: dark;
 }
 
+/* A theme swap repaints colours the floating header animates, so without this
+   the pill fades behind the rest of the page. */
+:root[data-theme-switching] .site-header {
+  transition: none;
+}
+
 .os-theme-rm3 {
   --os-size: 12px;
   --os-padding-perpendicular: 3px;

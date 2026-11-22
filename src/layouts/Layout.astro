@@ -1,6 +1,7 @@
 ---
 import { Font } from "astro:assets";
 import { profile } from "../data/profile";
+import { themeKey } from "../lib/theme";
 import "../styles/global.css";
 import "lenis/dist/lenis.css";
 import "../styles/portfolio.css";
@@ -58,6 +59,10 @@ const person = {
       name="theme-color"
       media="(prefers-color-scheme: dark)"
       content="#111214"
+    />
+    <script
+      is:inline
+      set:html={`try{const stored=localStorage.getItem(${JSON.stringify(themeKey)});if(stored==="light"||stored==="dark")document.documentElement.dataset.theme=stored}catch{}`}
     />
     <meta name="generator" content={Astro.generator} />
     {canonical && <link rel="canonical" href={canonical} />}

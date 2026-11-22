@@ -1,6 +1,7 @@
 ---
 import { navigation, profile } from "../data/profile";
 import PluckedLink from "./PluckedLink.astro";
+import ThemeToggle from "./ui/ThemeToggle.astro";
 
 const isHome = Astro.url.pathname === "/";
 const navHref = (href: string) =>
@@ -24,21 +25,24 @@ const navHref = (href: string) =>
     >
       {profile.wordmark}
     </PluckedLink>
-    <nav class="site-desktop-nav" aria-label="Main navigation">
-      {navigation.map((link) => (
-        <PluckedLink href={navHref(link.href)}>{link.label}</PluckedLink>
-      ))}
-    </nav>
-    <details class="site-mobile-menu" data-navigation-menu>
-      <summary>
-        Menu <span aria-hidden="true">+</span>
-      </summary>
-      <nav aria-label="Mobile navigation">
+    <div class="site-header-actions">
+      <nav class="site-desktop-nav" aria-label="Main navigation">
         {navigation.map((link) => (
           <PluckedLink href={navHref(link.href)}>{link.label}</PluckedLink>
         ))}
       </nav>
-    </details>
+      <ThemeToggle />
+      <details class="site-mobile-menu" data-navigation-menu>
+        <summary>
+          Menu <span aria-hidden="true">+</span>
+        </summary>
+        <nav aria-label="Mobile navigation">
+          {navigation.map((link) => (
+            <PluckedLink href={navHref(link.href)}>{link.label}</PluckedLink>
+          ))}
+        </nav>
+      </details>
+    </div>
   </header>
 </div>
 
