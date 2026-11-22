@@ -1,8 +1,9 @@
 ---
 name: antislop-ui
-description: "UI and visual skill for antislop. Use when building or editing any interface: color, layout, components, motion. Load with the core."
-allowed-tools: Read Write Edit Glob Grep
+description: "UI and visual skill for antislop. Use when building or editing any interface: color, layout, components, motion, and page performance. Load with the core."
+allowed-tools: Read, Write, Edit, Glob, Grep
 ---
+
 # antislop-ui
 
 > Anti Slop: Rules for AI Coding Agents. UI & Visual skill
@@ -240,6 +241,12 @@ The patterns above are landing-page shapes. These are the app-side equivalents: 
 - **Why:** it is the landing-page template problem in an app: a layout picked from memory instead of from the work the screen supports. Swap the labels and it belongs to any product.
 - **Fix:** name the screen's job and the one decision the user makes on it, then build the hierarchy around that (C-3, R-20). If the job is "spot the failing job and retry it", the failing jobs are the page and the stat row is a footnote. Sections that survive only because dashboards usually have them get cut (C-3).
 
+### Scaffold Sidebar
+
+- **Tell:** the page got a design pass and the navigation did not: one flat list of eight or more identical rows, "active" is only a slightly darker tint, no hover or pressed state, a collapse that clips labels mid-word, and on a phone the rail disappears with no trigger.
+- **Why:** the shell is on every screen, so its defects are paid on every navigation. It is the most-seen element in the product and the only one nobody designed. Avoiding the stat-row template is not permission to leave the shell at its starter value.
+- **Fix:** design the shell as a component. Group destinations with a quiet label, mark the current one with shape or weight as well as color, and keep that marker when the rail collapses to icons (R-24, R-25). Collapse is a real button with `aria-expanded`, every icon-only destination keeps an accessible name (R-39), and on a phone the control returns as a sheet with a trigger, Escape to close, and focus back on the trigger (R-26, C-4). Rows meet the touch target minimum (R-03), and destinations that load asynchronously arrive as skeleton rows instead of a jump (R-27).
+
 ### Stat Cards With Invented Numbers
 
 - **Tell:** a row of four cards reading 12,483 / 94.2% / $48.2K / 1,204, each with a green "+12% this week" delta.
@@ -290,6 +297,38 @@ The patterns above are landing-page shapes. These are the app-side equivalents: 
 - **Why:** a page where everything animates has no focal point. Motion becomes wallpaper.
 - **Fix:** choreograph motion to a purpose and to the MOTION dial (R-19). Not everything moves. The hero speaks, the supporting elements stay calm. Claimed "cinematic" pages must actually move; claimed "static" pages must not.
 
+## Performance
+
+A page that looks finished but shifts under the thumb or shows its main image last was built for the screenshot, not for use. R-40 gates what the code shows; the LCP, INP, and CLS thresholds are field data and live in [references/CORE-WEB-VITALS.md](references/CORE-WEB-VITALS.md), read when a real measurement exists. Never report a number that was not measured (R-36).
+
+### Unsized Media That Shifts the Layout
+
+- **Tell:** `<img>`, `<video>`, `<iframe>`, ads, or embeds with no `width`/`height` or `aspect-ratio`; a banner or late font that pushes content down.
+- **Why:** the page jumps while people read or tap, and they hit the wrong control (R-40).
+- **Fix:** give every media element intrinsic dimensions or `aspect-ratio`, reserve space for anything that loads late, and overlay banners instead of inserting them above content.
+
+### Hero Image Loaded Like Any Other Image
+
+- **Tell:** the largest above-the-fold image is `loading="lazy"`, set as a CSS background, or injected by JavaScript.
+- **Why:** the browser discovers the most important pixel last, and the first impression is an empty box (R-40).
+- **Fix:** an `<img>` in the HTML with `fetchpriority="high"`, never lazy; lazy-load only what is below the fold.
+
+### Render-Blocking Third-Party Script
+
+- **Tell:** synchronous analytics, chat, or tag-manager scripts in `<head>`.
+- **Why:** nothing paints until someone else's server answers, which on a phone on a slow network is the whole first impression (R-40).
+- **Fix:** `defer`/`async`, or load on interaction.
+
+## Page Basics
+
+Optional page-level checks. Not a gate.
+
+### Web Baseline Checklist
+
+- **Tell:** a page shipped with no doctype, mixed `http://` content, a secret in client code, or an unpinned third-party script.
+- **Why:** none of it shows in a screenshot, so it is the first thing skipped, and each one is expensive to find after launch.
+- **Fix:** run the checklist in [references/WEB-BASELINE.md](references/WEB-BASELINE.md) when the task asks for a production-ready page or a web-quality review.
+
 ## UI Skill Checklist
 
 Run these alongside the core Delivery Gate when the task is UI work. All answers must be **yes**:
@@ -305,7 +344,9 @@ Run these alongside the core Delivery Gate when the task is UI work. All answers
 - [ ] Is glass, glow, shadow, and radius used at their dose caps, not as a page-wide default? (R-10, R-11, R-12, R-13)
 - [ ] Is every colored dot and status light marking a real state, with no decorative glow or endless pulse? (R-13, R-19, R-31)
 - [ ] On an app screen, is the layout built around the decision the user makes there, rather than the sidebar plus stat row plus chart plus table default? (C-3, R-20)
+- [ ] On an app screen, is the navigation shell itself designed, with grouping, a current marker that survives icon-only and mobile, a working collapse, and a mobile trigger, rather than left at the starter default? (R-24, R-26, R-39)
 - [ ] Is every number, delta, feed entry, and table row real or a labelled placeholder, with no invented metrics? (R-17, R-18, R-38)
 - [ ] Do empty form fields and table cells stay empty or carry honest placeholders (Your Name, email@example.com) instead of fake-looking data (John Doe, johndoe@example.com)? (R-23, R-38)
 - [ ] Do the empty, loading, and error states name the cause and the next action instead of saying "No data"? (R-27)
 - [ ] Does the page hold up at every breakpoint, theme, and state, and pass keyboard-only use? (R-03, R-34, C-4)
+- [ ] Is every media element sized, the hero image in the HTML with `fetchpriority="high"` and not lazy, no third-party script blocking render, and every reported metric actually measured? (R-40, R-36)

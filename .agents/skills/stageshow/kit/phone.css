@@ -11,8 +11,10 @@
   .ss-phone {
     flex-shrink: 0;
     box-shadow:
-      0 calc(var(--ps) * 40) calc(var(--ps) * 80) calc(var(--ps) * -16) rgba(50, 50, 93, 0.25),
-      0 calc(var(--ps) * 24) calc(var(--ps) * 48) calc(var(--ps) * -24) rgba(0, 0, 0, 0.3);
+      0 calc(var(--ps) * 40) calc(var(--ps) * 80) calc(var(--ps) * -16)
+        rgba(50, 50, 93, 0.25),
+      0 calc(var(--ps) * 24) calc(var(--ps) * 48) calc(var(--ps) * -24)
+        rgba(0, 0, 0, 0.3);
   }
 
   .ss-phone__glass {
@@ -28,7 +30,14 @@
 
   /* The iOS frames paint their bands as strokes of the screen's outline
      (Phone's BANDS), from these colors; the body and glass paint nothing */
-  .ss-phone:is([data-frame="pro"], [data-frame="silver"], [data-frame="bezel"], [data-frame="clay"], [data-frame="outline"], [data-frame="bare"]) {
+  .ss-phone:is(
+    [data-frame="pro"],
+    [data-frame="silver"],
+    [data-frame="bezel"],
+    [data-frame="clay"],
+    [data-frame="outline"],
+    [data-frame="bare"]
+  ) {
     --ss-phone-glass: #0b0b0c;
     --ss-phone-rim: #2c2c2d;
     --ss-phone-seam: #e0dfdc;
@@ -43,7 +52,14 @@
     pointer-events: none;
   }
 
-  .ss-phone:is([data-frame="pro"], [data-frame="silver"], [data-frame="bezel"], [data-frame="clay"], [data-frame="outline"]) .ss-phone__glass {
+  .ss-phone:is(
+      [data-frame="pro"],
+      [data-frame="silver"],
+      [data-frame="bezel"],
+      [data-frame="clay"],
+      [data-frame="outline"]
+    )
+    .ss-phone__glass {
     position: relative;
   }
 
@@ -83,15 +99,29 @@
   /* Clay: one matte color, soft and thick, lit from above like a rendered
      model rather than a black ring. Light by default; set --ss-phone-clay */
   .ss-phone[data-frame="clay"] {
-    --ss-phone-clay-top: color-mix(in srgb, var(--ss-phone-clay, #ecebe8), #fff 45%);
-    --ss-phone-clay-bottom: color-mix(in srgb, var(--ss-phone-clay, #ecebe8), #000 6%);
+    --ss-phone-clay-top: color-mix(
+      in srgb,
+      var(--ss-phone-clay, #ecebe8),
+      #fff 45%
+    );
+    --ss-phone-clay-bottom: color-mix(
+      in srgb,
+      var(--ss-phone-clay, #ecebe8),
+      #000 6%
+    );
     box-shadow:
-      0 calc(var(--ps) * 30) calc(var(--ps) * 60) calc(var(--ps) * -12) rgba(50, 50, 93, 0.2),
-      0 calc(var(--ps) * 16) calc(var(--ps) * 32) calc(var(--ps) * -16) rgba(0, 0, 0, 0.16);
+      0 calc(var(--ps) * 30) calc(var(--ps) * 60) calc(var(--ps) * -12)
+        rgba(50, 50, 93, 0.2),
+      0 calc(var(--ps) * 16) calc(var(--ps) * 32) calc(var(--ps) * -16)
+        rgba(0, 0, 0, 0.16);
   }
 
   .ss-stage[data-theme="dark"] .ss-phone[data-frame="clay"] {
-    --ss-phone-clay-top: color-mix(in srgb, var(--ss-phone-clay, #2a2a2e), #fff 6%);
+    --ss-phone-clay-top: color-mix(
+      in srgb,
+      var(--ss-phone-clay, #2a2a2e),
+      #fff 6%
+    );
     --ss-phone-clay-bottom: var(--ss-phone-clay, #2a2a2e);
     --ss-phone-seam: #333338;
   }
@@ -136,7 +166,8 @@
     margin-top: 1px;
   }
 
-  .ss-phone:not([data-frame="android"], [data-frame="soft"]) .ss-phone__battery {
+  .ss-phone:not([data-frame="android"], [data-frame="soft"])
+    .ss-phone__battery {
     margin-top: 0.33px;
   }
 
@@ -158,12 +189,21 @@
 
   .ss-stage[data-theme="dark"] .ss-phone__photo,
   .ss-phone[data-dark] .ss-phone__photo {
-    background-image: var(--ss-phone-photo-dark, var(--ss-phone-photo-light, none));
+    background-image: var(
+      --ss-phone-photo-dark,
+      var(--ss-phone-photo-light, none)
+    );
   }
 
   /* Android: an even dark frame, a punch-hole camera instead of an island */
   .ss-phone[data-frame="android"] {
-    background: linear-gradient(150deg, #3a3b3f, #1d1e21 40%, #2f3034 70%, #1a1b1e);
+    background: linear-gradient(
+      150deg,
+      #3a3b3f,
+      #1d1e21 40%,
+      #2f3034 70%,
+      #1a1b1e
+    );
   }
 
   .ss-phone[data-frame="android"] .ss-phone__glass {
@@ -204,18 +244,22 @@
   .ss-phone[data-frame="soft"] {
     box-shadow:
       0 0 0 calc(var(--ps) * 1.5) rgba(10, 37, 64, 0.05),
-      0 calc(var(--ps) * 30) calc(var(--ps) * 60) calc(var(--ps) * -12) rgba(50, 50, 93, 0.18),
-      0 calc(var(--ps) * 18) calc(var(--ps) * 36) calc(var(--ps) * -18) rgba(0, 0, 0, 0.12);
+      0 calc(var(--ps) * 30) calc(var(--ps) * 60) calc(var(--ps) * -12)
+        rgba(50, 50, 93, 0.18),
+      0 calc(var(--ps) * 18) calc(var(--ps) * 36) calc(var(--ps) * -18)
+        rgba(0, 0, 0, 0.12);
   }
 
   .ss-phone[data-frame="soft"] .ss-phone__glass {
     background: #f6f9fc;
-    box-shadow: inset 0 calc(var(--ps) * -2.9) calc(var(--ps) * 7.2) rgba(10, 37, 64, 0.22);
+    box-shadow: inset 0 calc(var(--ps) * -2.9) calc(var(--ps) * 7.2)
+      rgba(10, 37, 64, 0.22);
   }
 
   .ss-stage[data-theme="dark"] .ss-phone[data-frame="soft"] .ss-phone__glass {
     background: #1c2433;
-    box-shadow: inset 0 calc(var(--ps) * -2.9) calc(var(--ps) * 7.2) rgba(0, 0, 0, 0.45);
+    box-shadow: inset 0 calc(var(--ps) * -2.9) calc(var(--ps) * 7.2)
+      rgba(0, 0, 0, 0.45);
   }
 
   .ss-phone__screen {
@@ -264,7 +308,11 @@
      switches to the Display cut, whose 9 has a straighter tail; name Text
      first, and ask the variable system font for text optics */
   .ss-phone__time {
-    font-family: "SF Pro Text", -apple-system, system-ui, sans-serif;
+    font-family:
+      "SF Pro Text",
+      -apple-system,
+      system-ui,
+      sans-serif;
     font-variation-settings: "opsz" 17;
     font-size: 17.67px;
     font-weight: 590;
@@ -288,7 +336,6 @@
     align-items: center;
     gap: 8px;
   }
-
 
   .ss-phone__glyph {
     display: block;
@@ -372,7 +419,7 @@
   }
 
   /* Under the clock instead, for a phone cropped by the stage's bottom edge */
-  .ss-lock__stack[data-at='top'] {
+  .ss-lock__stack[data-at="top"] {
     top: 290px;
     bottom: auto;
   }
@@ -434,7 +481,9 @@
   }
 
   @keyframes ss-banner-in {
-    from { transform: translateY(-110px); }
+    from {
+      transform: translateY(-110px);
+    }
   }
 
   .ss-notification__icon {
@@ -503,14 +552,14 @@
   /* Satellite: a phone beside a window. No controls, and notifications stack
      under the clock so a cropped phone still shows them. Everything stays at
      true iOS proportion: a notification is never scaled up to read. */
-  .ss-lock[data-size='satellite'] .ss-lock__stack {
+  .ss-lock[data-size="satellite"] .ss-lock__stack {
     top: 232px;
     bottom: auto;
   }
 
   /* No clock: the stack takes its place, just under the status bar, as
      Notification Center sits, rather than floating where the clock was */
-  .ss-lock[data-size='satellite'][data-clock='off'] .ss-lock__stack {
+  .ss-lock[data-size="satellite"][data-clock="off"] .ss-lock__stack {
     top: 74px;
   }
 
@@ -524,7 +573,9 @@
   /* A banner on a light screen needs its own edge: frosted white on white vanishes */
   .ss-phone:not([data-dark]) .ss-notification {
     background: rgba(255, 255, 255, 0.92);
-    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.12);
+    box-shadow:
+      0 0 0 0.5px rgba(0, 0, 0, 0.08),
+      0 8px 24px rgba(0, 0, 0, 0.12);
   }
 
   /* Minimal fidelity: the status bar time is a placeholder like any other word */

@@ -44,7 +44,10 @@
 
   /* Anything else in the row (a toggle, a chevron, a badge) trails on the
      first line's row, at the end, centered on the pair */
-  .ss-row > :not(.ss-row__lead):not(.ss-row__body):not(.ss-row__dot):not(.ss-row__preview) {
+  .ss-row
+    > :not(.ss-row__lead):not(.ss-row__body):not(.ss-row__dot):not(
+      .ss-row__preview
+    ) {
     grid-row: 1;
     align-self: center;
     justify-self: end;
@@ -101,7 +104,9 @@
   /* With a subtitle or preview lines the body holds the two-line pitch even
      when a line is a bar or shorter type, so rows in one list line up */
   .ss-row:has(.ss-row__subtitle, .ss-row__preview) .ss-row__body {
-    min-height: calc(var(--ss-row-line) + var(--ss-row-line-2) + var(--ss-row-gap));
+    min-height: calc(
+      var(--ss-row-line) + var(--ss-row-line-2) + var(--ss-row-gap)
+    );
   }
 
   .ss-row__head {
@@ -183,7 +188,9 @@
      it on the sender and subject) carries the dot with it by setting
      --ss-row-lead-h alone */
   .ss-row:has(.ss-row__preview) {
-    --ss-row-lead-h: calc(var(--ss-row-line) + var(--ss-row-line-2) * 2 + var(--ss-row-gap));
+    --ss-row-lead-h: calc(
+      var(--ss-row-line) + var(--ss-row-line-2) * 2 + var(--ss-row-gap)
+    );
   }
 
   .ss-row:has(.ss-row__preview) .ss-row__lead {

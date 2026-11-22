@@ -8,36 +8,41 @@ The helpers run in Node through `require()` and in a browser or worker through `
 
 `part(id, name, explosion)` creates a mesh with vertices, triangles and feature lines. Give `explosion` as an `[x, y, z]` translation from its assembled placement.
 
-| Helper | Inputs and result |
-| --- | --- |
-| `lathe(part, profile, options)` | Revolves a closed `[x, radius]` profile around X, or around world `axis` through point `at`. Inner segments form bores, a third value of `'h'` makes a point hexagonal and a crossing profile throws |
-| `ring(part, x, radius, options)` | Adds a circular feature line perpendicular to X, or a hexagonal one matching a lathe's `'h'` points with `hex: true` |
-| `helix(part, options)` | Adds a thread line from `x0` to `x1` with `radius` and `pitch`, plus optional `hand` of 1 or -1 and starting `phase` |
-| `spring(part, options)` | Builds closed wire around X from `radius`, `wire`, `turns`, `x0` and `x1`, starting at local +Y so whole turns end at the same angle |
-| `knurl(part, options)` | Adds crossing helices using `starts`, `pitch`, `radius`, `x0` and `x1` |
-| `screw(part, options)` | Builds a head, shank, thread lines and slot along X from `length`, `radius`, `headRadius`, `headHeight` and `pitch`, defaulting to 10, 1.5, 3, 2 and 0.8 |
-| `circle(part, center, radius, normal, options)` | Adds a closed circular feature line in the plane facing `normal`, with 144 `segments` to match a default lathe |
-| `ringPoints(center, radius, u, v, options)` | Samples an arc from `start` to `end` radians in orthonormal plane axes, to a `tolerance` of 0.008 model units. A full circle repeats its first point at the end |
-| `roundedRectangle(width, height, radius, options)` | Returns a rounded profile centered on the origin or on an `[x, y]` `center` |
-| `ringAngles(width, height, radius, options)` | Returns polar angles that crowd a rounded rectangle's corners, with `corner` and `side` sample counts defaulting to 12 and 24 per quarter |
-| `roundedRing(width, height, radius, options)` | Samples a rounded rectangle at given `angles` and height `z`, so rings of any size share one point count |
-| `loft(part, rings, options)` | Joins rings of equal point count into one surface; caps both ends by default, joins the last ring back to the first with `cyclic: true` and winds closed results outward |
-| `sweep(part, path, section, options)` | Carries a closed `[u, v]` section along a path of points, for handles, cables and tubes. `closed: true` joins the path into a ring, and `lines` defaults to `'ends'` or `'none'` when closed |
-| `polyline(part, points, options)` | Adds a feature line through points, closing it with `closed: true` |
-| `box(part, min, max, options)` | Adds an axis-aligned block between two corners, with rounded vertical edges when given `radius` |
-| `extrude(part, profile, options)` | Gives a simple XY polygon a positive Z `depth`, with concave outlines and real openings from a `holes` array of profiles inside it |
-| `transform(part, frame)` | Places mesh vertices, feature lines and explosion directions in one rigid frame |
-| `merge(target, source)` | Copies a positioned construction piece into one complete part, preserving the target's identity and explosion |
-| `piece()` | Returns a part named `Construction piece` for building something to merge |
-| `along(axis)` | Returns the frame that turns local X onto world `x`, `y` or `z`, for spreading into `transform` |
-| `plane(name)` | Returns the frame that lays a local XY profile in world `xy`, `xz` or `yz`, with extrusion depth along `+z`, `-y` or `+x` |
-| `line(part, a, b, role)` | Adds one feature segment between two `[x, y, z]` points |
+| Helper                                             | Inputs and result                                                                                                                                                                                    |
+| -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `lathe(part, profile, options)`                    | Revolves a closed `[x, radius]` profile around X, or around world `axis` through point `at`. Inner segments form bores, a third value of `'h'` makes a point hexagonal and a crossing profile throws |
+| `ring(part, x, radius, options)`                   | Adds a circular feature line perpendicular to X, or a hexagonal one matching a lathe's `'h'` points with `hex: true`                                                                                 |
+| `helix(part, options)`                             | Adds a thread line from `x0` to `x1` with `radius` and `pitch`, plus optional `hand` of 1 or -1 and starting `phase`                                                                                 |
+| `spring(part, options)`                            | Builds closed wire around X from `radius`, `wire`, `turns`, `x0` and `x1`, starting at local +Y so whole turns end at the same angle                                                                 |
+| `knurl(part, options)`                             | Adds crossing helices using `starts`, `pitch`, `radius`, `x0` and `x1`                                                                                                                               |
+| `screw(part, options)`                             | Builds a head, shank, thread lines and slot along X from `length`, `radius`, `headRadius`, `headHeight` and `pitch`, defaulting to 10, 1.5, 3, 2 and 0.8                                             |
+| `circle(part, center, radius, normal, options)`    | Adds a closed circular feature line in the plane facing `normal`, with 144 `segments` to match a default lathe                                                                                       |
+| `ringPoints(center, radius, u, v, options)`        | Samples an arc from `start` to `end` radians in orthonormal plane axes, to a `tolerance` of 0.008 model units. A full circle repeats its first point at the end                                      |
+| `roundedRectangle(width, height, radius, options)` | Returns a rounded profile centered on the origin or on an `[x, y]` `center`                                                                                                                          |
+| `ringAngles(width, height, radius, options)`       | Returns polar angles that crowd a rounded rectangle's corners, with `corner` and `side` sample counts defaulting to 12 and 24 per quarter                                                            |
+| `roundedRing(width, height, radius, options)`      | Samples a rounded rectangle at given `angles` and height `z`, so rings of any size share one point count                                                                                             |
+| `loft(part, rings, options)`                       | Joins rings of equal point count into one surface; caps both ends by default, joins the last ring back to the first with `cyclic: true` and winds closed results outward                             |
+| `sweep(part, path, section, options)`              | Carries a closed `[u, v]` section along a path of points, for handles, cables and tubes. `closed: true` joins the path into a ring, and `lines` defaults to `'ends'` or `'none'` when closed         |
+| `polyline(part, points, options)`                  | Adds a feature line through points, closing it with `closed: true`                                                                                                                                   |
+| `box(part, min, max, options)`                     | Adds an axis-aligned block between two corners, with rounded vertical edges when given `radius`                                                                                                      |
+| `extrude(part, profile, options)`                  | Gives a simple XY polygon a positive Z `depth`, with concave outlines and real openings from a `holes` array of profiles inside it                                                                   |
+| `transform(part, frame)`                           | Places mesh vertices, feature lines and explosion directions in one rigid frame                                                                                                                      |
+| `merge(target, source)`                            | Copies a positioned construction piece into one complete part, preserving the target's identity and explosion                                                                                        |
+| `piece()`                                          | Returns a part named `Construction piece` for building something to merge                                                                                                                            |
+| `along(axis)`                                      | Returns the frame that turns local X onto world `x`, `y` or `z`, for spreading into `transform`                                                                                                      |
+| `plane(name)`                                      | Returns the frame that lays a local XY profile in world `xy`, `xz` or `yz`, with extrusion depth along `+z`, `-y` or `+x`                                                                            |
+| `line(part, a, b, role)`                           | Adds one feature segment between two `[x, y, z]` points                                                                                                                                              |
 
 ```js
-const G = require('./tools/teardown/assets/geometry.js');
-const sleeve = G.part('sleeve', 'Knurled sleeve', [25, 0, 0]);
-G.lathe(sleeve, [[0, 5], [30, 5], [30, 3], [0, 3]]);
-G.knurl(sleeve, {x0: 2, x1: 28, radius: 5.01, starts: 12, pitch: 40});
+const G = require("./tools/teardown/assets/geometry.js");
+const sleeve = G.part("sleeve", "Knurled sleeve", [25, 0, 0]);
+G.lathe(sleeve, [
+  [0, 5],
+  [30, 5],
+  [30, 3],
+  [0, 3],
+]);
+G.knurl(sleeve, { x0: 2, x1: 28, radius: 5.01, starts: 12, pitch: 40 });
 ```
 
 `lathe` without `axis` or `at`, `ring`, `helix`, `knurl`, `spring` and `screw` all work in local X. On a part already placed elsewhere, build them on a `piece()`, transform it the same way and `merge` it.
@@ -63,8 +68,15 @@ Cap triangulation preserves concave notches. Curved profiles need sampled points
 Pass `holes` for pivot holes, mounting holes and windows. Each hole is its own ordered polygon inside the profile; the extrusion walls it and keeps it open through the part.
 
 ```js
-const disc = (cx, r) => Array.from({length: 48}, (_, i) => [cx + r * Math.cos(i * Math.PI / 24), r * Math.sin(i * Math.PI / 24)]);
-G.extrude(lever, G.roundedRectangle(80, 16, 8), {depth: 3, holes: [disc(-30, 4), disc(30, 3)]});
+const disc = (cx, r) =>
+  Array.from({ length: 48 }, (_, i) => [
+    cx + r * Math.cos((i * Math.PI) / 24),
+    r * Math.sin((i * Math.PI) / 24),
+  ]);
+G.extrude(lever, G.roundedRectangle(80, 16, 8), {
+  depth: 3,
+  holes: [disc(-30, 4), disc(30, 3)],
+});
 ```
 
 ## Place each part once
@@ -74,9 +86,18 @@ G.extrude(lever, G.roundedRectangle(80, 16, 8), {depth: 3, holes: [disc(-30, 4),
 Explosion vectors rotate with that frame but do not receive its origin translation. Build each part with zero explosion, place it, then assign `part.explosion` in world coordinates.
 
 ```js
-const pin = G.part('pin', 'Hinge pin');
-G.lathe(pin, [[0, 0], [0, 1.2], [14, 1.2], [14, 0]], {creaseAngle: 20});
-G.transform(pin, {origin: [0, 8, 2], ...G.along('z')});
+const pin = G.part("pin", "Hinge pin");
+G.lathe(
+  pin,
+  [
+    [0, 0],
+    [0, 1.2],
+    [14, 1.2],
+    [14, 0],
+  ],
+  { creaseAngle: 20 },
+);
+G.transform(pin, { origin: [0, 8, 2], ...G.along("z") });
 pin.explosion = [0, 0, 30];
 ```
 
@@ -90,12 +111,12 @@ Keep such junctions away from a silhouette. Where a junction curve grazes one, s
 
 Use this mesh contract when a construction needs surfaces beyond the helpers:
 
-| Field | Representation |
-| --- | --- |
-| `vertices` | Finite `[x, y, z]` positions in assembled model coordinates |
-| `triangles` | Three zero-based vertex indices per face, wound toward the surface's outside |
-| `lines` | Feature segments with `a` and `b` endpoints and a line `role` |
-| `explosion` | A translation applied to the complete part, independent of its assembled position |
+| Field         | Representation                                                                    |
+| ------------- | --------------------------------------------------------------------------------- |
+| `vertices`    | Finite `[x, y, z]` positions in assembled model coordinates                       |
+| `triangles`   | Three zero-based vertex indices per face, wound toward the surface's outside      |
+| `lines`       | Feature segments with `a` and `b` endpoints and a line `role`                     |
+| `explosion`   | A translation applied to the complete part, independent of its assembled position |
 | `transparent` | Optional; `true` for glass, which draws its own edges but hides nothing behind it |
 
 The renderer throws when a triangle references a missing vertex. An edge used by only one triangle draws as an outline, so an open skin keeps its rim and an unshared seam shows up as a stray line.
@@ -105,14 +126,17 @@ A part with feature lines and no triangles still fits the page, which suits a ma
 ## Project visible ink from the mesh
 
 ```js
-const {render} = require('./tools/teardown/assets/projection.js');
-const {markup} = render([sleeve], {explosion: 0.6, isolated: null});
+const { render } = require("./tools/teardown/assets/projection.js");
+const { markup } = render([sleeve], { explosion: 0.6, isolated: null });
 ```
 
 The model owns its camera. The viewer passes only `explosion`, `fitExplosion`, `isolated`, `fill` and `annotate`, so spread those options and add the camera:
 
 ```js
-return TechnicalProjection.render(parts, {...options, camera: {azimuth: -128, elevation: 30, roll: 0}});
+return TechnicalProjection.render(parts, {
+  ...options,
+  camera: { azimuth: -128, elevation: 30, roll: 0 },
+});
 ```
 
 Angles use degrees. [geometry.md](geometry.md) explains choosing them under **Know which way the camera looks**.
@@ -144,8 +168,8 @@ Regenerate visibility after changing geometry, spacing or isolation. Previously 
 Pass `trails` to `render` for centerlines and insertion paths. Each trail has model-space ends `a` and `b` plus optional part IDs `from` and `to` whose explosion moves that end:
 
 ```js
-const trails = [{a: [0, 0, 25], b: [0, 0, 25], from: 'screw', to: 'frame'}];
-return TechnicalProjection.render(parts, {...options, camera, trails});
+const trails = [{ a: [0, 0, 25], b: [0, 0, 25], from: "screw", to: "frame" }];
+return TechnicalProjection.render(parts, { ...options, camera, trails });
 ```
 
 Trails use the `axis` role by default, hide behind solid parts and render in a `data-trails` group outside every part. A trail between two parts collapses at zero spacing, and isolating a part omits every trail.

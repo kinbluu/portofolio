@@ -4,11 +4,11 @@
 
 For models built on the bundled helpers, run the copied proof script from the project folder, where `drawing.json` lives:
 
-| Command | Use it |
-| --- | --- |
-| `node tools/teardown/scripts/proof.cjs drawing.json proof/ --quick` | While iterating, for default parameters assembled and exploded in a few seconds |
-| `node tools/teardown/scripts/proof.cjs drawing.json proof/ --view=exploded --crop=x,y,w,h` | For the close-up pass, a 2000 px crop of a sheet rectangle given in millimeters |
-| `node tools/teardown/scripts/proof.cjs drawing.json proof/` | Before delivery, for every parameter extreme, 150% spacing and the occlusion check |
+| Command                                                                                    | Use it                                                                             |
+| ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| `node tools/teardown/scripts/proof.cjs drawing.json proof/ --quick`                        | While iterating, for default parameters assembled and exploded in a few seconds    |
+| `node tools/teardown/scripts/proof.cjs drawing.json proof/ --view=exploded --crop=x,y,w,h` | For the close-up pass, a 2000 px crop of a sheet rectangle given in millimeters    |
+| `node tools/teardown/scripts/proof.cjs drawing.json proof/`                                | Before delivery, for every parameter extreme, 150% spacing and the occlusion check |
 
 Add `--only=id` to proof one drawing, `--set=key=value` to proof a pose other than the defaults or `--no-png` to skip rasterizing. A full run with more than two sheets also writes `contact.png`, every sheet on one page for a first look. `--view` accepts `assembled`, `exploded` or `spread`. Sheets use the viewer's Technical linework and fit each spacing tightly.
 
@@ -34,15 +34,15 @@ Check the preview against the reference's visual grammar. Judge line density, pa
 
 ## Trace every correspondence
 
-| Drawing type | Evidence to check |
-| --- | --- |
-| Multiple views | Feature counts and shared coordinates agree across projections |
-| Section | Every hatch region is solid material at the stated cut; openings remain clear |
-| Dimensioned drawing | Every label comes from a model parameter with known units |
-| Parameterized object | Minimum, default and maximum settings preserve mating features, quantities and corresponding views |
-| Isolated part | Previously occluded geometry reappears and the export contains only the selected component |
-| Exploded assembly | Zero spacing reconstructs the assembly; intermediate and maximum spacing keep mating anchors on their insertion axes |
-| Numbered assembly | Each balloon resolves to one item; every listed item is represented; quantities match the assembly |
+| Drawing type         | Evidence to check                                                                                                    |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Multiple views       | Feature counts and shared coordinates agree across projections                                                       |
+| Section              | Every hatch region is solid material at the stated cut; openings remain clear                                        |
+| Dimensioned drawing  | Every label comes from a model parameter with known units                                                            |
+| Parameterized object | Minimum, default and maximum settings preserve mating features, quantities and corresponding views                   |
+| Isolated part        | Previously occluded geometry reappears and the export contains only the selected component                           |
+| Exploded assembly    | Zero spacing reconstructs the assembly; intermediate and maximum spacing keep mating anchors on their insertion axes |
+| Numbered assembly    | Each balloon resolves to one item; every listed item is represented; quantities match the assembly                   |
 
 An intentionally omitted item needs a note. A parts list cannot quietly count hardware that the drawing never represents.
 

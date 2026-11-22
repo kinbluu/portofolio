@@ -14,8 +14,16 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(70% 45% at 50% 0%, rgba(10, 132, 255, 0.1), transparent 70%),
-    radial-gradient(60% 40% at 50% 100%, rgba(10, 132, 255, 0.06), transparent 70%);
+    radial-gradient(
+      70% 45% at 50% 0%,
+      rgba(10, 132, 255, 0.1),
+      transparent 70%
+    ),
+    radial-gradient(
+      60% 40% at 50% 100%,
+      rgba(10, 132, 255, 0.06),
+      transparent 70%
+    );
 }
 
 .im-phone {
@@ -54,7 +62,7 @@
 
 /* The bar runs up behind the status bar, as iOS's navigation bar does */
 .im-head::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: -54px 0 100%;
   background: inherit;

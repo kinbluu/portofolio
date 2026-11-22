@@ -25,12 +25,12 @@ Collect the visible silhouette, component boundaries, fastening points, repeated
 
 Keep the evidence record in `evidence.md` beside the drawing source. Give each feature group a row classified by one of these evidence kinds, then add the commands that rebuild and proof the drawing below the table:
 
-| Evidence | How to use it |
-| --- | --- |
-| Supplied geometry or dimensions | Preserve them and identify the source |
-| Features visible in a photograph | Reconstruct their proportions, marking them as estimated |
-| Hidden or unspecified construction | Omit it, request the missing reference or identify it as illustrative |
-| A fictional object requested by the user | Design a coherent assembly and label the sheet as a concept |
+| Evidence                                                          | How to use it                                                                     |
+| ----------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Supplied geometry or dimensions                                   | Preserve them and identify the source                                             |
+| Features visible in a photograph                                  | Reconstruct their proportions, marking them as estimated                          |
+| Hidden or unspecified construction                                | Omit it, request the missing reference or identify it as illustrative             |
+| A fictional object requested by the user                          | Design a coherent assembly and label the sheet as a concept                       |
 | A concept with no physical form, such as pixels, layers or memory | Give each idea a part, build it from thin plates and label the sheet as a concept |
 
 Choose the least speculative route that still fulfils the request. A styling reference alone cannot establish another object's internals or dimensions.
@@ -43,12 +43,12 @@ This step is done when `evidence.md` classifies every feature group and names th
 
 Choose the smallest view set that answers the request. Read the conventions for each chosen view in [views-and-annotations.md](views-and-annotations.md), and read [exploded-views.md](exploded-views.md) before setting any explosion vector.
 
-| The drawing needs to explain | Start with |
-| --- | --- |
-| How components fit together | An exploded axonometric view, with the assembled view one switch away |
-| The external shape of one object | One parallel pictorial view, with a detail inset where needed |
-| Shape and specified dimensions | Aligned orthographic views |
-| An internal passage or interface | A section through that feature |
+| The drawing needs to explain                                               | Start with                                                                        |
+| -------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| How components fit together                                                | An exploded axonometric view, with the assembled view one switch away             |
+| The external shape of one object                                           | One parallel pictorial view, with a detail inset where needed                     |
+| Shape and specified dimensions                                             | Aligned orthographic views                                                        |
+| An internal passage or interface                                           | A section through that feature                                                    |
 | How a concept is layered, such as subpixels or composited interface layers | An exploded stack of plates, one part per layer, filled so color tells them apart |
 
 The bundled viewer switches between assembled and exploded views for any drawing with more than one part.
@@ -106,21 +106,21 @@ This step is done when the available controls work and every download preserves 
 
 ## Before you finish
 
-| You notice | Correct it |
-| --- | --- |
-| All edges show through every surface | Resolve visibility before adding more detail |
-| A rib or hole count changes between views | Generate both views from the same inventory and geometry |
-| The separated parts look like unrelated floating objects | Revisit their assembled placements and explosion paths |
-| The proof warns that a part shows less than half its linework | Lengthen its explosion path, move it to a parallel row or turn the camera |
-| Identical parts stack on one column of the page | Turn the camera so no two sit on one line through the view direction |
-| A smooth turned surface shows concentric stripes | Give `lathe` a `creaseAngle`, or `loft` the `lines` option |
+| You notice                                                              | Correct it                                                                       |
+| ----------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| All edges show through every surface                                    | Resolve visibility before adding more detail                                     |
+| A rib or hole count changes between views                               | Generate both views from the same inventory and geometry                         |
+| The separated parts look like unrelated floating objects                | Revisit their assembled placements and explosion paths                           |
+| The proof warns that a part shows less than half its linework           | Lengthen its explosion path, move it to a parallel row or turn the camera        |
+| Identical parts stack on one column of the page                         | Turn the camera so no two sit on one line through the view direction             |
+| A smooth turned surface shows concentric stripes                        | Give `lathe` a `creaseAngle`, or `loft` the `lines` option                       |
 | A circle seen at a steep angle keeps corners at the ends of its ellipse | Give it more segments; the renderer only rounds vertices that turn less than 35° |
-| Balloons appear inside cavities or leaders cross labels | Move the callout lane and reconnect the anchored endpoints |
-| A gallery, sidebar or framed sheet surrounds the default drawing | Return to the bundled blank-page viewer in [viewer-assets.md](viewer-assets.md) |
-| A title block claims a scale the fitted view cannot preserve | Use `NTS`, or compute and verify the physical output scale |
-| A photograph becomes an unexplained detailed interior | Remove unsupported construction or mark it as illustrative |
-| Slots merge into black bars in the preview | Enlarge the view, simplify the feature or make a detail inset |
-| A filled part loses patches of its fill | Close each shell and wind its triangles consistently |
+| Balloons appear inside cavities or leaders cross labels                 | Move the callout lane and reconnect the anchored endpoints                       |
+| A gallery, sidebar or framed sheet surrounds the default drawing        | Return to the bundled blank-page viewer in [viewer-assets.md](viewer-assets.md)  |
+| A title block claims a scale the fitted view cannot preserve            | Use `NTS`, or compute and verify the physical output scale                       |
+| A photograph becomes an unexplained detailed interior                   | Remove unsupported construction or mark it as illustrative                       |
+| Slots merge into black bars in the preview                              | Enlarge the view, simplify the feature or make a detail inset                    |
+| A filled part loses patches of its fill                                 | Close each shell and wind its triangles consistently                             |
 
 ## Deliver the drawing with its source
 

@@ -21,11 +21,11 @@ one — it tracks the MotionScore scoring engine as it evolves.
 
 ## If the read is refused
 
--   **Not signed in**: tell the user to sign in to the Motion+ MCP server from
-    the editor's MCP settings (in Cursor: Settings, MCP, Motion+, Log in).
--   **Signed in without Motion+**: MotionScore audits are a Motion+
-    capability. Say so plainly and mention https://motion.dev/plus once. Do
-    not improvise a MotionScore grade from general knowledge.
+- **Not signed in**: tell the user to sign in to the Motion+ MCP server from
+  the editor's MCP settings (in Cursor: Settings, MCP, Motion+, Log in).
+- **Signed in without Motion+**: MotionScore audits are a Motion+
+  capability. Say so plainly and mention https://motion.dev/plus once. Do
+  not improvise a MotionScore grade from general knowledge.
 
 ## Runtime audits
 

@@ -24,7 +24,8 @@
     transition:
       transform var(--ss-expand-ms) var(--ss-expand-ease),
       clip-path var(--ss-expand-ms) var(--ss-expand-ease),
-      background-color calc(var(--ss-expand-ms) * 0.25) ease calc(var(--ss-expand-ms) * 0.7);
+      background-color calc(var(--ss-expand-ms) * 0.25) ease
+        calc(var(--ss-expand-ms) * 0.7);
   }
 
   /* Opening, the app's surface rises from the first frame as the face fades,
@@ -43,12 +44,14 @@
      is nearly the face again */
   .ss-expand[data-launch] > .ss-expand__content {
     opacity: 0;
-    transition: opacity calc(var(--ss-expand-ms) * 0.25) ease calc(var(--ss-expand-ms) * 0.6);
+    transition: opacity calc(var(--ss-expand-ms) * 0.25) ease
+      calc(var(--ss-expand-ms) * 0.6);
   }
 
   .ss-expand[data-launch][data-open] > .ss-expand__content {
     opacity: 1;
-    transition: opacity calc(var(--ss-expand-ms) * 0.4) ease calc(var(--ss-expand-ms) * 0.3);
+    transition: opacity calc(var(--ss-expand-ms) * 0.4) ease
+      calc(var(--ss-expand-ms) * 0.3);
   }
 
   /* The closed thing's own face, drawn at its own size and scaled with the
@@ -60,7 +63,8 @@
     left: 0;
     transform-origin: 0 0;
     pointer-events: none;
-    transition: opacity calc(var(--ss-expand-ms) * 0.3) ease calc(var(--ss-expand-ms) * 0.65);
+    transition: opacity calc(var(--ss-expand-ms) * 0.3) ease
+      calc(var(--ss-expand-ms) * 0.65);
   }
 
   /* It is placed by the closed thing's measured box, so that box is all it

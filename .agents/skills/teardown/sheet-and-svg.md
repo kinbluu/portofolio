@@ -12,14 +12,14 @@ Use plain white paper and near-black ink, such as `#202020`, for a clean assembl
 
 Object linework takes its widths and axis dash from the presets in [assets/sheet.js](assets/sheet.js). Start the marks added around it from these values, a recipe rather than a drafting standard:
 
-| Mark | Paper size |
-| --- | --- |
-| Leaders and dimension lines | 0.16 mm stroke |
-| Hatching | 0.13 mm stroke |
-| Centerlines and trails | 0.13 mm dashed stroke, the `axis` role |
-| Main title | 5 mm text |
-| Item numbers and ordinary labels | 3 mm text |
-| Secondary metadata | 2.5 mm text |
+| Mark                             | Paper size                             |
+| -------------------------------- | -------------------------------------- |
+| Leaders and dimension lines      | 0.16 mm stroke                         |
+| Hatching                         | 0.13 mm stroke                         |
+| Centerlines and trails           | 0.13 mm dashed stroke, the `axis` role |
+| Main title                       | 5 mm text                              |
+| Item numbers and ordinary labels | 3 mm text                              |
+| Secondary metadata               | 2.5 mm text                            |
 
 Achieve hierarchy through width before reducing opacity.
 
@@ -90,8 +90,8 @@ Paste `render` markup into `views` as it comes out. Its paths carry `data-line-r
 Generate the role rules where the shell's comment sits, from the sheet module rather than copied numbers:
 
 ```js
-const SHEET = require('./tools/teardown/assets/sheet.js');
-const roles = SHEET.css('technical');
+const SHEET = require("./tools/teardown/assets/sheet.js");
+const roles = SHEET.css("technical");
 ```
 
 Generate projected coordinates directly in sheet space when possible. Nested scale transforms otherwise multiply stroke widths along with geometry. To inset a rendered view at a smaller size, wrap its markup in a translate and scale transform and divide its stroke widths by that scale.

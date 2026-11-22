@@ -12,17 +12,17 @@ When several drawings are requested, use a small selector. When several views he
 
 Provide these controls:
 
-| Control | Behavior |
-| --- | --- |
-| Zoom out and Zoom in | Change viewing magnification without changing the drawing |
-| Reset | Restore the drawing's view, settings, colors and fitted zoom. Zero also fits the sheet, and the fit recalculates when the viewport changes |
-| Appearance | Toggle light and dark mode, with a System option in settings |
-| Color | Open a line-hue slider for the whole drawing or one part, and a reset action |
-| Drawing settings | Choose linework, assembly spacing and model parameters |
-| Parts | Select, isolate, color or export a complete component |
-| Download SVG | Save the editable vector source |
-| Download PNG | Save the full sheet at the stated pixel dimensions |
-| Download PDF | Save the full vector sheet at its physical page size |
+| Control              | Behavior                                                                                                                                   |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Zoom out and Zoom in | Change viewing magnification without changing the drawing                                                                                  |
+| Reset                | Restore the drawing's view, settings, colors and fitted zoom. Zero also fits the sheet, and the fit recalculates when the viewport changes |
+| Appearance           | Toggle light and dark mode, with a System option in settings                                                                               |
+| Color                | Open a line-hue slider for the whole drawing or one part, and a reset action                                                               |
+| Drawing settings     | Choose linework, assembly spacing and model parameters                                                                                     |
+| Parts                | Select, isolate, color or export a complete component                                                                                      |
+| Download SVG         | Save the editable vector source                                                                                                            |
+| Download PNG         | Save the full sheet at the stated pixel dimensions                                                                                         |
+| Download PDF         | Save the full vector sheet at its physical page size                                                                                       |
 
 Show the zoom percentage and bound its range. A useful starting range is 25–400% of fitted size.
 

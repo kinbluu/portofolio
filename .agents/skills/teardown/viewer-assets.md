@@ -10,21 +10,25 @@ Create a JSON configuration beside the model scripts. Paths resolve relative to 
 {
   "dependencies": "node_modules",
   "modelScripts": ["model.js"],
-  "drawings": [{
-    "id": "sleeve",
-    "title": "Knurled sleeve",
-    "description": "Illustrative sleeve concept with a through bore.",
-    "parts": [{"id": "sleeve", "name": "Knurled sleeve"}],
-    "parameters": [{
-      "key": "length",
-      "label": "Sleeve length",
-      "min": 20,
-      "max": 40,
-      "default": 30,
-      "step": 1,
-      "unit": "mm"
-    }]
-  }]
+  "drawings": [
+    {
+      "id": "sleeve",
+      "title": "Knurled sleeve",
+      "description": "Illustrative sleeve concept with a through bore.",
+      "parts": [{ "id": "sleeve", "name": "Knurled sleeve" }],
+      "parameters": [
+        {
+          "key": "length",
+          "label": "Sleeve length",
+          "min": 20,
+          "max": 40,
+          "default": 30,
+          "step": 1,
+          "unit": "mm"
+        }
+      ]
+    }
+  ]
 }
 ```
 
@@ -60,14 +64,22 @@ Preserve existing registrations when the viewer includes multiple model scripts.
 self.DrawingModels ??= {};
 self.DrawingModels.sleeve = (parameters, options) => {
   const G = TechnicalGeometry;
-  const p = G.part('sleeve', 'Knurled sleeve', [25, 0, 0]);
+  const p = G.part("sleeve", "Knurled sleeve", [25, 0, 0]);
   const length = parameters.length;
   if (!Number.isFinite(length) || length < 20 || length > 40) {
-    throw Error('Length must be 20–40');
+    throw Error("Length must be 20–40");
   }
-  G.lathe(p, [[0, 5], [length, 5], [length, 3], [0, 3]]);
-  G.knurl(p, {x0: 2, x1: length - 2, radius: 5.01, starts: 12, pitch: 40});
-  return TechnicalProjection.render([p], {...options, camera: {azimuth: -128, elevation: 30, roll: 0}});
+  G.lathe(p, [
+    [0, 5],
+    [length, 5],
+    [length, 3],
+    [0, 3],
+  ]);
+  G.knurl(p, { x0: 2, x1: length - 2, radius: 5.01, starts: 12, pitch: 40 });
+  return TechnicalProjection.render([p], {
+    ...options,
+    camera: { azimuth: -128, elevation: 30, roll: 0 },
+  });
 };
 ```
 

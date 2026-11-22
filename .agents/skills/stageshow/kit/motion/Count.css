@@ -38,7 +38,13 @@
     vertical-align: baseline;
     /* The window's edges soften a touch, so a figure passing them is never
        sliced; the figure at rest sits inside the clear middle */
-    mask-image: linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      #000 8%,
+      #000 92%,
+      transparent
+    );
   }
 
   .ss-count__strip {

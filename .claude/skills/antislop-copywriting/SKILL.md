@@ -1,8 +1,9 @@
 ---
 name: antislop-copywriting
 description: "Copy and text skill for antislop. Use when writing or editing prose: headlines, tone, CTAs, and anti-AI-writing patterns. Load with the core."
-allowed-tools: Read Write Edit Glob Grep
+allowed-tools: Read, Write, Edit, Glob, Grep
 ---
+
 # antislop-copywriting
 
 > Anti Slop: Rules for AI Coding Agents. Copy & Text skill
@@ -22,7 +23,7 @@ allowed-tools: Read Write Edit Glob Grep
 
 ### Empty AI Vocabulary
 
-- **The pattern:** verbs and abstract nouns stacked to sound impressive without saying anything: *unlock, elevate, empower, delve, showcase, testament, landscape (abstract), journey, robust, game-changer, next-level, seamless, cutting-edge, revolutionary*.
+- **The pattern:** verbs and abstract nouns stacked to sound impressive without saying anything: _unlock, elevate, empower, delve, showcase, testament, landscape (abstract), journey, robust, game-changer, next-level, seamless, cutting-edge, revolutionary_.
 - **Why it reads as AI:** these words appear far more often in machine-written text. They signal intent to impress, not intent to inform, and they are the fastest way to mark a page as AI-generated.
 - **Before:**
   > Unlock the power of seamless collaboration to elevate your team's journey to the next level.
@@ -100,6 +101,16 @@ allowed-tools: Read Write Edit Glob Grep
   > Next.js caches data at multiple layers, including request memoization, the data cache, and the router cache.
 - **Rule:** R-36.
 
+### Temporal Runway Clichés
+
+- **The pattern:** opening a piece, section, or paragraph with a sweeping temporal generalization: "In today's fast-paced world", "In an era of rapid technological disruption", "In today's ever-evolving digital landscape", "In an increasingly connected world".
+- **Why it reads as AI:** it is empty runway. It establishes a broad, indisputable setting before saying an ordinary thing, padding word count and delaying the real subject. Real writers start directly with the subject itself.
+- **Before:**
+  > In today's fast-paced digital landscape, engineering teams struggle to keep internal documentation fresh and accurate.
+- **After:**
+  > Engineering teams struggle to keep internal documentation fresh and accurate.
+- **Rule:** R-16, R-36.
+
 ### All-Caps Emphasis
 
 - **The pattern:** a whole sentence, clause, or phrase in ALL CAPS inside a paragraph to shout emphasis: "The launch is ready and WE NEED TO MOVE NOW before the window closes."
@@ -175,6 +186,16 @@ allowed-tools: Read Write Edit Glob Grep
   > The old rules no longer applied, and every page had to be designed from scratch.
 - **Rule:** R-36.
 
+### Theatrical Takeaways
+
+- **The pattern:** dramatic single-line coaching commands and conclusion-labeling: "Read that again.", "Let that sink in.", "The message is clear:", "That distinction matters.", "The takeaway is simple:", "Here is the bottom line:".
+- **Why it reads as AI:** it directs the reader how to feel or react to an ordinary statement instead of letting the claim stand on its own evidence. It is stage direction pretending to be copywriting.
+- **Before:**
+  > Automated rollbacks cut customer downtime by 40%. Read that again. Let that sink in.
+- **After:**
+  > Automated rollbacks cut customer downtime by 40%.
+- **Rule:** R-36.
+
 ### Synonym Cycling
 
 - **The pattern:** swapping synonyms to avoid repeating a word: "the protagonist faces a challenge, the main character must adapt, the central figure persists".
@@ -231,9 +252,9 @@ allowed-tools: Read Write Edit Glob Grep
 
 ### Em Dashes
 
-- **The pattern:** the em dash character (`—`) used as an aside or connector: *"institutions — not the people — continue"*.
+- **The pattern:** the em dash character (`—`) used as an aside or connector: _"institutions — not the people — continue"_.
 - **Why it reads as AI:** it is one of the most reliable AI tells, and the core bans it outright.
-- **Rule:** R-02 forbids the em dash in any text. Replace each one, in rough order of preference: a period (start a new sentence), a comma (a tight aside), a colon (introduce an explanation), parentheses (a true aside), or restructure the sentence. Also catch spaced em dashes (` — `) and double hyphens (` -- `) used the same way.
+- **Rule:** R-02 forbids the em dash in any text. Replace each one, in rough order of preference: a period (start a new sentence), a comma (a tight aside), a colon (introduce an explanation), parentheses (a true aside), or restructure the sentence. Also catch spaced em dashes (`—`) and double hyphens (`--`) used the same way.
 - **Before:**
   > The policy — announced without warning — affects thousands of workers.
 - **After:**
@@ -280,6 +301,19 @@ allowed-tools: Read Write Edit Glob Grep
 - **Rule:** R-36.
 - **Carve-out:** the `- **Tell:**` / `- **Why:**` / `- **Fix:**` headers that structure every antislop skill entry are a documentation convention, not the header-restates-the-item habit above, and are exempt.
 
+### Title Case in List Elements
+
+- **The pattern:** capitalizing every word in bullet items, feature cards, or body list entries: "- Comprehensive Security Audits Across All Repositories".
+- **Why it reads as AI:** models default to title case for list elements and short blocks to make them feel official. Sentence case is easier to read and sounds like a human wrote it.
+- **Before:**
+  > - Comprehensive Security Audits Across All Repositories
+  > - Instant Notifications Delivered Right To Your Team's Slack Channel
+- **After:**
+  > - Comprehensive security audits across all repositories
+  > - Instant notifications delivered to your team's Slack channel
+- **Rule:** R-36.
+- **Not a ban:** proper nouns, acronyms, and genuine publication titles keep their capitalization. The tell is capitalizing every word in a regular list item or feature bullet.
+
 ### Emojis in Headings
 
 - **The pattern:** decoration emojis leading headings or bullets: 🚀 Launch, 💡 Key insight, ✅ Next steps.
@@ -318,7 +352,7 @@ A clean human writer can hit several patterns above without any AI involvement. 
 - **Perfect grammar and consistent style.** Many writers are professionals or have been edited. Polish does not equal AI.
 - **Mixed casual and formal registers.** This often signals a real person, not a chatbot.
 - **"Bland" or "robotic" prose.** AI prose has specific tells. Generic dryness without those tells is just dry writing.
-- **Formal vocabulary.** AI overuses *specific* words (see Empty AI Vocabulary), not all fancy words. Do not flatten a precise word just because it sounds brainy.
+- **Formal vocabulary.** AI overuses _specific_ words (see Empty AI Vocabulary), not all fancy words. Do not flatten a precise word just because it sounds brainy.
 - **Common transition words in isolation.** One "however" or "additionally" is not a tell. They count only when piled up.
 - **Curly quotes alone.** macOS, Word, and most CMSes auto-curl by default. Curly quotes count only when stacked with other tells.
 - **Em dashes alone.** Editors and journalists use them. An em dash is evidence only inside a cluster.
@@ -367,6 +401,8 @@ Run these alongside the core Delivery Gate when the task is copy work. Every lin
 - [ ] No all-caps emphasis clauses: emphasis written into the sentence, not shouted with caps (R-36)
 - [ ] Every sentence names its actor: no actorless passive, no abstraction given a human verb, where a real subject was available (R-02, R-16)
 - [ ] CTAs specific to the action, not generic templates (R-15)
-- [ ] No AI-rhythm tells: no forced rule of three, no negative parallelism, no staccato drama, no aphorism formulas, no false ranges (R-36)
+- [ ] No AI-rhythm tells: no forced rule of three, no negative parallelism, no staccato drama, no theatrical takeaways, no aphorism formulas, no false ranges (R-36)
+- [ ] No temporal runway clichés ("in today's fast-paced world", "in an increasingly digital landscape") padding openings (R-16, R-36)
+- [ ] List items and bullet points use natural sentence case, not mechanical title case on every word (R-36)
 - [ ] Voice present: the copy has a real voice (the user's sample or a clearly chosen tone), not a sterile default (R-37)
 - [ ] Read aloud: the copy sounds like a person wrote it, not like a model padded it

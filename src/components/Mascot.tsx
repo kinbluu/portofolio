@@ -89,7 +89,13 @@ export type MascotProps = {
 };
 
 export function Mascot(props: MascotProps) {
-  const { directions, reactions, size = 110, className, label = "mascot" } = props;
+  const {
+    directions,
+    reactions,
+    size = 110,
+    className,
+    label = "mascot",
+  } = props;
 
   const buttonRef = useRef<HTMLButtonElement>(null);
   const squashRef = useRef<HTMLSpanElement>(null);

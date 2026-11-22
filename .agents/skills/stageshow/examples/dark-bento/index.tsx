@@ -1,5 +1,5 @@
-import { Avatar, Bar, Facepile, Stage, Text, Window } from '../../kit'
-import './bento.css'
+import { Avatar, Bar, Facepile, Stage, Text, Window } from "../../kit";
+import "./bento.css";
 
 // The bar for a dark, grayscale still: a bento card (360 × 280) for a music
 // app, in a dark section of the page. Feature: shared playlists.
@@ -21,12 +21,19 @@ const TRACKS = [
   { added: true, art: 3 },
   { title: 70, artist: 36, art: 4 },
   { title: 56, artist: 46, art: 5 },
-]
+];
 
 export default function DarkBento() {
   return (
     <>
-      <Stage width={360} height={280} compact={{ below: 360, width: 358, height: 280 }} theme="dark" palette="mono" className="db-card">
+      <Stage
+        width={360}
+        height={280}
+        compact={{ below: 360, width: 358, height: 280 }}
+        theme="dark"
+        palette="mono"
+        className="db-card"
+      >
         {() => (
           <>
             <Window className="db-window" lights="grey">
@@ -46,7 +53,13 @@ export default function DarkBento() {
                     <Text className="db-title">Sunday Slow</Text>
                     <div className="db-people">
                       {/* Cut out, not ringed: the gap shows the window behind */}
-                      <Facepile names={['', '', '', '']} tones={['ink', 'ink', 'ink', 'ink']} size={18} overlap={4} className="db-pile" />
+                      <Facepile
+                        names={["", "", "", ""]}
+                        tones={["ink", "ink", "ink", "ink"]}
+                        size={18}
+                        overlap={4}
+                        className="db-pile"
+                      />
                     </div>
                   </div>
                 </header>
@@ -56,8 +69,15 @@ export default function DarkBento() {
                     t.added ? (
                       <div key={i} className="db-row" data-new>
                         <span className="db-row-art">
-                          <span className={`db-art db-art--${t.art} db-art--row`} />
-                          <Avatar name="Mara" size={14} className="db-face db-face--row" style={{ color: '#111113' }} />
+                          <span
+                            className={`db-art db-art--${t.art} db-art--row`}
+                          />
+                          <Avatar
+                            name="Mara"
+                            size={14}
+                            className="db-face db-face--row"
+                            style={{ color: "#111113" }}
+                          />
                         </span>
                         <div className="db-lines">
                           <Bar w={58} h={5} tone={5} />
@@ -66,7 +86,9 @@ export default function DarkBento() {
                       </div>
                     ) : (
                       <div key={i} className="db-row">
-                        <span className={`db-art db-art--${t.art} db-art--row`} />
+                        <span
+                          className={`db-art db-art--${t.art} db-art--row`}
+                        />
                         <div className="db-lines">
                           <Bar w={t.title!} h={5} tone={3} />
                           <Bar w={t.artist!} h={4} tone={2} />
@@ -88,7 +110,12 @@ export default function DarkBento() {
                 </div>
               </div>
               <div className="db-detail-by">
-                <Avatar name="Mara" size={20} className="db-face db-face--detail" style={{ color: '#111113' }} />
+                <Avatar
+                  name="Mara"
+                  size={20}
+                  className="db-face db-face--detail"
+                  style={{ color: "#111113" }}
+                />
                 <Text className="db-by">Added by Mara</Text>
               </div>
             </div>
@@ -96,5 +123,5 @@ export default function DarkBento() {
         )}
       </Stage>
     </>
-  )
+  );
 }

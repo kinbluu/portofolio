@@ -1,11 +1,15 @@
 (function (root) {
   function create(worker) {
-    let active = null, pending = null, timer = null, failure = null, requestId = 0;
+    let active = null,
+      pending = null,
+      timer = null,
+      failure = null,
+      requestId = 0;
     const exports = [];
 
     function superseded() {
-      const error = new Error('Drawing preview superseded');
-      error.name = 'AbortError';
+      const error = new Error("Drawing preview superseded");
+      error.name = "AbortError";
       return error;
     }
 
@@ -35,13 +39,18 @@
       }
     }
 
-    function request(message, {preview = false, delay = 0} = {}) {
+    function request(message, { preview = false, delay = 0 } = {}) {
       return new Promise((resolve, reject) => {
         if (failure) {
           reject(failure);
           return;
         }
-        const job = {message: {...structuredClone(message), request: ++requestId}, preview, resolve, reject};
+        const job = {
+          message: { ...structuredClone(message), request: ++requestId },
+          preview,
+          resolve,
+          reject,
+        };
         if (preview) {
           supersedePreviews();
           pending = job;
@@ -58,7 +67,7 @@
       });
     }
 
-    worker.onmessage = ({data}) => {
+    worker.onmessage = ({ data }) => {
       if (!active || data.request !== active.message.request) return;
       const job = active;
       active = null;
@@ -66,8 +75,8 @@
       else job.resolve(data.result);
       dispatch();
     };
-    worker.onerror = event => {
-      failure = new Error(event.message || 'Drawing worker failed');
+    worker.onerror = (event) => {
+      failure = new Error(event.message || "Drawing worker failed");
       clearTimeout(timer);
       for (const job of [active, pending, ...exports]) job?.reject(failure);
       active = null;
@@ -75,7 +84,7 @@
       exports.length = 0;
     };
 
-    return {request};
+    return { request };
   }
-  root.DrawingRenderQueue = {create};
+  root.DrawingRenderQueue = { create };
 })(globalThis);

@@ -68,28 +68,32 @@
   height: 90px;
   margin-top: 8px;
   border-radius: 8px;
-  background: linear-gradient(135deg, var(--mn-hue), color-mix(in srgb, var(--mn-hue) 40%, #fff));
+  background: linear-gradient(
+    135deg,
+    var(--mn-hue),
+    color-mix(in srgb, var(--mn-hue) 40%, #fff)
+  );
 }
 
 /* Narrow: two sites, both whole, the third left out */
-.mn .ss-stage[data-layout='compact'] .mn-row {
+.mn .ss-stage[data-layout="compact"] .mn-row {
   grid-template-columns: repeat(2, 155px);
   gap: 16px;
 }
 
-.mn .ss-stage[data-layout='compact'] .mn-win:nth-child(3) {
+.mn .ss-stage[data-layout="compact"] .mn-win:nth-child(3) {
   display: none;
 }
 
-.mn .ss-stage[data-layout='compact'] .mn-site {
+.mn .ss-stage[data-layout="compact"] .mn-site {
   padding: 12px 14px;
 }
 
-.mn .ss-stage[data-layout='compact'] .mn-head {
+.mn .ss-stage[data-layout="compact"] .mn-head {
   font-size: 14px;
 }
 
-.mn .ss-stage[data-layout='compact'] .mn-head {
+.mn .ss-stage[data-layout="compact"] .mn-head {
   font-size: 13px;
 }
 

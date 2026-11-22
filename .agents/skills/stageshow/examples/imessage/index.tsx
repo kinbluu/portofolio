@@ -1,6 +1,16 @@
-import { ArrowUp, ChevronLeft, Mic, Plus, Video } from 'lucide-react'
-import { Stage, Phone, Thread, Bubble, Stamp, Receipt, Keyboard, type Act, Avatar } from '../../kit'
-import './imessage.css'
+import { ArrowUp, ChevronLeft, Mic, Plus, Video } from "lucide-react";
+import {
+  Stage,
+  Phone,
+  Thread,
+  Bubble,
+  Stamp,
+  Receipt,
+  Keyboard,
+  type Act,
+  Avatar,
+} from "../../kit";
+import "./imessage.css";
 
 // iMessage on an iPhone, for a landing page. Four beats:
 //   1. Context: Maya's two messages, keyboard up, the field focused.
@@ -16,74 +26,74 @@ import './imessage.css'
 // signature, not information.
 
 type S = {
-  draft: string
-  keys: boolean
-  sent: boolean
-  delivered: boolean
-  read: boolean
-  typing: boolean
-  reply: boolean
-}
+  draft: string;
+  keys: boolean;
+  sent: boolean;
+  delivered: boolean;
+  read: boolean;
+  typing: boolean;
+  reply: boolean;
+};
 
 const initial: S = {
-  draft: '',
+  draft: "",
   keys: false,
   sent: false,
   delivered: false,
   read: false,
   typing: false,
   reply: false,
-}
+};
 
-const MINE = "No way, I'm so in"
-const REPLY = "Leaving at 5, I'll drive"
+const MINE = "No way, I'm so in";
+const REPLY = "Leaving at 5, I'll drive";
 
 // The predictive bar follows the word being typed, as iOS's does
 const SUGGEST: Record<string, [string, string]> = {
-  N: ['No', 'Not'],
-  No: ['Now', 'Not'],
-  w: ['was', 'we'],
-  wa: ['way', 'was'],
-  way: ['way', 'was'],
-  'way,': ['I', 'I’m'],
-  I: ['I’m', 'I'],
-  "I'": ['I’m', 'I’ll'],
-  "I'm": ['I’m', 'I’ve'],
-  s: ['so', 'see'],
-  so: ['so', 'soon'],
-  i: ['in', 'is'],
-  in: ['in', 'it'],
-}
+  N: ["No", "Not"],
+  No: ["Now", "Not"],
+  w: ["was", "we"],
+  wa: ["way", "was"],
+  way: ["way", "was"],
+  "way,": ["I", "I’m"],
+  I: ["I’m", "I"],
+  "I'": ["I’m", "I’ll"],
+  "I'm": ["I’m", "I’ve"],
+  s: ["so", "see"],
+  so: ["so", "soon"],
+  i: ["in", "is"],
+  in: ["in", "it"],
+};
 
 function suggestions(draft: string): [string, string, string] {
-  const word = draft.split(' ').pop() ?? ''
-  if (!word) return draft ? ['I', 'the', 'and'] : ['I', 'The', 'I’m']
-  const [a, b] = SUGGEST[word] ?? [word, word]
-  return [`“${word}”`, a, b]
+  const word = draft.split(" ").pop() ?? "";
+  if (!word) return draft ? ["I", "the", "and"] : ["I", "The", "I’m"];
+  const [a, b] = SUGGEST[word] ?? [word, word];
+  return [`“${word}”`, a, b];
 }
 
 async function script(a: Act<S>) {
-  await a.wait(900)
-  a.mark('type')
-  await a.set({ keys: true })
-  await a.type('draft', MINE, { interval: 95 })
-  await a.wait(150)
-  await a.set({ keys: false })
-  await a.wait(250)
-  a.mark('send')
-  await a.click({ at: 'send', x: 0.5, y: 0.5 })
-  await a.set({ sent: true, draft: '' })
-  await a.wait(700)
-  await a.set({ delivered: true })
-  await a.wait(1200)
-  await a.set({ read: true })
-  await a.wait(900)
-  a.mark('typing')
-  await a.set({ typing: true })
-  await a.wait(1900)
-  await a.set({ typing: false, reply: true })
-  await a.wait(3700)
-  a.mark('done')
+  await a.wait(900);
+  a.mark("type");
+  await a.set({ keys: true });
+  await a.type("draft", MINE, { interval: 95 });
+  await a.wait(150);
+  await a.set({ keys: false });
+  await a.wait(250);
+  a.mark("send");
+  await a.click({ at: "send", x: 0.5, y: 0.5 });
+  await a.set({ sent: true, draft: "" });
+  await a.wait(700);
+  await a.set({ delivered: true });
+  await a.wait(1200);
+  await a.set({ read: true });
+  await a.wait(900);
+  a.mark("typing");
+  await a.set({ typing: true });
+  await a.wait(1900);
+  await a.set({ typing: false, reply: true });
+  await a.wait(3700);
+  a.mark("done");
 }
 
 export default function IMessage() {
@@ -92,10 +102,16 @@ export default function IMessage() {
       width={420}
       height={620}
       initial={initial}
-      poster={{ ...initial, sent: true, delivered: true, read: true, reply: true }}
+      poster={{
+        ...initial,
+        sent: true,
+        delivered: true,
+        read: true,
+        reply: true,
+      }}
       script={script}
       play="once"
-      cursor={{ at: { x: 330, y: 420 }, style: 'touch' }}
+      cursor={{ at: { x: 330, y: 420 }, style: "touch" }}
       className="im"
     >
       {(s) => {
@@ -109,11 +125,28 @@ export default function IMessage() {
                     <ChevronLeft size={30} strokeWidth={2.4} />
                   </span>
                   <span className="im-contact">
-                    <Avatar name="Maya" tone="ios" size={46} className="im-avatar" />
+                    <Avatar
+                      name="Maya"
+                      tone="ios"
+                      size={46}
+                      className="im-avatar"
+                    />
                     <span className="im-name">
                       Maya
-                      <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden>
-                        <path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <svg
+                        viewBox="0 0 16 16"
+                        width="11"
+                        height="11"
+                        aria-hidden
+                      >
+                        <path
+                          d="M6 3.5 10.5 8 6 12.5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
                       </svg>
                     </span>
                   </span>
@@ -137,14 +170,11 @@ export default function IMessage() {
                   )}
                   {s.sent && (
                     <Receipt show={s.delivered} className="im-receipt">
-                      {s.read ? 'Read 9:41' : 'Delivered'}
+                      {s.read ? "Read 9:41" : "Delivered"}
                     </Receipt>
                   )}
                   {(s.typing || s.reply) && (
-                    <Bubble
-                      from="them"
-                      typing={s.typing}
-                    >
+                    <Bubble from="them" typing={s.typing}>
                       {REPLY}
                     </Bubble>
                   )}
@@ -157,13 +187,22 @@ export default function IMessage() {
                   <span className="im-field">
                     <span className="im-field__text">
                       {s.draft}
-                      <i className="im-caret" data-solid={s.keys || undefined} />
-                      {!s.draft && <span className="im-field__ph">iMessage</span>}
+                      <i
+                        className="im-caret"
+                        data-solid={s.keys || undefined}
+                      />
+                      {!s.draft && (
+                        <span className="im-field__ph">iMessage</span>
+                      )}
                     </span>
                     <span className="im-mic" data-off={!!s.draft || undefined}>
                       <Mic size={19} strokeWidth={2} />
                     </span>
-                    <span className="im-send" data-on={!!s.draft || undefined} data-target="send">
+                    <span
+                      className="im-send"
+                      data-on={!!s.draft || undefined}
+                      data-target="send"
+                    >
                       <ArrowUp size={19} strokeWidth={3} />
                     </span>
                   </span>
@@ -173,8 +212,8 @@ export default function IMessage() {
               </div>
             </Phone>
           </>
-        )
+        );
       }}
     </Stage>
-  )
+  );
 }

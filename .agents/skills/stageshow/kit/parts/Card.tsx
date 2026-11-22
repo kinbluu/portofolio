@@ -1,5 +1,5 @@
-import type { CSSProperties, HTMLAttributes } from 'react'
-import './Card.css'
+import type { CSSProperties, HTMLAttributes } from "react";
+import "./Card.css";
 
 /**
  * A surface that holds content: a comment, a receipt, a settings group.
@@ -14,27 +14,36 @@ import './Card.css'
  * and a full-width hairline runs between children. Use it whenever rows are
  * split by rules that reach both edges, rather than hand-building a box.
  */
-export function Card({ pad = 'medium', gap = 12, tone = 'surface', lift, flush, className, style, ...rest }: HTMLAttributes<HTMLDivElement> & {
+export function Card({
+  pad = "medium",
+  gap = 12,
+  tone = "surface",
+  lift,
+  flush,
+  className,
+  style,
+  ...rest
+}: HTMLAttributes<HTMLDivElement> & {
   /** small 12px, medium 16px (the default), large 20px, on every side. */
-  pad?: 'small' | 'medium' | 'large'
+  pad?: "small" | "medium" | "large";
   /** Space between children, in px. */
-  gap?: number
+  gap?: number;
   /** surface: white with a hairline ring. sunken: a quiet gray fill, no ring, for a group inside a surface. */
-  tone?: 'surface' | 'sunken'
+  tone?: "surface" | "sunken";
   /** A soft shadow, for a card that sits over the ground rather than in a window. */
-  lift?: boolean
+  lift?: boolean;
   /** Sections: each direct child is padded by `pad`, with a full-width hairline between them. `gap` is ignored. */
-  flush?: boolean
+  flush?: boolean;
 }) {
   return (
     <div
       {...rest}
-      className={`ss-card${className ? ` ${className}` : ''}`}
+      className={`ss-card${className ? ` ${className}` : ""}`}
       data-pad={pad}
       data-tone={tone}
       data-lift={lift || undefined}
       data-flush={flush || undefined}
-      style={{ ...style, '--ss-card-gap': `${gap}px` } as CSSProperties}
+      style={{ ...style, "--ss-card-gap": `${gap}px` } as CSSProperties}
     />
-  )
+  );
 }

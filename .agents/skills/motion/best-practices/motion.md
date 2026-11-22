@@ -4,7 +4,7 @@ Rules for using Motion in vanilla JavaScript, TypeScript, and HTML projects.
 
 ## Importing
 
--   Import from `motion`, never from `framer-motion`.
+- Import from `motion`, never from `framer-motion`.
 
 ## `animate`
 
