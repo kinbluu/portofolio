@@ -15,10 +15,12 @@
   --rm3-selection-background: var(--rm3-accent);
   --rm3-selection-foreground: var(--rm3-paper);
   --rm3-gh-0: light-dark(#e1e2e5, #34363b);
-  --rm3-gh-1: light-dark(#c8cbd1, #596272);
-  --rm3-gh-2: light-dark(#a8b0bd, #778cad);
-  --rm3-gh-3: light-dark(#788cad, #93acd3);
-  --rm3-gh-4: light-dark(#315fa9, #b2ceff);
+  /* The light steps hold the accent hue at rising chroma, so the calendar reads
+     blue instead of grey next to a pale page. */
+  --rm3-gh-1: light-dark(#bfcde4, #596272);
+  --rm3-gh-2: light-dark(#9ab0d6, #778cad);
+  --rm3-gh-3: light-dark(#6d8ec8, #93acd3);
+  --rm3-gh-4: light-dark(#305daf, #b2ceff);
   --rm3-online: light-dark(#7fb24e, #a0c875);
   --rm3-chat-bar: light-dark(#1c1d20, #25272c);
   --rm3-chat-bar-ink: light-dark(#fafafa, #f3f3f4);
