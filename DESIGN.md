@@ -51,7 +51,7 @@ Semua token `--rm3-*` berada di satu sumber, `src/styles/global.css`, dan dipeta
 | `--rm3-chat-bar-ink`   | `#fafafa` | `#f3f3f4` | Teks pada batang asisten          |
 | `--rm3-chat-bar-muted` | `#c5c9d0` | `#b9bdc5` | Teks sekunder pada batang asisten |
 
-Tema mengikuti perangkat tanpa tombol manual pada iterasi ini; penambahan override manual masih terbuka. Aksen olive dan nilai warna dokumen contoh tidak digunakan.
+Tema mengikuti preferensi perangkat sampai pengunjung memilih sendiri lewat tombol tema di header; pilihan itu tersimpan di `localStorage` dan menang atas perangkat pada kunjungan berikutnya. Aksen olive dan nilai warna dokumen contoh tidak digunakan.
 
 ## Tipografi
 
@@ -96,7 +96,7 @@ Tema mengikuti perangkat tanpa tombol manual pada iterasi ini; penambahan overri
 
 ## Interaksi dan aksesibilitas
 
-- Tema mengikuti preferensi warna perangkat dan berubah tanpa reload. Override manual belum tersedia dan masih menunggu keputusan.
+- Tema mengikuti preferensi warna perangkat dan berubah tanpa reload, sampai pengunjung menekan tombol tema di header. Tombol itu satu-satunya kontrol manual: nama aksesnya menyebut tema yang belum aktif ("Dark theme"), `aria-pressed` menyatakan tema gelap sedang dipakai, dan ikon bulan serta matahari bertukar dengan cross-fade singkat. Pilihan disimpan di `localStorage` dengan kunci `portfolio-theme` dan dibaca skrip inline di `head`, jadi halaman tidak berkedip saat dimuat. Tanpa JavaScript tombol tidak muncul dan tema tetap mengikuti perangkat.
 - Pastikan konten portofolio tetap dapat dibaca tanpa JavaScript atau GPU; asisten AI boleh memerlukan JavaScript untuk berinteraksi.
 - Semua navigasi dan kontrol harus dapat digunakan dengan keyboard, mempunyai nama yang jelas, dan menampilkan fokus yang terlihat.
 - Targetkan area interaksi sedikitnya 44 × 44 px. Jangan mengandalkan warna saja untuk membedakan status atau tautan.
@@ -127,12 +127,12 @@ Implementasi awal sudah dibuat; tinjauan pengguna dan verifikasi lanjutan tetap 
 - Pengujian Obscura mencakup lebar 320, 390, 768, dan 1440 px, anchor, perubahan tema, HTML server, chat dengan respons tiruan, serta pemulihan GitHub untuk HTTP 503 dan koneksi putus.
 - Obscura tidak memverifikasi JavaScript yang benar-benar dimatikan atau aktivasi keyboard bawaan. Pemeriksaan browser desktop terpisah memastikan konten utama dan fallback tersedia tanpa JavaScript, serta Tab, Enter, Space, dan Escape bekerja pada navigasi yang diuji.
 - Chat diuji dengan respons lokal tiruan; panggilan ke penyedia AI sebenarnya tidak dilakukan. Aturan CSS cetak diperiksa, tetapi hasil cetak sesungguhnya belum diuji. Tinjauan visual akhir tetap menunggu pengguna.
+- Tombol tema diperiksa di browser desktop lewat `bun tests/run-desktop.ts theme-toggle.e2e.ts`: tema awal mengikuti perangkat dan berubah saat perangkat berubah, satu tekan mengunci tema lain dan menyimpannya, pilihan bertahan setelah reload dan menang atas perubahan perangkat, Enter bekerja, area sentuh 44 × 44 px, kedua ikon ber-cross-fade (hanya opasitas yang tersisa pada `prefers-reduced-motion`), tombol tetap di dalam header tanpa gulir mendatar pada 320, 768, 961, dan 1440 px, serta tanpa JavaScript dan dengan `localStorage` diblokir tombol tetap tersembunyi dan tema tetap ikut perangkat.
 
 ## Hal yang belum diputuskan
 
 - Persetujuan pengguna atas implementasi awal, termasuk font, jarak, radius, dan nuansa biru.
 - Posisi final asisten AI dan penyajian proyek, keahlian, serta kontak.
-- Ada atau tidaknya pilihan tema manual selain mengikuti perangkat.
 
 ## Gambar pratinjau sosial
 
