@@ -46,10 +46,14 @@ Semua token `--rm3-*` berada di satu sumber, `src/styles/global.css`, dan dipeta
 | ---------------------- | --------- | --------- | --------------------------------- |
 | `--rm3-soft`           | `#f0f1f2` | `#25272c` | Permukaan sekunder dan isian      |
 | `--rm3-tint`           | `#e9eef9` | `#293449` | Sorotan lembut dan keadaan aktif  |
-| `--rm3-online`         | `#7fb24e` | `#a0c875` | Titik status asisten              |
-| `--rm3-chat-bar`       | `#1c1d20` | `#25272c` | Batang judul panel asisten        |
-| `--rm3-chat-bar-ink`   | `#fafafa` | `#f3f3f4` | Teks pada batang asisten          |
-| `--rm3-chat-bar-muted` | `#c5c9d0` | `#b9bdc5` | Teks sekunder pada batang asisten |
+| `--rm3-online`         | `#60912b` | `#a0c875` | Titik status asisten              |
+| `--rm3-chat-bar`       | `#f0f1f2` | `#25272c` | Batang judul panel asisten        |
+| `--rm3-chat-bar-ink`   | `#1c1d20` | `#f3f3f4` | Teks pada batang asisten          |
+| `--rm3-chat-bar-muted` | `#555b63` | `#b9bdc5` | Teks sekunder pada batang asisten |
+
+Batang judul panel asisten memakai permukaan sekunder, bukan permukaan gelap tetap, dan dipisahkan dari isi panel oleh `--rm3-line`; dengan begitu ia ikut tema terang maupun gelap.
+
+Ramp kalender kontribusi GitHub (`--rm3-gh-1` sampai `--rm3-gh-4`) memakai hue aksen dengan chroma yang naik tiap tingkat di mode terang. Sebelumnya tiga tingkat terbawah hampir netral, sehingga kalender terbaca abu-abu dan birunya tidak menonjol di halaman terang.
 
 Tema mengikuti preferensi perangkat sampai pengunjung memilih sendiri lewat tombol tema di header; pilihan itu tersimpan di `localStorage` dan menang atas perangkat pada kunjungan berikutnya. Aksen olive dan nilai warna dokumen contoh tidak digunakan.
 
