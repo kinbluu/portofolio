@@ -138,6 +138,20 @@ body {
   transform: translateY(0);
 }
 
+.site-header-sentinel {
+  display: block;
+  height: 1px;
+  margin-bottom: -1px;
+}
+
+.site-header-dock[data-sticky] {
+  position: sticky;
+  top: 0.75rem;
+  z-index: 10;
+  min-height: 6rem;
+  pointer-events: none;
+}
+
 .site-header {
   position: relative;
   z-index: 10;
@@ -148,6 +162,30 @@ body {
   width: min(100% - 4rem, 76rem);
   min-height: 6rem;
   margin-inline: auto;
+  border: 1px solid transparent;
+  border-radius: var(--rm3-radius-pill);
+  background-color: transparent;
+  box-shadow: 0 12px 30px transparent;
+  backdrop-filter: blur(0px) saturate(100%);
+  pointer-events: auto;
+  transition:
+    width var(--rm3-duration-shift) var(--rm3-ease-out),
+    min-height var(--rm3-duration-shift) var(--rm3-ease-out),
+    padding var(--rm3-duration-shift) var(--rm3-ease-out),
+    border-color var(--rm3-duration-shift) var(--rm3-ease-out),
+    background-color var(--rm3-duration-shift) var(--rm3-ease-out),
+    box-shadow var(--rm3-duration-shift) var(--rm3-ease-out),
+    backdrop-filter var(--rm3-duration-shift) var(--rm3-ease-out);
+}
+
+.site-header[data-floating] {
+  width: min(100% - 2rem, 42rem);
+  min-height: 3.5rem;
+  padding-inline: 1.25rem;
+  border-color: var(--rm3-line);
+  background-color: color-mix(in oklab, var(--rm3-paper) 82%, transparent);
+  box-shadow: 0 12px 30px var(--rm3-shadow);
+  backdrop-filter: blur(14px) saturate(150%);
 }
 
 .site-progress {
@@ -155,6 +193,29 @@ body {
   inset: auto 0 0;
   height: 1px;
   background: var(--rm3-line);
+  transition: inset var(--rm3-duration-shift) var(--rm3-ease-out);
+}
+
+.site-header[data-floating] .site-progress {
+  inset: auto 1.75rem 0;
+  border-radius: var(--rm3-radius-pill);
+}
+
+/* The panel anchors to the pill rather than to the padded menu button, so it
+   stays inside a 320px screen. */
+.site-header[data-floating] .site-mobile-menu {
+  position: static;
+}
+
+.site-header[data-floating] .site-mobile-menu nav {
+  top: calc(100% + 0.5rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header,
+  .site-progress {
+    transition: none;
+  }
 }
 
 .site-progress > span {
@@ -262,6 +323,9 @@ body {
   .site-mobile-menu {
     display: block;
   }
+  .site-header[data-floating] {
+    width: min(100% - 2rem, 21rem);
+  }
 }
 
 @media (max-width: 40rem) {
@@ -277,6 +341,7 @@ body {
   .site-footer {
     width: calc(100% - 2.5rem);
   }
+  .site-header-dock[data-sticky],
   .site-header {
     min-height: 5rem;
   }
@@ -290,6 +355,19 @@ body {
     width: 100%;
     margin: 0;
     border: 0;
+  }
+  .site-header-dock[data-sticky] {
+    position: static;
+    min-height: 0;
+  }
+  .site-header {
+    width: 100%;
+    min-height: 0;
+    padding-inline: 0;
+    border: 0;
+    background-color: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
   }
   .site-desktop-nav,
   .site-mobile-menu,

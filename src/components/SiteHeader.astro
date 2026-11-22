@@ -7,33 +7,40 @@ const navHref = (href: string) =>
   isHome || !href.startsWith("#") ? href : `/${href}`;
 ---
 
-<header class="site-header">
-  <span class="site-progress" aria-hidden="true">
-    <span data-scroll-progress></span>
-  </span>
-  <PluckedLink
-    class="site-wordmark"
-    href={isHome ? "#top" : "/"}
-    current={isHome}
-  >
-    {profile.wordmark}
-  </PluckedLink>
-  <nav class="site-desktop-nav" aria-label="Main navigation">
-    {navigation.map((link) => (
-      <PluckedLink href={navHref(link.href)}>{link.label}</PluckedLink>
-    ))}
-  </nav>
-  <details class="site-mobile-menu" data-navigation-menu>
-    <summary>
-      Menu <span aria-hidden="true">+</span>
-    </summary>
-    <nav aria-label="Mobile navigation">
+<span
+  class="site-header-sentinel"
+  data-header-sentinel
+  aria-hidden="true"
+></span>
+<div class="site-header-dock" data-header-dock>
+  <header class="site-header" data-site-header>
+    <span class="site-progress" aria-hidden="true">
+      <span data-scroll-progress></span>
+    </span>
+    <PluckedLink
+      class="site-wordmark"
+      href={isHome ? "#top" : "/"}
+      current={isHome}
+    >
+      {profile.wordmark}
+    </PluckedLink>
+    <nav class="site-desktop-nav" aria-label="Main navigation">
       {navigation.map((link) => (
         <PluckedLink href={navHref(link.href)}>{link.label}</PluckedLink>
       ))}
     </nav>
-  </details>
-</header>
+    <details class="site-mobile-menu" data-navigation-menu>
+      <summary>
+        Menu <span aria-hidden="true">+</span>
+      </summary>
+      <nav aria-label="Mobile navigation">
+        {navigation.map((link) => (
+          <PluckedLink href={navHref(link.href)}>{link.label}</PluckedLink>
+        ))}
+      </nav>
+    </details>
+  </header>
+</div>
 
 <script>
   const menu = document.querySelector<HTMLDetailsElement>(
@@ -56,4 +63,27 @@ const navHref = (href: string) =>
       menu.querySelector<HTMLElement>("summary")?.focus();
     }
   });
+
+  // The floating pill only exists once a script is there to keep it off the
+  // content. Without it the header stays in flow, exactly as it renders without
+  // JavaScript.
+  const dock = document.querySelector<HTMLElement>("[data-header-dock]");
+  const header = document.querySelector<HTMLElement>("[data-site-header]");
+  const sentinel = document.querySelector<HTMLElement>(
+    "[data-header-sentinel]",
+  );
+
+  if (dock && header && sentinel) {
+    dock.toggleAttribute("data-sticky", true);
+    const offset = parseFloat(getComputedStyle(dock).top) || 0;
+    new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry) {
+          header.toggleAttribute("data-floating", !entry.isIntersecting);
+        }
+      },
+      { rootMargin: `-${offset}px 0px 0px 0px` },
+    ).observe(sentinel);
+  }
 </script>

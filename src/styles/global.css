@@ -32,6 +32,7 @@
   --rm3-radius-xl: 28px;
   --rm3-radius-pill: 100px;
   --rm3-duration-enter: 700ms;
+  --rm3-duration-shift: 320ms;
   --rm3-stagger: 80ms;
   --rm3-rise: 12px;
   --rm3-ease-out: cubic-bezier(0.16, 1, 0.3, 1);

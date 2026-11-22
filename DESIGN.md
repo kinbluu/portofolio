@@ -101,6 +101,7 @@ Tema mengikuti perangkat tanpa tombol manual pada iterasi ini; penambahan overri
 - Semua navigasi dan kontrol harus dapat digunakan dengan keyboard, mempunyai nama yang jelas, dan menampilkan fokus yang terlihat.
 - Targetkan area interaksi sedikitnya 44 × 44 px. Jangan mengandalkan warna saja untuk membedakan status atau tautan.
 - Targetkan kontras WCAG AA: 4,5:1 untuk teks normal dan 3:1 untuk teks besar. Pasangan teks utama terhadap permukaan terukur 16,15:1 terang dan 15,35:1 gelap; teks sekunder 6,57:1 dan 9,04:1. Pasangan lain tetap perlu diperiksa sesuai penggunaannya.
+- Navigasi utama menjadi pil mengambang saat halaman digulir: header tetap di alirannya di awal halaman, lalu menempel 0,75 rem dari tepi atas dengan lebar menyusut, latar tembus pandang, blur, bayangan, dan garis progres yang mengikuti lebar pil. Tanpa JavaScript header tetap statis seperti sebelumnya; peralihannya memakai `--rm3-duration-shift` dan dimatikan pada `prefers-reduced-motion`.
 - Hormati `prefers-reduced-motion` dan hindari animasi atau scroll yang menghalangi pembacaan.
 - Pertahankan informasi status, keadaan gagal, dan pemulihan untuk kontribusi GitHub serta asisten AI.
 
